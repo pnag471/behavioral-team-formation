@@ -12,22 +12,32 @@ The prototype is intentionally modular: every AI component is behind an abstract
 
 ```mermaid
 flowchart TD
-    Student["Student\n(browser)"] -->|POST /assessment/analyze| BA["Behavioral Analysis\napp/behavioral_analysis.py"]
-    BA -->|keyword matching via| MA["MockBehavioralAnalyzer\nai/mock_analyzer.py"]
-    MA -->|behavioral signature| SS[("students_store\nin-memory dict")]
 
-    Instructor["Instructor\n(browser)"] -->|POST /teams/generate| ME["Matching Engine\napp/matching.py"]
-    SS -->|student pool| ME
-    ME -->|greedy optimization| TS[("teams_store\nin-memory dict")]
+Student[Student Browser]
+Assessment[Behavioral Analysis]
+Analyzer[Mock Behavioral Analyzer]
+Students[(Students Store)]
 
-    Instructor -->|GET /teams/{id}/explanation| EE["Explainability Engine\napp/explainability.py"]
-    EE -->|rule-based via| MX["MockExplainer\nai/mock_explainer.py"]
-    TS --> EE
-    SS --> EE
-    MX -->|strengths · risks · norms · explanation| Instructor
+Instructor[Instructor Browser]
+Matching[Matching Engine]
+Teams[(Teams Store)]
 
-    Instructor -->|GET /teams/{id}/radar| EE
-    EE -->|RadarData| Instructor
+Explain[Explainability Engine]
+Explainer[Mock Explainer]
+
+Student --> Assessment
+Assessment --> Analyzer
+Analyzer --> Students
+
+Instructor --> Matching
+Students --> Matching
+Matching --> Teams
+
+Instructor --> Explain
+Teams --> Explain
+Students --> Explain
+Explain --> Explainer
+Explainer --> Instructor
 ```
 
 ---
