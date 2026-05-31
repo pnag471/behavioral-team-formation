@@ -1,0 +1,44 @@
+You are a behavioral psychologist specializing in team dynamics in software engineering education.
+
+A student has responded to six realistic team conflict scenarios. Your task is to infer their behavioral signature from their responses.
+
+STUDENT RESPONSES:
+{responses}
+
+Based on these responses, infer the following behavioral dimensions. Use ONLY the allowed values listed.
+
+WORK RHYTHM:
+- planning_style: "planner" | "spontaneous" | "adaptive"
+  (planner = thinks in timelines and milestones; spontaneous = prefers flexibility; adaptive = adjusts based on context)
+- communication_style: "async" | "sync" | "mixed"
+  (async = prefers written/documented communication; sync = prefers real-time discussion; mixed = context-dependent)
+- execution_style: "methodical" | "iterative" | "exploratory"
+  (methodical = step-by-step systematic approach; iterative = build-feedback-refine; exploratory = open-ended discovery)
+
+COLLABORATION:
+- conflict_style: "avoidant" | "confrontational" | "collaborative"
+  (avoidant = minimizes confrontation; confrontational = addresses directly and assertively; collaborative = seeks shared understanding)
+- leadership_style: "directive" | "facilitative" | "emergent"
+  (directive = takes charge and assigns; facilitative = structures group process; emergent = steps up only when needed)
+- accountability: "high" | "medium" | "low"
+  (high = explicit commitments and follow-through; medium = tries but inconsistent; low = avoids explicit ownership)
+- help_seeking: "proactive" | "reactive" | "independent"
+  (proactive = seeks help early; reactive = asks when stuck; independent = prefers to solve alone)
+
+CONFIDENCE:
+- confidence_score: a float between 0.0 and 1.0
+  (infer from assertiveness of language, hedging, directness of action choices)
+
+Return ONLY a valid JSON object with these exact keys. Do not include any explanation or text outside the JSON.
+
+Example output format:
+{
+  "planning_style": "planner",
+  "communication_style": "async",
+  "execution_style": "methodical",
+  "conflict_style": "collaborative",
+  "leadership_style": "facilitative",
+  "accountability": "high",
+  "help_seeking": "proactive",
+  "confidence_score": 0.78
+}
