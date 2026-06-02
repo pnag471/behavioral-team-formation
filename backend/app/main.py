@@ -8,25 +8,38 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.models import Student, Team
-
-# ---------------------------------------------------------------------------
-# Shared in-memory state — imported by reference in other modules
-# ---------------------------------------------------------------------------
-students_store: dict[str, Student] = {}
-teams_store: dict[str, Team] = {}
-
+from app.database import init_db, SessionLocal, StudentDB
 
 # ---------------------------------------------------------------------------
 # Lifespan: seed data on startup
 # ---------------------------------------------------------------------------
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    seed_path = Path(__file__).parent.parent / "sample_students.json"
-    with open(seed_path) as f:
-        data = json.load(f)
-    for raw in data:
-        student = Student(**raw)
-        students_store[student.id] = student
+    init_db()
+
+    db = SessionLocal()
+    try:
+        existing = db.query(StudentDB).first()
+        if not existing:
+            seed_path = Path(__file__).parent.parent / "sample_students.json"
+            with open(seed_path) as f:
+                data = json.load(f)
+            for raw in data:
+                student = Student(**raw)
+                db_student = StudentDB(
+                    id=student.id,
+                    name=student.name,
+                    competence_signature=student.competence_signature.model_dump(),
+                    work_rhythm_signature=student.work_rhythm_signature.model_dump(),
+                    collaboration_signature=student.collaboration_signature.model_dump(),
+                    motivation_layer=student.motivation_layer.model_dump(),
+                    confidence_layer=student.confidence_layer.model_dump(),
+                )
+                db.add(db_student)
+            db.commit()
+    finally:
+        db.close()
+
     yield
 
 
@@ -65,10 +78,40 @@ def health():
 
 @app.get("/students", response_model=List[Student])
 def list_students():
-    return list(students_store.values())
+    db = SessionLocal()
+    try:
+        students = db.query(StudentDB).all()
+        return [
+            Student(
+                id=s.id,
+                name=s.name,
+                competence_signature=s.competence_signature,
+                work_rhythm_signature=s.work_rhythm_signature,
+                collaboration_signature=s.collaboration_signature,
+                motivation_layer=s.motivation_layer,
+                confidence_layer=s.confidence_layer,
+            )
+            for s in students
+        ]
+    finally:
+        db.close()
 
 
 @app.post("/students", response_model=Student)
 def add_student(student: Student):
-    students_store[student.id] = student
-    return student
+    db = SessionLocal()
+    try:
+        db_student = StudentDB(
+            id=student.id,
+            name=student.name,
+            competence_signature=student.competence_signature.model_dump(),
+            work_rhythm_signature=student.work_rhythm_signature.model_dump(),
+            collaboration_signature=student.collaboration_signature.model_dump(),
+            motivation_layer=student.motivation_layer.model_dump(),
+            confidence_layer=student.confidence_layer.model_dump(),
+        )
+        db.add(db_student)
+        db.commit()
+        return student
+    finally:
+        db.close()
