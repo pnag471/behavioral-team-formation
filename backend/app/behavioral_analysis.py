@@ -15,11 +15,11 @@ from app.models import (
     Student,
     WorkRhythmSignature,
 )
-from ai.mock_analyzer import MockBehavioralAnalyzer
+from ai.claude_analyzer import ClaudeBehavioralAnalyzer
 
 router = APIRouter(prefix="/assessment", tags=["assessment"])
 
-analyzer = MockBehavioralAnalyzer()
+analyzer = ClaudeBehavioralAnalyzer()
 
 # ---------------------------------------------------------------------------
 # Built-in scenarios
@@ -125,45 +125,87 @@ def get_scenarios():
 
 @router.post("/analyze")
 def analyze_assessment(request: AssessmentRequest):
-    from app.main import students_store
+    from app.database import SessionLocal, StudentDB, AssessmentDB, ResponseDB, BehavioralSignatureDB
+    import uuid
 
     sig = analyzer.analyze(request)
 
-    # Build or update student in the store
-    existing = students_store.get(request.student_id) if request.student_id else None
-
-    if existing:
-        # Update behavioral fields, preserve competence/motivation
-        existing.work_rhythm_signature.planning_style = sig["planning_style"]
-        existing.work_rhythm_signature.communication_style = sig["communication_style"]
-        existing.work_rhythm_signature.execution_style = sig["execution_style"]
-        existing.collaboration_signature.conflict_style = sig["conflict_style"]
-        existing.collaboration_signature.leadership_style = sig["leadership_style"]
-        existing.collaboration_signature.accountability = sig["accountability"]
-        existing.collaboration_signature.help_seeking = sig["help_seeking"]
-        existing.confidence_layer.confidence_score = sig["confidence_score"]
-        student_id = existing.id
-    else:
+    db = SessionLocal()
+    try:
+        #build student id
         student_id = request.student_id or f"s{int(time.time() * 1000)}"
-        student = Student(
-            id=student_id,
-            name=request.student_name,
-            work_rhythm_signature=WorkRhythmSignature(
-                planning_style=sig["planning_style"],
-                communication_style=sig["communication_style"],
-                execution_style=sig["execution_style"],
-                availability=[],
-            ),
-            collaboration_signature=CollaborationSignature(
-                conflict_style=sig["conflict_style"],
-                leadership_style=sig["leadership_style"],
-                accountability=sig["accountability"],
-                help_seeking=sig["help_seeking"],
-            ),
-            confidence_layer=ConfidenceLayer(
-                confidence_score=sig["confidence_score"]
-            ),
+
+        #save or update the student in db
+        existing = db.query(StudentDB).filter(StudentDB.id == student_id).first()
+        if existing:
+            existing.work_rhythm_signature = {
+                **existing.work_rhythm_signature, 
+                "planning style": sig["planning_style"],
+                "communication_style" = sig["communication_style"],
+                "execution_style" = sig["execution_style"],
+            }
+            existing.collaboration_signature = {
+                **existing.collaboration_signature, 
+                "conflict_style" = sig["conflict_style"],
+                "leadership_style" = sig["leadership_style"],
+                "accountability" = sig["accountability"],
+                "help_seeking" = sig["help_seeking"],
+            }
+            existing.confidence_layer = {"confidence_score" = sig["confidence_score"]}
+        else:
+            db_student = StudentDB(
+                id=student_id,
+                name=request.student_name,
+                work_rhythm_signature={
+                    planning_style=sig["planning_style"],
+                    communication_style=sig["communication_style"],
+                    execution_style=sig["execution_style"],
+                    availability=[],
+                },
+                collaboration_signature={
+                    conflict_style=sig["conflict_style"],
+                    leadership_style=sig["leadership_style"],
+                    accountability=sig["accountability"],
+                    help_seeking=sig["help_seeking"],
+                },
+                confidence_layer=ConfidenceLayer{confidence_score=sig["confidence_score"]},
+                competence_signature={"skills": [], "roles": [], "experience_level": "intermediate"},
+                motivation_layer={"interests": [], "learning_goals": []},
+            )
+            db.add(db_student)
+
+        #save the session for the assessment
+        session_id = str(uuid.uuid4())
+        assessment = AssessmentDB(
+            id=session_id,
+            student_id=student_id,
+            status="complete",
+            model_version="claude-sonnet-4-20250514",
         )
-        students_store[student_id] = student
+        db.add(assessment)
+
+        # save each individual response
+        for response in request.responses:
+            db_response = ResponseDB(
+                id = str(uuid.uuid4()),
+                assessment_id=session_id,
+                student_id=student_id,
+                scenario_id=response.scenario_id,
+                option_id=response.option_id,
+                response_text=response.response_text,
+            )
+            db.add(db_response)
+
+        #save students behavioral signature
+        db_sig = BehavioralSignatureDB(
+            student_id=student_id,
+            signature=sig,
+            model_version="claude-sonnet-4--20250514"
+        )
+        db.merge(db_sig) #inserts or updates
+
+        db.commit()
+    finally:
+        db.close()
 
     return {"student_id": student_id, "signature": sig}

@@ -1,3 +1,5 @@
+from dotenv import load_dotenv
+load_dotenv()
 from __future__ import annotations
 import json
 from contextlib import asynccontextmanager
