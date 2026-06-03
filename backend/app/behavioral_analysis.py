@@ -140,35 +140,35 @@ def analyze_assessment(request: AssessmentRequest):
         if existing:
             existing.work_rhythm_signature = {
                 **existing.work_rhythm_signature, 
-                "planning style": sig["planning_style"],
-                "communication_style" = sig["communication_style"],
-                "execution_style" = sig["execution_style"],
+                "planning_style": sig["planning_style"],
+                "communication_style": sig["communication_style"],
+                "execution_style": sig["execution_style"],
             }
             existing.collaboration_signature = {
                 **existing.collaboration_signature, 
-                "conflict_style" = sig["conflict_style"],
-                "leadership_style" = sig["leadership_style"],
-                "accountability" = sig["accountability"],
-                "help_seeking" = sig["help_seeking"],
+                "conflict_style": sig["conflict_style"],
+                "leadership_style": sig["leadership_style"],
+                "accountability": sig["accountability"],
+                "help_seeking": sig["help_seeking"],
             }
-            existing.confidence_layer = {"confidence_score" = sig["confidence_score"]}
+            existing.confidence_layer = {"confidence_score": sig["confidence_score"]}
         else:
             db_student = StudentDB(
                 id=student_id,
                 name=request.student_name,
                 work_rhythm_signature={
-                    planning_style=sig["planning_style"],
-                    communication_style=sig["communication_style"],
-                    execution_style=sig["execution_style"],
-                    availability=[],
+                    "planning_style": sig["planning_style"],
+                    "communication_style": sig["communication_style"],
+                    "execution_style": sig["execution_style"],
+                    "availability": [],
                 },
                 collaboration_signature={
-                    conflict_style=sig["conflict_style"],
-                    leadership_style=sig["leadership_style"],
-                    accountability=sig["accountability"],
-                    help_seeking=sig["help_seeking"],
+                    "conflict_style": sig["conflict_style"],
+                    "leadership_style": sig["leadership_style"],
+                    "accountability": sig["accountability"],
+                    "help_seeking": sig["help_seeking"],
                 },
-                confidence_layer=ConfidenceLayer{confidence_score=sig["confidence_score"]},
+                confidence_layer={"confidence_score": sig["confidence_score"]},
                 competence_signature={"skills": [], "roles": [], "experience_level": "intermediate"},
                 motivation_layer={"interests": [], "learning_goals": []},
             )
@@ -200,7 +200,7 @@ def analyze_assessment(request: AssessmentRequest):
         db_sig = BehavioralSignatureDB(
             student_id=student_id,
             signature=sig,
-            model_version="claude-sonnet-4--20250514"
+            model_version="claude-sonnet-4-20250514"
         )
         db.merge(db_sig) #inserts or updates
 

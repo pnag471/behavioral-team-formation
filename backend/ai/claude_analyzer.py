@@ -15,7 +15,7 @@ class ClaudeBehavioralAnalyzer(BehavioralAnalyzer):
 
     def __init__(self):
         self.client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-        prompt_path = os.path.join(os.path.dirname(__file__), "..", "prompts", "behavioral_assessment.txt")
+        prompt_path = os.path.join(os.path.dirname(__file__), "..", "..", "prompts", "behavioral_assessment.txt")        
         with open(prompt_path) as f:
             self.prompt_template = f.read()
 
