@@ -32,6 +32,8 @@ export default function DashboardPage() {
   const [generating, setGenerating] = useState(false)
   const [error, setError] = useState('')
   const [teamSize, setTeamSize] = useState(4)
+  const [formationMode, setFormationMode] = useState<'behavioral' | 'skill' | 'random'>('behavioral')
+  const [comparisonResults, setComparisonResults] = useState<Record<string, { avg_behavioral_compat: number; avg_skill_coverage: number; avg_confidence: number; avg_conflict_risk: number }>>({})
   const [weights, setWeights] = useState<Weights>({
     skill_coverage: 0.4,
     behavioral_compat: 0.3,
@@ -55,7 +57,18 @@ export default function DashboardPage() {
     setError('')
     setGenerating(true)
     try {
-      await generateTeams({ team_size: teamSize, weights })
+      const result = await generateTeams({ team_size: teamSize, weights, formation_mode: formationMode })
+
+      const avg = (arr: number[]) => arr.reduce((a, b) => a + b, 0) / arr.length
+      setComparisonResults(prev => ({
+        ...prev,
+        [formationMode]: {
+          avg_behavioral_compat: avg(result.teams.map(t => t.score_breakdown.behavioral_compat)),
+          avg_skill_coverage: avg(result.teams.map(t => t.score_breakdown.skill_coverage)),
+          avg_confidence: avg(result.teams.map(t => t.score_breakdown.match_confidence)),
+          avg_conflict_risk: avg(result.teams.map(t => t.score_breakdown.conflict_risk)),
+        }
+      }))
       router.push('/teams')
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Team generation failed.')
@@ -80,6 +93,70 @@ export default function DashboardPage() {
         </div>
       )}
 
+
+      {/* Formation Mode Selector */}
+      <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm mb-6">
+        <h2 className="font-semibold text-slate-800 mb-1 text-base">Formation Mode</h2>
+        <p className="text-xs text-slate-400 mb-4">Select how teams will be formed. Run all three to compare results.</p>
+        <div className="grid grid-cols-3 gap-3">
+          {([
+            { mode: 'random', label: 'Random', desc: 'Baseline — no optimization' },
+            { mode: 'skill', label: 'Skill-Based', desc: 'Traditional approach' },
+            { mode: 'behavioral', label: 'Behavioral', desc: 'Research contribution' },
+          ] as const).map(({ mode, label, desc }) => (
+            <button
+              key={mode}
+              onClick={() => setFormationMode(mode)}
+              className={`p-4 rounded-xl border-2 text-left transition-all ${
+                formationMode === mode
+                  ? 'border-[#1e3a8a] bg-blue-50'
+                  : 'border-slate-200 hover:border-slate-300'
+              }`}
+            >
+              <p className={`font-semibold text-sm ${formationMode === mode ? 'text-[#1e3a8a]' : 'text-slate-700'}`}>
+                {label}
+              </p>
+              <p className="text-xs text-slate-400 mt-0.5">{desc}</p>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Comparison Results */}
+      {Object.keys(comparisonResults).length > 0 && (
+        <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm mb-6">
+          <h2 className="font-semibold text-slate-800 mb-1 text-base">Formation Comparison</h2>
+          <p className="text-xs text-slate-400 mb-4">Run all three modes to compare results side by side.</p>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-slate-50 text-slate-500 text-xs uppercase tracking-wide">
+                  <th className="text-left px-4 py-3 font-medium">Mode</th>
+                  <th className="text-left px-4 py-3 font-medium">Behavioral Compat</th>
+                  <th className="text-left px-4 py-3 font-medium">Skill Coverage</th>
+                  <th className="text-left px-4 py-3 font-medium">Confidence</th>
+                  <th className="text-left px-4 py-3 font-medium">Conflict Risk</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {(['behavioral', 'skill', 'random'] as const).map(mode => {
+                  const r = comparisonResults[mode]
+                  if (!r) return null
+                  return (
+                    <tr key={mode} className={mode === 'behavioral' ? 'bg-blue-50' : ''}>
+                      <td className="px-4 py-3 font-medium capitalize text-slate-800">{mode}</td>
+                      <td className="px-4 py-3 text-slate-600">{Math.round(r.avg_behavioral_compat * 100)}%</td>
+                      <td className="px-4 py-3 text-slate-600">{Math.round(r.avg_skill_coverage * 100)}%</td>
+                      <td className="px-4 py-3 text-slate-600">{Math.round(r.avg_confidence * 100)}%</td>
+                      <td className="px-4 py-3 text-slate-600">{Math.round(r.avg_conflict_risk * 100)}%</td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
       {/* Stats bar */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <StatCard label="Students" value={loadingStudents ? '…' : String(students.length)} />

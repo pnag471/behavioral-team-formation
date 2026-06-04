@@ -115,12 +115,22 @@ export interface Team {
 
 export interface TeamGenerationRequest {
   team_size: number
+  formation_mode: 'behavioral' | 'skill' | 'random'
   weights: {
     skill_coverage: number
     behavioral_compat: number
     availability_overlap: number
     shared_interests: number
   }
+}
+
+export interface ComparisonResult {
+  mode: 'behavioral' | 'skill' | 'random'
+  teams: Team[]
+  avg_behavioral_compat: number
+  avg_skill_coverage: number
+  avg_confidence: number
+  avf_conflict_risk: number
 }
 
 export interface TeamExplanation {
