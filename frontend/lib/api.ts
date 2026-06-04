@@ -9,7 +9,7 @@ import type {
   TeamGenerationRequest,
 } from './types'
 
-const BASE_URL = 'http://localhost:8000'
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 
 const JSON_HEADERS = {
   'Content-Type': 'application/json',
