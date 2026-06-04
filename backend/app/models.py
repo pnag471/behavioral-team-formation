@@ -64,7 +64,19 @@ class AssessmentResponse(BaseModel):
 
 class AssessmentRequest(BaseModel):
     student_name: str
-    student_id: Optional[str] = None  # if provided, updates existing profile
+    student_id: Optional[str] = None   # if provided, updates existing profile
+    session_id: Optional[str] = None   # if provided, completes that existing session
+    responses: List[AssessmentResponse]
+
+
+class StartSessionRequest(BaseModel):
+    student_name: str
+    student_id: Optional[str] = None
+
+
+class SaveProgressRequest(BaseModel):
+    session_id: str
+    student_id: str
     responses: List[AssessmentResponse]
 
 
@@ -100,6 +112,7 @@ class Team(BaseModel):
 
 class TeamGenerationRequest(BaseModel):
     team_size: int = Field(default=4, ge=2, le=8)
+    formation_mode: str = "behavioral"  # "behavioral" | "skill" | "random"
     weights: Dict[str, float] = Field(default_factory=lambda: {
         "skill_coverage": 0.4,
         "behavioral_compat": 0.3,

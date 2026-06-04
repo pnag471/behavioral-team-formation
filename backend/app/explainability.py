@@ -3,7 +3,7 @@ from typing import List
 
 from fastapi import APIRouter, HTTPException
 
-from app.models import MemberRadarData, RadarData, Team, TeamExplanation
+from app.models import MemberRadarData, RadarData, Student, Team, TeamExplanation
 from ai.claude_explainer import ClaudeExplainer
 
 router = APIRouter(prefix="/teams", tags=["explainability"])
@@ -85,7 +85,7 @@ def get_explanation(team_id: str):
             team_norms=team_db.team_norms,
         )
     
-        students = [m["student_id"] for m in team_db.members]
+        student_ids = [m["student_id"] for m in team_db.members]
         db_students = db.query(StudentDB).filter(StudentDB.id.in_(student_ids)).all()
         students = [_db_student_to_model(s) for s in db_students]
 
