@@ -1,3 +1,7 @@
 fastapi==0.136.3
 uvicorn==0.48.0
 pydantic==2.13.4
+python-dotenv>=1.0.0
+sqlalchemy>=2.0.0
+# Optional: uncomment to enable LLM-powered analysis
+# anthropic>=0.40.0

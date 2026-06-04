@@ -1,5 +1,6 @@
 from __future__ import annotations
 import itertools
+import random
 from typing import List
 
 from fastapi import APIRouter, HTTPException
@@ -23,6 +24,7 @@ REFERENCE_SKILLS = {
     "testing", "design", "devops", "algorithms", "communication",
     "documentation", "research",
 }
+
 
 # ---------------------------------------------------------------------------
 # Compatibility tables — pairwise scoring per behavioral dimension
@@ -129,7 +131,6 @@ def _shared_interests(students: List[Student]) -> float:
 
 
 def _conflict_risk(students: List[Student]) -> float:
-    """Higher = more risk. Driven by mismatched conflict styles and directive concentration."""
     if len(students) < 2:
         return 0.0
     mismatch_count = 0
@@ -140,11 +141,8 @@ def _conflict_risk(students: List[Student]) -> float:
         if ca != cb and not ("collaborative" in (ca, cb)):
             mismatch_count += 1
     mismatch_rate = mismatch_count / total_pairs
-
-    # Penalise multiple directive leaders
     directive_count = sum(1 for s in students if s.collaboration_signature.leadership_style == "directive")
     directive_penalty = max(0.0, (directive_count - 1) * 0.15)
-
     return min(1.0, mismatch_rate * 0.7 + directive_penalty)
 
 
@@ -164,13 +162,36 @@ def _match_confidence(team_score: float, all_scores: List[float]) -> float:
     lo, hi = min(all_scores), max(all_scores)
     spread = hi - lo
     if spread < 0.05:
-        return 0.45  # near-tie pool — low confidence
+        return 0.45
     relative = (team_score - lo) / spread
     return round(min(0.92, 0.40 + relative * 0.52), 2)
 
 
+def _normalize_weights(weights: dict) -> dict:
+    total = sum(weights.values())
+    if total <= 0:
+        return weights
+    return {k: v / total for k, v in weights.items()}
+
+
 # ---------------------------------------------------------------------------
-# Greedy team builder
+# SQLite helper — mirrors the same pattern in explainability.py
+# ---------------------------------------------------------------------------
+
+def _db_student_to_model(s) -> Student:
+    return Student(
+        id=s.id,
+        name=s.name,
+        competence_signature=s.competence_signature,
+        work_rhythm_signature=s.work_rhythm_signature,
+        collaboration_signature=s.collaboration_signature,
+        motivation_layer=s.motivation_layer,
+        confidence_layer=s.confidence_layer,
+    )
+
+
+# ---------------------------------------------------------------------------
+# Greedy team builder (unchanged — used by both behavioral and skill modes)
 # ---------------------------------------------------------------------------
 
 def _greedy_build(students: List[Student], team_size: int, weights: dict) -> List[List[Student]]:
@@ -178,7 +199,6 @@ def _greedy_build(students: List[Student], team_size: int, weights: dict) -> Lis
     teams: List[List[Student]] = []
 
     while len(remaining) >= team_size:
-        # Seed: student with most distinct skills (connector role)
         seed = max(remaining, key=lambda s: len(set(s.competence_signature.skills) & REFERENCE_SKILLS))
         team = [seed]
         remaining.remove(seed)
@@ -193,7 +213,6 @@ def _greedy_build(students: List[Student], team_size: int, weights: dict) -> Lis
 
         teams.append(team)
 
-    # Assign leftover students to the team that gains the most from them
     for leftover in remaining:
         best_team_idx = max(
             range(len(teams)),
@@ -205,7 +224,6 @@ def _greedy_build(students: List[Student], team_size: int, weights: dict) -> Lis
 
 
 def _two_opt_improve(teams: List[List[Student]], weights: dict) -> List[List[Student]]:
-    """One pass of pairwise member swaps between teams."""
     improved = True
     while improved:
         improved = False
@@ -214,60 +232,96 @@ def _two_opt_improve(teams: List[List[Student]], weights: dict) -> List[List[Stu
                 for a_idx in range(len(teams[i])):
                     for b_idx in range(len(teams[j])):
                         original = _total_score(teams[i], weights) + _total_score(teams[j], weights)
-                        # Swap
                         teams[i][a_idx], teams[j][b_idx] = teams[j][b_idx], teams[i][a_idx]
                         after = _total_score(teams[i], weights) + _total_score(teams[j], weights)
                         if after > original + 1e-6:
                             improved = True
                         else:
-                            # Revert
                             teams[i][a_idx], teams[j][b_idx] = teams[j][b_idx], teams[i][a_idx]
     return teams
 
 
 # ---------------------------------------------------------------------------
-# Endpoint
+# Formation mode implementations
 # ---------------------------------------------------------------------------
 
-@router.post("/generate")
-def generate_teams(request: TeamGenerationRequest):
-    from app.main import students_store, teams_store
-    from ai.mock_explainer import MockExplainer
+def random_assignment(students: List[Student], team_size: int) -> List[List[Student]]:
+    """Shuffle students randomly and slice into teams. No optimization."""
+    pool = list(students)
+    random.shuffle(pool)
+    teams: List[List[Student]] = []
+    while len(pool) >= team_size:
+        teams.append(pool[:team_size])
+        pool = pool[team_size:]
+    # Distribute leftover students across teams
+    for i, leftover in enumerate(pool):
+        teams[i % len(teams)].append(leftover)
+    return teams
 
-    students = list(students_store.values())
-    if len(students) < request.team_size:
-        raise HTTPException(status_code=400, detail="Not enough students to form a team.")
 
-    weights = request.weights
-    # Normalize weights so they sum to 1
-    total_w = sum(weights.values())
-    if total_w > 0:
-        weights = {k: v / total_w for k, v in weights.items()}
+def skill_based_assignment(students: List[Student], team_size: int) -> List[List[Student]]:
+    """Greedy + 2-opt optimizing skill coverage only — ignores behavioral dimensions."""
+    skill_weights = {
+        "skill_coverage": 1.0,
+        "behavioral_compat": 0.0,
+        "availability_overlap": 0.0,
+        "shared_interests": 0.0,
+    }
+    raw_teams = _greedy_build(students, team_size, skill_weights)
+    return _two_opt_improve(raw_teams, skill_weights)
 
-    raw_teams = _greedy_build(students, request.team_size, weights)
-    raw_teams = _two_opt_improve(raw_teams, weights)
 
-    # Compute raw scores for confidence calculation
-    raw_scores = [_total_score(t, weights) for t in raw_teams]
+# ---------------------------------------------------------------------------
+# Shared team-object builder
+# ---------------------------------------------------------------------------
 
-    explainer = MockExplainer()
-    teams_store.clear()
+def _build_teams(
+    raw_groups: List[List[Student]],
+    mode: str,
+    behavioral_weights: dict,
+) -> List[Team]:
+    from ai.claude_explainer import ClaudeExplainer
+
+    explainer = ClaudeExplainer()
+    skill_weights = {"skill_coverage": 1.0, "behavioral_compat": 0.0,
+                     "availability_overlap": 0.0, "shared_interests": 0.0}
+
+    # For confidence calculation we need the "primary" score of each group
+    if mode == "random":
+        primary_scores = [0.0] * len(raw_groups)
+    elif mode == "skill":
+        primary_scores = [_skill_coverage(g) for g in raw_groups]
+    else:
+        primary_scores = [_total_score(g, behavioral_weights) for g in raw_groups]
+
     result: List[Team] = []
 
-    for idx, group in enumerate(raw_teams):
+    for idx, group in enumerate(raw_groups):
         team_id = f"team-{idx + 1}"
+
         sc = _skill_coverage(group)
-        bc = _behavioral_compat(group)
-        ao = _availability_overlap(group)
-        si = _shared_interests(group)
         cr = _conflict_risk(group)
-        raw_total = (
-            weights.get("skill_coverage", 0.4) * sc
-            + weights.get("behavioral_compat", 0.3) * bc
-            + weights.get("availability_overlap", 0.2) * ao
-            + weights.get("shared_interests", 0.1) * si
-        )
-        mc = _match_confidence(raw_total, raw_scores)
+
+        if mode == "random":
+            bc = ao = 0.0
+            mc = 0.0
+            total = 0.0
+        elif mode == "skill":
+            bc = ao = 0.0
+            mc = _match_confidence(sc, primary_scores)
+            total = round(sc, 3)
+        else:
+            bc = _behavioral_compat(group)
+            ao = _availability_overlap(group)
+            si = _shared_interests(group)
+            raw_total = (
+                behavioral_weights.get("skill_coverage", 0.4) * sc
+                + behavioral_weights.get("behavioral_compat", 0.3) * bc
+                + behavioral_weights.get("availability_overlap", 0.2) * ao
+                + behavioral_weights.get("shared_interests", 0.1) * si
+            )
+            mc = _match_confidence(raw_total, primary_scores)
+            total = round(min(raw_total, 1.0), 3)
 
         breakdown = TeamScoreBreakdown(
             skill_coverage=round(sc, 3),
@@ -275,7 +329,7 @@ def generate_teams(request: TeamGenerationRequest):
             availability_overlap=round(ao, 3),
             conflict_risk=round(cr, 3),
             match_confidence=mc,
-            total=round(min(raw_total, 1.0), 3),
+            total=total,
         )
 
         members = [
@@ -293,19 +347,77 @@ def generate_teams(request: TeamGenerationRequest):
             group,
         )
 
-        team = Team(
-            id=team_id,
-            members=members,
-            score_breakdown=breakdown,
-            team_norms=norms,
-        )
-        teams_store[team_id] = team
-        result.append(team)
+        result.append(Team(id=team_id, members=members, score_breakdown=breakdown, team_norms=norms))
+
+    return result
+
+
+# ---------------------------------------------------------------------------
+# Endpoints
+# ---------------------------------------------------------------------------
+
+@router.post("/generate")
+def generate_teams(request: TeamGenerationRequest):
+    from app.database import SessionLocal, TeamDB, StudentDB
+
+    db = SessionLocal()
+    try:
+        db_students = db.query(StudentDB).all()
+        students = [_db_student_to_model(s) for s in db_students]
+    finally:
+        db.close()
+
+    if len(students) < request.team_size:
+        raise HTTPException(status_code=400, detail="Not enough students to form a team.")
+
+    mode = request.formation_mode
+    behavioral_weights = _normalize_weights(request.weights)
+
+    if mode == "random":
+        raw_groups = random_assignment(students, request.team_size)
+    elif mode == "skill":
+        raw_groups = skill_based_assignment(students, request.team_size)
+    else:
+        raw_groups = _greedy_build(students, request.team_size, behavioral_weights)
+        raw_groups = _two_opt_improve(raw_groups, behavioral_weights)
+
+    result = _build_teams(raw_groups, mode, behavioral_weights)
+
+    # Persist to SQLite
+    db = SessionLocal()
+    try:
+        db.query(TeamDB).delete()
+        for team in result:
+            db.add(TeamDB(
+                id=team.id,
+                members=[m.model_dump() for m in team.members],
+                score_breakdown=team.score_breakdown.model_dump(),
+                team_norms=[n.model_dump() for n in team.team_norms],
+                formation_mode=mode,
+            ))
+        db.commit()
+    finally:
+        db.close()
 
     return {"teams": result}
 
 
 @router.get("/teams")
 def list_teams():
-    from app.main import teams_store
-    return {"teams": list(teams_store.values())}
+    from app.database import SessionLocal, TeamDB
+
+    db = SessionLocal()
+    try:
+        rows = db.query(TeamDB).all()
+        teams = [
+            Team(
+                id=r.id,
+                members=r.members,
+                score_breakdown=r.score_breakdown,
+                team_norms=r.team_norms,
+            )
+            for r in rows
+        ]
+        return {"teams": teams}
+    finally:
+        db.close()
