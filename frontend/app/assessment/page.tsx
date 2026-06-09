@@ -119,7 +119,7 @@ export default function AssessmentPage() {
           </div>
           <div className="px-6 py-5 flex flex-col md:flex-row gap-6 items-start">
             <div className="flex-shrink-0">
-              <RadarChart data={signatureToRadar(result.signature)} size={200} />
+              <RadarChart data={signatureToRadar(result.signature)} size={260} />
             </div>
             <div className="flex-1">
               <h3 className="text-sm font-semibold text-slate-700 mb-3">Your Behavioral Profile</h3>

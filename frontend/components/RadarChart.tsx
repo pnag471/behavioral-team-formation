@@ -31,7 +31,7 @@ export default function RadarChart({ data, size = 260, teamColor = '#1e3a8a' }: 
   const gridLevels = [0.25, 0.5, 0.75, 1.0]
 
   return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} aria-label="Behavioral radar chart">
+    <svg width={size} height={size} viewBox={`-70 -10 ${size + 140} ${size + 20}`} aria-label="Behavioral radar chart">
       {/* Grid rings */}
       {gridLevels.map((level) => (
         <polygon
@@ -89,10 +89,17 @@ export default function RadarChart({ data, size = 260, teamColor = '#1e3a8a' }: 
       {/* Axis labels */}
       {data.labels.map((label, i) => {
         const angle = (i / axes) * 2 * Math.PI - Math.PI / 2
-        const labelRadius = radius + 20
+        const labelRadius = radius + 28
         const pos = polarToXY(angle, labelRadius, cx, cy)
         const anchor =
           Math.abs(pos.x - cx) < 4 ? 'middle' : pos.x < cx ? 'end' : 'start'
+        const shortLabels: Record<string, string> = {
+          'Accountability': 'Account.',
+          'Communication': 'Comm.',
+          'Leadership': 'Leader.',
+          'Conflict Handling': 'Conflict',
+        }
+        const displayLabel = shortLabels[label] ?? label
         return (
           <text
             key={i}
