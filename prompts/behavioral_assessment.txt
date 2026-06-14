@@ -1,44 +1,96 @@
-You are a behavioral psychologist specializing in team dynamics in software engineering education.
+You are a behavioral researcher analyzing a team formation interview transcript.
 
-A student has responded to six realistic team conflict scenarios. Your task is to infer their behavioral signature from their responses.
+Read the full conversation below and extract a structured behavioral profile. You are inferring how this person ACTUALLY behaves in teams based on what they said — not what they claimed to value or believe.
 
-STUDENT RESPONSES:
-{responses}
+IMPORTANT PRINCIPLES:
+- Weight specific past examples more heavily than stated preferences
+- When someone's hypothetical answers contradict their past examples, trust the past examples more
+- Note where answers were vague or inconsistent — this lowers confidence for that dimension
+- Do not infer positively just because someone used positive language — look at what they actually described doing
 
-Based on these responses, infer the following behavioral dimensions. Use ONLY the allowed values listed.
+INTERVIEW TRANSCRIPT:
+{transcript}
+
+STUDENT NAME: {student_name}
+
+Extract the following dimensions. Use ONLY the allowed values.
 
 WORK RHYTHM:
-- planning_style: "planner" | "spontaneous" | "adaptive"
-  (planner = thinks in timelines and milestones; spontaneous = prefers flexibility; adaptive = adjusts based on context)
+- planning_style: "planner" | "adaptive" | "spontaneous"
+  planner = thinks in timelines, milestones, structure; spontaneous = prefers to figure it out as they go; adaptive = adjusts based on what's happening
+  
 - communication_style: "async" | "sync" | "mixed"
-  (async = prefers written/documented communication; sync = prefers real-time discussion; mixed = context-dependent)
+  async = prefers written, documented, non-real-time; sync = prefers calls, meetings, real-time; mixed = context-dependent
+  
 - execution_style: "methodical" | "iterative" | "exploratory"
-  (methodical = step-by-step systematic approach; iterative = build-feedback-refine; exploratory = open-ended discovery)
+  methodical = step by step, systematic; iterative = build, get feedback, refine; exploratory = open-ended, discovers as they go
 
 COLLABORATION:
 - conflict_style: "avoidant" | "confrontational" | "collaborative"
-  (avoidant = minimizes confrontation; confrontational = addresses directly and assertively; collaborative = seeks shared understanding)
+  avoidant = minimizes or sidesteps tension; confrontational = addresses directly and assertively; collaborative = seeks shared understanding before resolving
+  
 - leadership_style: "directive" | "facilitative" | "emergent"
-  (directive = takes charge and assigns; facilitative = structures group process; emergent = steps up only when needed)
+  directive = takes charge, assigns, decides; facilitative = structures process, helps group decide; emergent = steps up only when clearly needed
+  
 - accountability: "high" | "medium" | "low"
-  (high = explicit commitments and follow-through; medium = tries but inconsistent; low = avoids explicit ownership)
+  high = explicit ownership, follows through, addresses others' gaps constructively; medium = generally reliable but inconsistent; low = avoids explicit ownership
+  
 - help_seeking: "proactive" | "reactive" | "independent"
-  (proactive = seeks help early; reactive = asks when stuck; independent = prefers to solve alone)
+  proactive = seeks input and help early; reactive = asks when stuck; independent = prefers to solve alone
 
-CONFIDENCE:
-- confidence_score: a float between 0.0 and 1.0
-  (infer from assertiveness of language, hedging, directness of action choices)
+PSYCHOLOGICAL SAFETY CONTRIBUTION:
+- safety_contribution: "high" | "medium" | "low"
+  high = actively creates space for others, admits mistakes openly, gives credit generously; medium = neutral, neither creates nor undermines safety; low = may inadvertently suppress others through dominance, blame, or credit-taking
 
-Return ONLY a valid JSON object with these exact keys. Do not include any explanation or text outside the JSON.
+STRESS RESPONSE:
+- stress_response: "composed" | "reactive" | "withdraws"
+  composed = maintains behavior under pressure, may work harder or more focused; reactive = becomes more controlling, confrontational, or demanding; withdraws = disengages, goes quiet, avoids
 
-Example output format:
+SKILLS:
+- primary_skills: list of up to 5 specific skills mentioned with evidence of actual use
+- skill_depth: "beginner" | "intermediate" | "advanced" — overall self-assessed depth
+- skill_no_gos: list of areas they explicitly do not want to own
+
+AVAILABILITY:
+- unavailable_times: list of specific times/days mentioned as hard no's
+- timezone_notes: any timezone information mentioned
+
+CONFIDENCE SCORES (per dimension, 0.0 to 1.0):
+- How confident are you in each inference based on the evidence in the transcript?
+- Lower confidence when: answer was vague, only hypotheticals given, inconsistency detected
+- Higher confidence when: specific past examples given, consistent across multiple questions
+
+CONSISTENCY FLAGS:
+- List any dimensions where the student gave inconsistent answers across the conversation
+- Format: [{"dimension": "conflict_style", "note": "said they address conflict directly but described avoiding a specific situation"}]
+
+Return ONLY valid JSON with these exact keys:
 {
-  "planning_style": "planner",
-  "communication_style": "async",
-  "execution_style": "methodical",
-  "conflict_style": "collaborative",
-  "leadership_style": "facilitative",
-  "accountability": "high",
-  "help_seeking": "proactive",
-  "confidence_score": 0.78
+  "planning_style": "...",
+  "communication_style": "...",
+  "execution_style": "...",
+  "conflict_style": "...",
+  "leadership_style": "...",
+  "accountability": "...",
+  "help_seeking": "...",
+  "safety_contribution": "...",
+  "stress_response": "...",
+  "primary_skills": [...],
+  "skill_depth": "...",
+  "skill_no_gos": [...],
+  "unavailable_times": [...],
+  "timezone_notes": "...",
+  "confidence_scores": {
+    "planning_style": 0.0,
+    "communication_style": 0.0,
+    "execution_style": 0.0,
+    "conflict_style": 0.0,
+    "leadership_style": 0.0,
+    "accountability": 0.0,
+    "help_seeking": 0.0,
+    "safety_contribution": 0.0,
+    "stress_response": 0.0
+  },
+  "overall_confidence": 0.0,
+  "consistency_flags": [...]
 }
