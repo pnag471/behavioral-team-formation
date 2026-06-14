@@ -31,8 +31,50 @@ class GeminiExplainer(ExplanationGenerator, NormGenerator):
             self.prompt_template = None
 
     def suggest_norms(self, team: "Team", students: "List[Student]") -> "List[TeamNorm]":
-        explanation = self.generate(team, students)
-        return explanation.team_norms
+        if self._fallback is not None:
+            return self._fallback.suggest_norms(team, students)
+
+        from app.models import TeamNorm
+
+        members_data = []
+        for student in students:
+            members_data.append({
+                "name": student.name,
+                "planning_style": student.work_rhythm_signature.planning_style,
+                "communication_style": student.work_rhythm_signature.communication_style,
+                "conflict_style": student.collaboration_signature.conflict_style,
+                "leadership_style": student.collaboration_signature.leadership_style,
+                "accountability": student.collaboration_signature.accountability,
+            })
+
+        prompt = f"""You are a team dynamics expert. Based on these student behavioral profiles, generate 5 specific working norms for this team.
+
+    TEAM PROFILES:
+    {json.dumps(members_data, indent=2)}
+
+    Return ONLY a valid JSON array with exactly 5 objects, each with "category" and "norm" fields.
+    Categories must be exactly: "Communication", "Conflict Resolution", "Decision Making", "Planning", "Accountability"
+
+    Example format:
+    [
+    {{"category": "Communication", "norm": "specific norm here"}},
+    {{"category": "Conflict Resolution", "norm": "specific norm here"}},
+    {{"category": "Decision Making", "norm": "specific norm here"}},
+    {{"category": "Planning", "norm": "specific norm here"}},
+    {{"category": "Accountability", "norm": "specific norm here"}}
+    ]"""
+
+        response = self.client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                temperature=0.3,
+                response_mime_type="application/json",
+            )
+        )
+
+        norms_data = json.loads(response.text)
+        return [TeamNorm(category=n["category"], norm=n["norm"]) for n in norms_data]
 
     def generate(self, team: "Team", students: "List[Student]") -> "TeamExplanation":
         if self._fallback is not None:

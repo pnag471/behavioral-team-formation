@@ -35,10 +35,10 @@ export default function DashboardPage() {
   const [formationMode, setFormationMode] = useState<'behavioral' | 'skill' | 'random'>('behavioral')
   const [comparisonResults, setComparisonResults] = useState<Record<string, { avg_behavioral_compat: number; avg_skill_coverage: number; avg_confidence: number; avg_conflict_risk: number }>>({})
   const [weights, setWeights] = useState<Weights>({
-    skill_coverage: 0.4,
-    behavioral_compat: 0.3,
-    availability_overlap: 0.2,
-    shared_interests: 0.1,
+    skill_coverage: 0,
+    behavioral_compat: 0,
+    availability_overlap: 0,
+    shared_interests: 0,
   })
 
   useEffect(() => {
@@ -49,15 +49,14 @@ export default function DashboardPage() {
   }, [])
 
   const handleWeightChange = (key: keyof Weights, raw: number) => {
-    const updated = { ...weights, [key]: raw }
-    setWeights(normalizeWeights(updated))
+    setWeights({ ...weights, [key]: raw })
   }
 
   const handleGenerate = async () => {
     setError('')
     setGenerating(true)
     try {
-      const result = await generateTeams({ team_size: teamSize, weights, formation_mode: formationMode })
+      const result = await generateTeams({ team_size: teamSize, weights: normalizeWeights(weights), formation_mode: formationMode })
 
       const avg = (arr: number[]) => arr.reduce((a, b) => a + b, 0) / arr.length
       setComparisonResults(prev => ({
@@ -173,28 +172,46 @@ export default function DashboardPage() {
             Adjust the importance of each factor. Weights are auto-normalized to sum to 100%.
           </p>
           <div className="flex flex-col gap-5">
-            {WEIGHT_META.map(({ key, label, description }) => (
-              <div key={key}>
-                <div className="flex justify-between items-center mb-1">
-                  <div>
-                    <span className="text-sm font-medium text-slate-700">{label}</span>
-                    <p className="text-xs text-slate-400">{description}</p>
+            {WEIGHT_META.map(({ key, label, description }) => {
+              const used = Object.entries(weights)
+                .filter(([k]) => k !== key)
+                .reduce((sum, [, v]) => sum + v, 0)
+              const max = Math.max(0, 100 - used)
+              return (
+                <div key={key}>
+                  <div className="flex justify-between items-center mb-1">
+                    <div>
+                      <span className="text-sm font-medium text-slate-700">{label}</span>
+                      <p className="text-xs text-slate-400">{description}</p>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <input
+                        type="number"
+                        min={0}
+                        max={max}
+                        value={Math.round(weights[key] * 100)}
+                        onChange={(e) => {
+                          const val = Math.min(max, Math.max(0, parseInt(e.target.value) || 0))
+                          handleWeightChange(key, val / 100)
+                        }}
+                        className="w-16 text-right border border-slate-200 rounded-lg px-2 py-1 text-sm font-bold text-[#1e3a8a] focus:outline-none focus:ring-2 focus:ring-blue-300"
+                      />
+                      <span className="text-sm text-slate-400">%</span>
+                    </div>
                   </div>
-                  <span className="text-sm font-bold text-[#1e3a8a] w-10 text-right">
-                    {Math.round(weights[key] * 100)}%
-                  </span>
                 </div>
-                <input
-                  type="range"
-                  min={0}
-                  max={1}
-                  step={0.05}
-                  value={weights[key]}
-                  onChange={(e) => handleWeightChange(key, parseFloat(e.target.value))}
-                  className="w-full accent-[#1e3a8a]"
-                />
-              </div>
-            ))}
+              )
+            })}
+          </div>
+          <div className="flex justify-between items-center pt-3 border-t border-slate-100 mt-1">
+            <span className="text-xs text-slate-500">Total</span>
+            <span className={`text-xs font-bold ${
+              Math.round(Object.values(weights).reduce((a, b) => a + b, 0) * 100) === 100
+                ? 'text-emerald-600'
+                : 'text-amber-500'
+            }`}>
+              {Math.round(Object.values(weights).reduce((a, b) => a + b, 0) * 100)}% / 100%
+            </span>
           </div>
         </div>
 

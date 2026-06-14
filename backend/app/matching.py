@@ -280,9 +280,9 @@ def _build_teams(
     mode: str,
     behavioral_weights: dict,
 ) -> List[Team]:
-    from ai.claude_explainer import ClaudeExplainer
+    from ai.gemini_explainer import GeminiExplainer
 
-    explainer = ClaudeExplainer()
+    explainer = GeminiExplainer()
     skill_weights = {"skill_coverage": 1.0, "behavioral_compat": 0.0,
                      "availability_overlap": 0.0, "shared_interests": 0.0}
 
