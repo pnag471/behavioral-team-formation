@@ -4,11 +4,11 @@ from typing import List
 from fastapi import APIRouter, HTTPException
 
 from app.models import MemberRadarData, RadarData, Student, Team, TeamExplanation
-from ai.claude_explainer import ClaudeExplainer
+from ai.gemini_explainer import GeminiExplainer
 
 router = APIRouter(prefix="/teams", tags=["explainability"])
 
-explainer = ClaudeExplainer()
+explainer = GeminiExplainer()
 
 # ---------------------------------------------------------------------------
 # Categorical → numeric radar mappings (5 axes)

@@ -18,11 +18,11 @@ from app.models import (
     Student,
     WorkRhythmSignature,
 )
-from ai.claude_analyzer import ClaudeBehavioralAnalyzer, MODEL_ID
+from ai.gemini_analyzer import GeminiBehavioralAnalyzer
 
 router = APIRouter(prefix="/assessment", tags=["assessment"])
 
-analyzer = ClaudeBehavioralAnalyzer()
+analyzer = GeminiBehavioralAnalyzer()
 
 # ---------------------------------------------------------------------------
 # Built-in scenarios
@@ -126,7 +126,7 @@ SCENARIOS: List[Scenario] = [
 # ---------------------------------------------------------------------------
 
 def _model_version() -> str:
-    return MODEL_ID if analyzer._fallback is None else "mock"
+    return "gemini-1.5-flash" if analyzer._fallback is None else "mock"
 
 
 # ---------------------------------------------------------------------------
