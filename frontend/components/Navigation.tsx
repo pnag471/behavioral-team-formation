@@ -12,7 +12,7 @@ export default function Navigation() {
           <Link href="/dashboard" className="text-blue-100 hover:text-white transition-colors">
             Dashboard
           </Link>
-          <Link href="/assessment" className="text-blue-100 hover:text-white transition-colors">
+          <Link href="/interview" className="text-blue-100 hover:text-white transition-colors">
             Assessment
           </Link>
           <Link href="/teams" className="text-blue-100 hover:text-white transition-colors">
