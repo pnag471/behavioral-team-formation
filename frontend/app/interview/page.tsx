@@ -196,14 +196,19 @@ export default function InterviewPage() {
       {!isComplete && (
         <div className="bg-white border-t border-slate-200 px-4 py-4">
           <div className="max-w-3xl mx-auto flex gap-3">
-            <input
-              type="text"
+            <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && !loading && sendMessage()}
-              placeholder="Type your response..."
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey && !loading) {
+                  e.preventDefault()
+                  sendMessage()
+                }
+              }}
+              placeholder="Type your response... (Shift+Enter for new line)"
               disabled={loading}
-              className="flex-1 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-300 disabled:opacity-40"
+              rows={3}
+              className="flex-1 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-300 disabled:opacity-40 resize-none"
             />
             <button
               onClick={sendMessage}

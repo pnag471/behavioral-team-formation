@@ -46,7 +46,8 @@ def start_conversation(request: ConversationStartRequest):
     session_id = str(uuid.uuid4())
 
     # Inject student name into system prompt
-    system = INTERVIEW_SYSTEM.replace("[name]", request.student_name)
+    first_name = request.student_name.strip().split()[0]
+    system = INTERVIEW_SYSTEM.replace("[name]", first_name)
 
     # Get first message from interviewer
     response = client.models.generate_content(
@@ -97,7 +98,8 @@ def conversation_turn(request: ConversationTurnRequest):
         )
 
     client = _get_gemini_client()
-    system = INTERVIEW_SYSTEM.replace("[name]", request.student_name)
+    first_name = request.student_name.strip().split()[0]
+    system = INTERVIEW_SYSTEM.replace("[name]", first_name)
 
     contents = []
     for turn in request.history:
