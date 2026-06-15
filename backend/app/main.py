@@ -119,8 +119,8 @@ def add_student(student: Student):
     finally:
         db.close()
 
-    @app.get("/students/{student_id}", response_model=Student)
-    def get_student(student_id: str):
+@app.get("/students/{student_id}", response_model=Student)
+def get_student(student_id: str):
         db = SessionLocal()
         try:
             s = db.query(StudentDB).filter(StudentDB.id == student_id).first()

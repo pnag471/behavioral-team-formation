@@ -10,6 +10,7 @@ from app.models import (
     ConversationTurn,
 )
 
+_active_sessions: dict[str, object] = {}
 router = APIRouter(prefix="/conversation", tags=["conversation"])
 
 # Load prompts
@@ -49,20 +50,23 @@ def start_conversation(request: ConversationStartRequest):
     first_name = request.student_name.strip().split()[0]
     system = INTERVIEW_SYSTEM.replace("[name]", first_name)
 
-    # Get first message from interviewer
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=[{
-            "role": "user",
-            "parts": [{"text": f"Start the interview. The student's name is {request.student_name}."}]
-        }],
+    # Create a native chat session
+    chat = client.chats.create(
+        model="gemini-2.0-flash-lite",
         config=types.GenerateContentConfig(
             system_instruction=system,
             temperature=0.7,
+            max_output_tokens=200,
         )
     )
 
+    response = chat.send_message(
+        f"Start the interview. The student's name is {request.student_name}."
+    )
     first_message = response.text
+
+    #store session in memory
+    _active_sessions[session_id] = chat
 
     # Save session to DB
     db = SessionLocal()
@@ -71,7 +75,7 @@ def start_conversation(request: ConversationStartRequest):
             id=session_id,
             student_id=f"pending_{session_id}",
             status="incomplete",
-            model_version="gemini-2.5-flash",
+            model_version="gemini-2.0-flash-lite",
         ))
         db.commit()
     finally:
@@ -97,40 +101,35 @@ def conversation_turn(request: ConversationTurnRequest):
             session_id=request.session_id,
         )
 
-    client = _get_gemini_client()
-    first_name = request.student_name.strip().split()[0]
-    system = INTERVIEW_SYSTEM.replace("[name]", first_name)
-
-    contents = []
-    for turn in request.history:
-        role = "model" if turn.role == "interviewer" else "user"
-        contents.append({
-            "role": role,
-            "parts": [{"text": turn.content}]
-        })
-
-    contents.append({
-        "role": "user",
-        "parts": [{"text": request.message}]
-    })
-
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=contents,
-        config=types.GenerateContentConfig(
-            system_instruction=system,
-            temperature=0.7,
-            max_output_tokens=150,
+    chat = _active_sessions.get(request.session_id)
+    if not chat:
+        client = _get_gemini_client()
+        first_name = request.student_name.strip().split()[0]
+        system = INTERVIEW_SYSTEM.replace("[name]", first_name)
+        from google.genai import types
+        chat = client.chats.create(
+            model="gemini-2.0-flash-lite",
+            config=types.GenerateContentConfig(
+                system_instruction=system,
+                temperature=0.7,
+                max_output_tokens=200,
+            )
         )
-    )
+        #replay history to reconstruct session
+        for turn in request.history[:-1]:
+            if turn.role == "student":
+                chat.send_message(turn.content)
+        _active_sessions[request.session_id] = chat
+
+    #send just the new message
+    response = chat.send_message(request.message)
+    interviewer_message = response.txt
 
     usage = response.usage_metadata
     print(f"Turn {len(request.history) + 1} | "
         f"in: {usage.prompt_token_count} | "
         f"out: {usage.candidates_token_count} | "
         f"total: {usage.total_token_count}")
-
-    interviewer_message = response.text
 
     is_complete = any(phrase in interviewer_message.lower() for phrase in [
         "that's everything i needed",
@@ -168,7 +167,7 @@ def extract_signature(session_id: str, student_name: str, history: List[Conversa
         .replace("{student_name}", student_name)
 
     response = client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-2.0-flash-lite",
         contents=prompt,
         config=types.GenerateContentConfig(
             temperature=0.1,
@@ -239,7 +238,7 @@ def extract_signature(session_id: str, student_name: str, history: List[Conversa
         db.merge(BehavioralSignatureDB(
             student_id=student_id,
             signature=sig,
-            model_version="gemini-2.5-flash",
+            model_version="gemini-2.0-flash-lite",
         ))
 
         db.commit()
