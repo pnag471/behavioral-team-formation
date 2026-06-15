@@ -63,11 +63,12 @@ app.add_middleware(
 )
 
 # Import routers after app is created to avoid circular imports
-from app import behavioral_analysis, matching, explainability  # noqa: E402
+from app import behavioral_analysis, matching, explainability, conversation
 
 app.include_router(behavioral_analysis.router)
 app.include_router(matching.router)
 app.include_router(explainability.router)
+app.include_router(conversation.router)
 
 
 # ---------------------------------------------------------------------------
@@ -117,3 +118,22 @@ def add_student(student: Student):
         return student
     finally:
         db.close()
+
+    @app.get("/students/{student_id}", response_model=Student)
+    def get_student(student_id: str):
+        db = SessionLocal()
+        try:
+            s = db.query(StudentDB).filter(StudentDB.id == student_id).first()
+            if not s:
+                raise HTTPException(status_code=404, detail="Student not found")
+            return Student(
+                id=s.id,
+                name=s.name,
+                competence_signature=s.competence_signature,
+                work_rhythm_signature=s.work_rhythm_signature,
+                collaboration_signature=s.collaboration_signature,
+                motivation_layer=s.motivation_layer,
+                confidence_layer=s.confidence_layer,
+            )
+        finally:
+            db.close()

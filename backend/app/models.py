@@ -7,6 +7,8 @@ class CompetenceSignature(BaseModel):
     skills: List[str] = []
     roles: List[str] = []
     experience_level: str = "intermediate"  # beginner | intermediate | advanced
+    skill_depth: str = "intermediate"
+    skill_no_gos: List[str] = []
 
 
 class WorkRhythmSignature(BaseModel):
@@ -14,6 +16,8 @@ class WorkRhythmSignature(BaseModel):
     communication_style: str = "mixed"      # async | sync | mixed
     execution_style: str = "iterative"      # methodical | iterative | exploratory
     availability: List[str] = []            # e.g. ["Mon-morning", "Wed-evening"]
+    unavailable_times: List[str] = []
+    timezone_notes: str = ""
 
 
 class CollaborationSignature(BaseModel):
@@ -21,6 +25,8 @@ class CollaborationSignature(BaseModel):
     leadership_style: str = "facilitative"  # directive | facilitative | emergent
     accountability: str = "medium"          # high | medium | low
     help_seeking: str = "proactive"         # proactive | reactive | independent
+    safety_contribution: str = "medium"
+    stress_response: str = "composed"
 
 
 class MotivationLayer(BaseModel):
@@ -149,3 +155,22 @@ class RadarData(BaseModel):
     ])
     values: List[float]               # team-average, 5 values in [0,1]
     members_radar: List[MemberRadarData] = []
+
+class ConversationTurn(BaseModel):
+    role: str   # "interviewer" or "student"
+    content: str
+
+class ConversationStartRequest(BaseModel):
+    student_name: str
+
+class ConversationTurnRequest(BaseModel):
+    session_id: str
+    student_name: str
+    message: str
+    history: List[ConversationTurn]
+
+class ConversationResponse(BaseModel):
+    message: str
+    is_complete: bool
+    session_id: str
+    
