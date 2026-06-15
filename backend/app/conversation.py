@@ -88,10 +88,17 @@ def conversation_turn(request: ConversationTurnRequest):
     """Process one student message and return the next interviewer message."""
     from google.genai import types
 
+    # Hard turn cap — force close before building or calling anything
+    if len(request.history) >= 16:
+        return ConversationResponse(
+            message="That's everything I needed — thanks for being so open about all of this. I'll put together your profile now.",
+            is_complete=True,
+            session_id=request.session_id,
+        )
+
     client = _get_gemini_client()
     system = INTERVIEW_SYSTEM.replace("[name]", request.student_name)
 
-    # Build conversation history for Gemini
     contents = []
     for turn in request.history:
         role = "model" if turn.role == "interviewer" else "user"
@@ -100,7 +107,6 @@ def conversation_turn(request: ConversationTurnRequest):
             "parts": [{"text": turn.content}]
         })
 
-    # Add the new student message
     contents.append({
         "role": "user",
         "parts": [{"text": request.message}]
@@ -112,12 +118,18 @@ def conversation_turn(request: ConversationTurnRequest):
         config=types.GenerateContentConfig(
             system_instruction=system,
             temperature=0.7,
+            max_output_tokens=150,
         )
     )
 
+    usage = response.usage_metadata
+    print(f"Turn {len(request.history) + 1} | "
+        f"in: {usage.prompt_token_count} | "
+        f"out: {usage.candidates_token_count} | "
+        f"total: {usage.total_token_count}")
+
     interviewer_message = response.text
 
-    # Check if interview is complete
     is_complete = any(phrase in interviewer_message.lower() for phrase in [
         "that's everything i needed",
         "thanks for being open",

@@ -68,7 +68,7 @@ export default function InterviewPage() {
           session_id: sessionId,
           student_name: name,
           message: studentMessage,
-          history: messages,
+          history: newMessages,
         }),
       })
       const data = await res.json()
@@ -200,7 +200,7 @@ export default function InterviewPage() {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+              onKeyDown={(e) => e.key === 'Enter' && !loading && sendMessage()}
               placeholder="Type your response..."
               disabled={loading}
               className="flex-1 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-300 disabled:opacity-40"
