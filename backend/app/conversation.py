@@ -10,6 +10,12 @@ from app.models import (
     ConversationTurn,
 )
 
+from app.database import (
+    SessionLocal, AssessmentDB, StudentDB, ResponseDB, 
+    BehavioralSignatureDB, ExtractionRunDB, ProfileVersionDB,
+    DimensionScoreDB
+)
+
 _active_sessions: dict[str, object] = {}
 router = APIRouter(prefix="/conversation", tags=["conversation"])
 
@@ -176,6 +182,48 @@ def extract_signature(session_id: str, student_name: str, history: List[Conversa
     )
 
     sig = json.loads(response.text)
+
+    # Log extraction run
+    run_id = str(uuid.uuid4())
+    db.add(ExtractionRunDB(
+        id=run_id,
+        session_id=session_id,
+        model_name="gemini-2.5-flash",
+        prompt_version="1.0",
+        params_json={"temperature": 0.1},
+        run_purpose="production",
+    ))
+
+    # Log profile version
+    profile_version_id = str(uuid.uuid4())
+    db.add(ProfileVersionDB(
+        id=profile_version_id,
+        session_id=session_id,
+        student_id=student_id,
+        run_id=run_id,
+        signature_json=sig,
+    ))
+
+    # Log individual dimension scores with confidence
+    dimensions = [
+        "planning_style", "communication_style", "execution_style",
+        "conflict_style", "leadership_style", "accountability",
+        "help_seeking", "safety_contribution", "stress_response"
+    ]
+
+    confidence_scores = sig.get("confidence_scores", {})
+
+    for dimension in dimensions:
+        value = sig.get(dimension)
+        if value:
+            db.add(DimensionScoreDB(
+                id=str(uuid.uuid4()),
+                profile_version_id=profile_version_id,
+                dimension=dimension,
+                value=value,
+                confidence=confidence_scores.get(dimension),
+                evidence_span=sig.get(f"{dimension}_evidence"),
+            ))
 
     # Build student record
     student_id = f"s{int(time.time() * 1000)}"
