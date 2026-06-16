@@ -52,7 +52,7 @@ def start_conversation(request: ConversationStartRequest):
 
     # Create a native chat session
     chat = client.chats.create(
-        model="gemini-2.0-flash-lite",
+        model="gemini-2.5-flash",
         config=types.GenerateContentConfig(
             system_instruction=system,
             temperature=0.7,
@@ -108,7 +108,7 @@ def conversation_turn(request: ConversationTurnRequest):
         system = INTERVIEW_SYSTEM.replace("[name]", first_name)
         from google.genai import types
         chat = client.chats.create(
-            model="gemini-2.0-flash-lite",
+            model="gemini-2.5-flash",
             config=types.GenerateContentConfig(
                 system_instruction=system,
                 temperature=0.7,
@@ -167,7 +167,7 @@ def extract_signature(session_id: str, student_name: str, history: List[Conversa
         .replace("{student_name}", student_name)
 
     response = client.models.generate_content(
-        model="gemini-2.0-flash-lite",
+        model="gemini-2.5-flash",
         contents=prompt,
         config=types.GenerateContentConfig(
             temperature=0.1,
@@ -238,7 +238,7 @@ def extract_signature(session_id: str, student_name: str, history: List[Conversa
         db.merge(BehavioralSignatureDB(
             student_id=student_id,
             signature=sig,
-            model_version="gemini-2.0-flash-lite",
+            model_version="gemini-2.5-flash",
         ))
 
         db.commit()
@@ -250,3 +250,16 @@ def extract_signature(session_id: str, student_name: str, history: List[Conversa
         "session_id": session_id,
         "signature": sig,
     }
+
+import time
+
+def _call_with_retry(fn, retries=3, delay=10):
+    for attempt in range(retries):
+        try:
+            return fn()
+        except Exception as e:
+            if attempt < retries - 1 and ("503" in str(e) or "429" in str(e)):
+                print(f"Gemini unavailable, retrying in {delay}s... (attempt {attempt + 1})")
+                time.sleep(delay)
+            else:
+                raise

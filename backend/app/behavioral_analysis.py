@@ -126,7 +126,7 @@ SCENARIOS: List[Scenario] = [
 # ---------------------------------------------------------------------------
 
 def _model_version() -> str:
-    return "gemini-1.5-flash" if analyzer._fallback is None else "mock"
+    return "gemini-2.5-flash" if analyzer._fallback is None else "mock"
 
 
 # ---------------------------------------------------------------------------
