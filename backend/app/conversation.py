@@ -58,7 +58,7 @@ def start_conversation(request: ConversationStartRequest):
 
     # Create a native chat session
     chat = client.chats.create(
-        model="gemini-2.5-flash",
+        model="gemini-3.1-flash-lite",
         config=types.GenerateContentConfig(
             system_instruction=system,
             temperature=0.7,
@@ -81,7 +81,7 @@ def start_conversation(request: ConversationStartRequest):
             id=session_id,
             student_id=f"pending_{session_id}",
             status="incomplete",
-            model_version="gemini-2.0-flash-lite",
+            model_version="gemini-3.1-flash-lite",
         ))
         db.commit()
     finally:
@@ -114,7 +114,7 @@ def conversation_turn(request: ConversationTurnRequest):
         system = INTERVIEW_SYSTEM.replace("[name]", first_name)
         from google.genai import types
         chat = client.chats.create(
-            model="gemini-2.5-flash",
+            model="gemini-3.1-flash-lite",
             config=types.GenerateContentConfig(
                 system_instruction=system,
                 temperature=0.7,
@@ -173,7 +173,7 @@ def extract_signature(session_id: str, student_name: str, history: List[Conversa
         .replace("{student_name}", student_name)
 
     response = client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-3.1-flash-lite",
         contents=prompt,
         config=types.GenerateContentConfig(
             temperature=0.1,
@@ -188,7 +188,7 @@ def extract_signature(session_id: str, student_name: str, history: List[Conversa
     db.add(ExtractionRunDB(
         id=run_id,
         session_id=session_id,
-        model_name="gemini-2.5-flash",
+        model_name="gemini-3.1-flash-lite",
         prompt_version="1.0",
         params_json={"temperature": 0.1},
         run_purpose="production",
@@ -286,7 +286,7 @@ def extract_signature(session_id: str, student_name: str, history: List[Conversa
         db.merge(BehavioralSignatureDB(
             student_id=student_id,
             signature=sig,
-            model_version="gemini-2.5-flash",
+            model_version="gemini-3.1-flash-lite",
         ))
 
         db.commit()

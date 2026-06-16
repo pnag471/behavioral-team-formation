@@ -65,7 +65,7 @@ class GeminiExplainer(ExplanationGenerator, NormGenerator):
     ]"""
 
         response = self.client.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-3.1-flash-lite",
             contents=prompt,
             config=types.GenerateContentConfig(
                 temperature=0.3,
@@ -116,7 +116,7 @@ class GeminiExplainer(ExplanationGenerator, NormGenerator):
             .replace("{team_norms_json}", json.dumps(norms_data, indent=2))
 
         response = self.client.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-3.1-flash-lite",
             contents=prompt,
             config=types.GenerateContentConfig(
                 temperature=0.2,
