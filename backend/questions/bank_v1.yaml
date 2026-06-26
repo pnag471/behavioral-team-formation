@@ -1,0 +1,231 @@
+bank_version: "v1"
+
+# ---------------------------------------------------------------------------
+# L1 Question Bank — curated scenarios, each tagged to L0 trait(s).
+#
+# Option IDs sent to the client are anonymous (opt_a … opt_d) so the
+# scoring rubric is not visible in the API response.  The server-side
+# option → signal mapping lives here only.
+#
+# Each signal entry:
+#   trait: L0 dimension name (must match rubric_v1.yaml)
+#   value: must be in that dimension's allowed_values
+# ---------------------------------------------------------------------------
+
+scenarios:
+
+  - id: missed_deadline
+    title: "Teammate Missed a Deadline"
+    description: >
+      A teammate was responsible for a critical deliverable due yesterday.
+      They haven't sent any update and the team is now blocked.
+      How do you respond?
+    elicits: [conflict_style, cooperativeness, leadership_style]
+    options:
+      - anonymous_id: opt_a
+        text: "Wait and hope they catch up on their own"
+        signals:
+          - trait: conflict_style
+            value: avoidant
+          - trait: cooperativeness
+            value: low
+      - anonymous_id: opt_b
+        text: "Directly call out the issue in the group chat"
+        signals:
+          - trait: conflict_style
+            value: assertive
+      - anonymous_id: opt_c
+        text: "Message them privately to understand what happened"
+        signals:
+          - trait: conflict_style
+            value: collaborative
+          - trait: cooperativeness
+            value: high
+      - anonymous_id: opt_d
+        text: "Reassign the task immediately and notify the team"
+        signals:
+          - trait: leadership_style
+            value: directive
+
+  - id: workload_imbalance
+    title: "Workload Imbalance"
+    description: >
+      You realize you are doing significantly more work than your teammates.
+      Two members seem to be coasting while you are pulling extra weight.
+      How do you handle this?
+    elicits: [conflict_style, accountability, cooperativeness, leadership_style]
+    options:
+      - anonymous_id: opt_a
+        text: "Keep working hard and hope others notice"
+        signals:
+          - trait: conflict_style
+            value: avoidant
+          - trait: cooperativeness
+            value: low
+      - anonymous_id: opt_b
+        text: "Raise it bluntly in the next meeting"
+        signals:
+          - trait: conflict_style
+            value: assertive
+      - anonymous_id: opt_c
+        text: "Bring it up with the team as a process problem to solve together"
+        signals:
+          - trait: conflict_style
+            value: collaborative
+          - trait: cooperativeness
+            value: high
+          - trait: accountability
+            value: high
+      - anonymous_id: opt_d
+        text: "Propose a formal task-tracking system with assigned owners"
+        signals:
+          - trait: leadership_style
+            value: directive
+          - trait: planning_style
+            value: planner
+          - trait: accountability
+            value: high
+
+  - id: communication_breakdown
+    title: "Communication Breakdown"
+    description: >
+      The team has gone quiet. Messages are going unanswered, meetings are
+      skipped, and nobody seems to know what others are working on.
+      What is your move?
+    elicits: [conflict_style, leadership_style, communication_style, cooperativeness]
+    options:
+      - anonymous_id: opt_a
+        text: "Continue working on my part and wait for others to reconnect"
+        signals:
+          - trait: conflict_style
+            value: avoidant
+          - trait: communication_style
+            value: async
+      - anonymous_id: opt_b
+        text: "Send a firm message demanding everyone respond"
+        signals:
+          - trait: conflict_style
+            value: assertive
+          - trait: communication_style
+            value: sync
+      - anonymous_id: opt_c
+        text: "Schedule a quick sync and set up a shared status board"
+        signals:
+          - trait: leadership_style
+            value: facilitative
+          - trait: planning_style
+            value: planner
+          - trait: communication_style
+            value: mixed
+      - anonymous_id: opt_d
+        text: "Check in with each person individually to understand what's going on"
+        signals:
+          - trait: conflict_style
+            value: collaborative
+          - trait: cooperativeness
+            value: high
+          - trait: communication_style
+            value: sync
+
+  - id: leadership_vacuum
+    title: "Leadership Vacuum"
+    description: >
+      Your team has no designated leader and nobody is stepping up to
+      coordinate the project.  Decisions are stalling, work is duplicated,
+      and the deadline is approaching.  What do you do?
+    elicits: [leadership_style, planning_style, cooperativeness]
+    options:
+      - anonymous_id: opt_a
+        text: "Take charge immediately — assign roles and set a plan"
+        signals:
+          - trait: leadership_style
+            value: directive
+          - trait: planning_style
+            value: planner
+      - anonymous_id: opt_b
+        text: "Organize a meeting to collectively decide on a coordination structure"
+        signals:
+          - trait: leadership_style
+            value: facilitative
+          - trait: communication_style
+            value: sync
+      - anonymous_id: opt_c
+        text: "Wait to see if someone naturally steps up"
+        signals:
+          - trait: leadership_style
+            value: emergent
+      - anonymous_id: opt_d
+        text: "Suggest a rotating leadership model so nobody is burdened"
+        signals:
+          - trait: leadership_style
+            value: facilitative
+          - trait: cooperativeness
+            value: high
+
+  - id: technical_disagreement
+    title: "Technical Disagreement"
+    description: >
+      You and a teammate strongly disagree on the technical approach for a
+      core feature.  Both solutions have merit but they are incompatible.
+      The team needs to pick one.  How do you handle it?
+    elicits: [conflict_style, execution_style, help_seeking]
+    options:
+      - anonymous_id: opt_a
+        text: "Argue my case strongly until the team agrees"
+        signals:
+          - trait: conflict_style
+            value: assertive
+      - anonymous_id: opt_b
+        text: "Let them have it — it's not worth the conflict"
+        signals:
+          - trait: conflict_style
+            value: avoidant
+      - anonymous_id: opt_c
+        text: "Propose a structured comparison — pros/cons doc and a team vote"
+        signals:
+          - trait: conflict_style
+            value: collaborative
+          - trait: execution_style
+            value: methodical
+      - anonymous_id: opt_d
+        text: "Escalate to the instructor or a neutral third party to decide"
+        signals:
+          - trait: help_seeking
+            value: proactive
+
+  - id: ambiguous_requirements
+    title: "Ambiguous Requirements"
+    description: >
+      The project brief is vague, the team is paralyzed by uncertainty,
+      and everyone is waiting for someone to clarify the direction.
+      What do you do?
+    elicits: [planning_style, execution_style, leadership_style, help_seeking]
+    options:
+      - anonymous_id: opt_a
+        text: "Make reasonable assumptions, document them, and move forward"
+        signals:
+          - trait: execution_style
+            value: methodical
+          - trait: planning_style
+            value: planner
+      - anonymous_id: opt_b
+        text: "Organize a requirements clarification session with the whole team"
+        signals:
+          - trait: leadership_style
+            value: facilitative
+          - trait: communication_style
+            value: sync
+      - anonymous_id: opt_c
+        text: "Reach out to the instructor or stakeholder directly for clarification"
+        signals:
+          - trait: help_seeking
+            value: proactive
+          - trait: communication_style
+            value: sync
+      - anonymous_id: opt_d
+        text: "Wait until more information becomes available"
+        signals:
+          - trait: planning_style
+            value: spontaneous
+          - trait: help_seeking
+            value: reactive

@@ -1,6 +1,7 @@
 from __future__ import annotations
 import json
 import os
+import time
 from typing import List
 from fastapi import APIRouter, HTTPException
 from app.models import (
@@ -17,6 +18,7 @@ from app.database import (
 )
 
 _active_sessions: dict[str, object] = {}
+_gemini_client = None
 router = APIRouter(prefix="/conversation", tags=["conversation"])
 
 # Load prompts
@@ -35,11 +37,14 @@ with open(_EXTRACTION_PROMPT_PATH) as f:
 
 
 def _get_gemini_client():
+    global _gemini_client
     from google import genai
-    api_key = os.getenv("GEMINI_API_KEY")
-    if not api_key:
-        raise HTTPException(status_code=500, detail="GEMINI_API_KEY not set")
-    return genai.Client(api_key=api_key)
+    if _gemini_client is None:
+        api_key = os.getenv("GEMINI_API_KEY")
+        if not api_key:
+            raise HTTPException(status_code=500, detail="GEMINI_API_KEY not set")
+        _gemini_client = genai.Client(api_key=api_key)
+    return _gemini_client
 
 
 @router.post("/start", response_model=ConversationResponse)
@@ -71,7 +76,7 @@ def start_conversation(request: ConversationStartRequest):
     )
     first_message = response.text
 
-    #store session in memory
+    # store session in memory
     _active_sessions[session_id] = chat
 
     # Save session to DB
@@ -100,7 +105,7 @@ def conversation_turn(request: ConversationTurnRequest):
     from google.genai import types
 
     # Hard turn cap — force close before building or calling anything
-    if len(request.history) >= 16:
+    if len(request.history) >= 22:
         return ConversationResponse(
             message="That's everything I needed — thanks for being so open about all of this. I'll put together your profile now.",
             is_complete=True,
@@ -112,7 +117,6 @@ def conversation_turn(request: ConversationTurnRequest):
         client = _get_gemini_client()
         first_name = request.student_name.strip().split()[0]
         system = INTERVIEW_SYSTEM.replace("[name]", first_name)
-        from google.genai import types
         chat = client.chats.create(
             model="gemini-3.1-flash-lite",
             config=types.GenerateContentConfig(
@@ -121,21 +125,54 @@ def conversation_turn(request: ConversationTurnRequest):
                 max_output_tokens=200,
             )
         )
-        #replay history to reconstruct session
-        for turn in request.history[:-1]:
-            if turn.role == "student":
-                chat.send_message(turn.content)
-        _active_sessions[request.session_id] = chat
+        # Fallback: rebuild using generate_content with full history
+        contents = []
+        for turn in request.history:
+            role = "model" if turn.role == "interviewer" else "user"
+            contents.append({
+                "role": role,
+                "parts": [{"text": turn.content}]
+            })
+        contents.append({
+            "role": "user",
+            "parts": [{"text": request.message}]
+        })
+        response = client.models.generate_content(
+            model="gemini-3.1-flash-lite",
+            contents=contents,
+            config=types.GenerateContentConfig(
+                system_instruction=system,
+                temperature=0.7,
+                max_output_tokens=200,
+            )
+        )
+        interviewer_message = response.text
+        usage = response.usage_metadata
+        print(f"Turn {len(request.history) + 1} [rebuilt] | "
+              f"in: {usage.prompt_token_count} | "
+              f"out: {usage.candidates_token_count} | "
+              f"total: {usage.total_token_count}")
+        is_complete = any(phrase in interviewer_message.lower() for phrase in [
+            "that's everything i needed",
+            "thanks for being open",
+            "i'll put together your profile",
+            "based on our conversation",
+        ])
+        return ConversationResponse(
+            message=interviewer_message,
+            is_complete=is_complete,
+            session_id=request.session_id,
+        )
 
-    #send just the new message
+    # send just the new message
     response = chat.send_message(request.message)
-    interviewer_message = response.txt
+    interviewer_message = response.text
 
     usage = response.usage_metadata
     print(f"Turn {len(request.history) + 1} | "
-        f"in: {usage.prompt_token_count} | "
-        f"out: {usage.candidates_token_count} | "
-        f"total: {usage.total_token_count}")
+          f"in: {usage.prompt_token_count} | "
+          f"out: {usage.candidates_token_count} | "
+          f"total: {usage.total_token_count}")
 
     is_complete = any(phrase in interviewer_message.lower() for phrase in [
         "that's everything i needed",
@@ -157,7 +194,6 @@ def extract_signature(session_id: str, student_name: str, history: List[Conversa
     from app.database import SessionLocal, StudentDB, AssessmentDB, BehavioralSignatureDB, ResponseDB
     from google.genai import types
     import uuid
-    import time
 
     client = _get_gemini_client()
 
@@ -182,29 +218,8 @@ def extract_signature(session_id: str, student_name: str, history: List[Conversa
     )
 
     sig = json.loads(response.text)
-
-    # Log extraction run
     run_id = str(uuid.uuid4())
-    db.add(ExtractionRunDB(
-        id=run_id,
-        session_id=session_id,
-        model_name="gemini-3.1-flash-lite",
-        prompt_version="1.0",
-        params_json={"temperature": 0.1},
-        run_purpose="production",
-    ))
 
-    # Log profile version
-    profile_version_id = str(uuid.uuid4())
-    db.add(ProfileVersionDB(
-        id=profile_version_id,
-        session_id=session_id,
-        student_id=student_id,
-        run_id=run_id,
-        signature_json=sig,
-    ))
-
-    # Log individual dimension scores with confidence
     dimensions = [
         "planning_style", "communication_style", "execution_style",
         "conflict_style", "leadership_style", "accountability",
@@ -213,23 +228,44 @@ def extract_signature(session_id: str, student_name: str, history: List[Conversa
 
     confidence_scores = sig.get("confidence_scores", {})
 
-    for dimension in dimensions:
-        value = sig.get(dimension)
-        if value:
-            db.add(DimensionScoreDB(
-                id=str(uuid.uuid4()),
-                profile_version_id=profile_version_id,
-                dimension=dimension,
-                value=value,
-                confidence=confidence_scores.get(dimension),
-                evidence_span=sig.get(f"{dimension}_evidence"),
-            ))
-
     # Build student record
     student_id = f"s{int(time.time() * 1000)}"
 
     db = SessionLocal()
     try:
+        # Log extraction run
+        db.add(ExtractionRunDB(
+            id=run_id,
+            session_id=session_id,
+            model_name="gemini-3.1-flash-lite",
+            prompt_version="1.0",
+            params_json={"temperature": 0.1},
+            run_purpose="production",
+        ))
+
+        # Log profile version
+        profile_version_id = str(uuid.uuid4())
+        db.add(ProfileVersionDB(
+            id=profile_version_id,
+            session_id=session_id,
+            student_id=student_id,
+            run_id=run_id,
+            signature_json=sig,
+        ))
+
+        # Log individual dimension scores with confidence
+        for dimension in dimensions:
+            value = sig.get(dimension)
+            if value:
+                db.add(DimensionScoreDB(
+                    id=str(uuid.uuid4()),
+                    profile_version_id=profile_version_id,
+                    dimension=dimension,
+                    value=value,
+                    confidence=confidence_scores.get(dimension),
+                    evidence_span=sig.get(f"{dimension}_evidence"),
+                ))
+
         db.add(StudentDB(
             id=student_id,
             name=student_name,
@@ -299,7 +335,6 @@ def extract_signature(session_id: str, student_name: str, history: List[Conversa
         "signature": sig,
     }
 
-import time
 
 def _call_with_retry(fn, retries=3, delay=10):
     for attempt in range(retries):

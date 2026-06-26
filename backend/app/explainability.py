@@ -15,9 +15,9 @@ explainer = GeminiExplainer()
 # labels: Communication, Conflict Handling, Leadership, Accountability, Planning
 # ---------------------------------------------------------------------------
 _COMM_MAP    = {"async": 0.35, "mixed": 0.65, "sync": 0.90}
-_CONFLICT_MAP = {"avoidant": 0.20, "confrontational": 0.60, "collaborative": 0.85}
+_CONFLICT_MAP = {"avoidant": 0.20, "assertive": 0.60, "collaborative": 0.85}
 _LEADER_MAP  = {"emergent": 0.30, "facilitative": 0.70, "directive": 0.92}
-_ACCOUNT_MAP = {"low": 0.20, "medium": 0.60, "high": 0.90}
+_ACCOUNT_MAP = {"low": 0.20, "developing": 0.60, "high": 0.90}
 _PLAN_MAP    = {"spontaneous": 0.20, "adaptive": 0.60, "planner": 0.90}
 
 
