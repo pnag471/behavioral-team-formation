@@ -1,5 +1,5 @@
 from __future__ import annotations
-from sqlalchemy import create_engine, Column, String, Float, JSON, DateTime
+from sqlalchemy import create_engine, Column, String, Float, JSON, DateTime, UniqueConstraint
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
@@ -28,6 +28,8 @@ class StudentDB(Base):
     collaboration_signature = Column(JSON, default={})
     motivation_layer = Column(JSON, default={})
     confidence_layer = Column(JSON, default={})
+    # Dimensions for which the last scorer run had zero MCQ signals.
+    under_determined_dims = Column(JSON, default=[])
 
 
 class AssessmentDB(Base):
@@ -36,29 +38,38 @@ class AssessmentDB(Base):
     id = Column(String, primary_key=True)
     student_id = Column(String, nullable=False)
     status = Column(String, default="complete")
-    model_version = Column(String, default="mock")
+    # Retained for explainability LLM calls; null for deterministic scoring sessions.
+    model_version = Column(String, nullable=True, default=None)
     created_at = Column(DateTime, default=datetime.utcnow)
 
 
 class ResponseDB(Base):
     __tablename__ = "responses"
 
-    id = Column(String, primary_key=True)
+    id = Column(String, primary_key=True)         # UUID — surrogate key
     assessment_id = Column(String, nullable=False)
     student_id = Column(String, nullable=False)
     scenario_id = Column(String, nullable=False)
-    option_id = Column(String, nullable=False)
+    option_id = Column(String, nullable=False)     # anonymous: opt_a … opt_d
     response_text = Column(String, default="")
     timestamp = Column(DateTime, default=datetime.utcnow)
+
+    __table_args__ = (
+        UniqueConstraint("assessment_id", "scenario_id", name="uq_response_session_scenario"),
+    )
 
 
 class BehavioralSignatureDB(Base):
     __tablename__ = "behavioral_signatures"
 
-    student_id = Column(String, primary_key=True)
+    id = Column(String, primary_key=True)          # UUID
+    student_id = Column(String, nullable=False, index=True)
     signature = Column(JSON, nullable=False)
-    model_version = Column(String, default="mock")
-    created_at = Column(DateTime, default=datetime.utcnow)
+    # Scoring provenance — no model/prompt fields; scoring is deterministic code.
+    rubric_version = Column(String, nullable=False)
+    bank_version = Column(String, nullable=False)
+    scorer_version = Column(String, nullable=False)
+    scored_at = Column(DateTime, default=datetime.utcnow)
 
 
 class TeamDB(Base):

@@ -13,14 +13,15 @@ class WorkRhythmSignature(BaseModel):
     planning_style: str = "adaptive"        # planner | spontaneous | adaptive
     communication_style: str = "mixed"      # async | sync | mixed
     execution_style: str = "iterative"      # methodical | iterative | exploratory
-    availability: List[str] = []            # e.g. ["Mon-morning", "Wed-evening"]
+    availability: List[str] = []
 
 
 class CollaborationSignature(BaseModel):
-    conflict_style: str = "collaborative"   # avoidant | confrontational | collaborative
+    conflict_style: str = "collaborative"   # avoidant | assertive | collaborative
     leadership_style: str = "facilitative"  # directive | facilitative | emergent
-    accountability: str = "medium"          # high | medium | low
+    accountability: str = "developing"      # low | developing | high
     help_seeking: str = "proactive"         # proactive | reactive | independent
+    cooperativeness: str = "developing"     # low | developing | high
 
 
 class MotivationLayer(BaseModel):
@@ -29,7 +30,8 @@ class MotivationLayer(BaseModel):
 
 
 class ConfidenceLayer(BaseModel):
-    confidence_score: float = Field(default=0.6, ge=0.0, le=1.0)
+    # Scorer measurement quality, NOT student self-assurance (see rubric_v1.yaml).
+    confidence_score: float = Field(default=0.5, ge=0.0, le=1.0)
 
 
 class Student(BaseModel):
@@ -40,6 +42,9 @@ class Student(BaseModel):
     collaboration_signature: CollaborationSignature = Field(default_factory=CollaborationSignature)
     motivation_layer: MotivationLayer = Field(default_factory=MotivationLayer)
     confidence_layer: ConfidenceLayer = Field(default_factory=ConfidenceLayer)
+    # Dimensions for which the scorer received zero MCQ signals.
+    # Matcher treats these as unknown — they do NOT satisfy or violate floor.
+    under_determined_dims: List[str] = Field(default_factory=list)
 
 
 # Assessment models
@@ -58,14 +63,14 @@ class Scenario(BaseModel):
 
 class AssessmentResponse(BaseModel):
     scenario_id: str
-    option_id: str
+    option_id: str           # anonymous: opt_a | opt_b | opt_c | opt_d
     response_text: str = ""
 
 
 class AssessmentRequest(BaseModel):
     student_name: str
-    student_id: Optional[str] = None   # if provided, updates existing profile
-    session_id: Optional[str] = None   # if provided, completes that existing session
+    student_id: Optional[str] = None
+    session_id: Optional[str] = None
     responses: List[AssessmentResponse]
 
 
@@ -147,5 +152,5 @@ class RadarData(BaseModel):
         "Accountability",
         "Planning",
     ])
-    values: List[float]               # team-average, 5 values in [0,1]
+    values: List[float]
     members_radar: List[MemberRadarData] = []
