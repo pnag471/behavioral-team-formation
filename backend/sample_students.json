@@ -3,520 +3,963 @@
     "id": "s01",
     "name": "Amara Osei",
     "competence_signature": {
-      "skills": ["frontend", "design", "documentation"],
-      "roles": ["ui-developer", "design-lead"],
+      "skills": [
+        "frontend",
+        "design",
+        "documentation"
+      ],
+      "roles": [
+        "ui-developer",
+        "design-lead"
+      ],
       "experience_level": "intermediate"
     },
     "work_rhythm_signature": {
       "planning_style": "planner",
       "communication_style": "async",
       "execution_style": "methodical",
-      "availability": ["Mon-morning", "Wed-evening", "Fri-afternoon", "Sat-anytime"]
+      "availability": [
+        "Mon-morning",
+        "Wed-evening",
+        "Fri-afternoon",
+        "Sat-anytime"
+      ]
     },
     "collaboration_signature": {
       "conflict_style": "collaborative",
       "leadership_style": "facilitative",
       "accountability": "high",
-      "help_seeking": "proactive"
+      "help_seeking": "proactive",
+      "cooperativeness": "high"
     },
     "motivation_layer": {
-      "interests": ["accessibility", "data visualization", "open source"],
-      "learning_goals": ["system design", "user research"]
+      "interests": [
+        "accessibility",
+        "data visualization",
+        "open source"
+      ],
+      "learning_goals": [
+        "system design",
+        "user research"
+      ]
     },
-    "confidence_layer": { "confidence_score": 0.72 }
+    "confidence_layer": {
+      "confidence_score": 0.72
+    }
   },
   {
     "id": "s02",
     "name": "Diego Reyes",
     "competence_signature": {
-      "skills": ["backend", "algorithms", "testing"],
-      "roles": ["backend-developer", "tech-lead"],
+      "skills": [
+        "backend",
+        "algorithms",
+        "testing"
+      ],
+      "roles": [
+        "backend-developer",
+        "tech-lead"
+      ],
       "experience_level": "advanced"
     },
     "work_rhythm_signature": {
       "planning_style": "planner",
       "communication_style": "sync",
       "execution_style": "methodical",
-      "availability": ["Mon-morning", "Tue-morning", "Thu-morning", "Fri-morning"]
+      "availability": [
+        "Mon-morning",
+        "Tue-morning",
+        "Thu-morning",
+        "Fri-morning"
+      ]
     },
     "collaboration_signature": {
-      "conflict_style": "confrontational",
+      "conflict_style": "assertive",
       "leadership_style": "directive",
       "accountability": "high",
-      "help_seeking": "independent"
+      "help_seeking": "independent",
+      "cooperativeness": "developing"
     },
     "motivation_layer": {
-      "interests": ["distributed systems", "performance optimization", "open source"],
-      "learning_goals": ["machine learning", "cloud architecture"]
+      "interests": [
+        "distributed systems",
+        "performance optimization",
+        "open source"
+      ],
+      "learning_goals": [
+        "machine learning",
+        "cloud architecture"
+      ]
     },
-    "confidence_layer": { "confidence_score": 0.88 }
+    "confidence_layer": {
+      "confidence_score": 0.88
+    }
   },
   {
     "id": "s03",
     "name": "Priya Sharma",
     "competence_signature": {
-      "skills": ["ml", "data analysis", "research"],
-      "roles": ["ml-engineer", "researcher"],
+      "skills": [
+        "ml",
+        "data analysis",
+        "research"
+      ],
+      "roles": [
+        "ml-engineer",
+        "researcher"
+      ],
       "experience_level": "advanced"
     },
     "work_rhythm_signature": {
       "planning_style": "adaptive",
       "communication_style": "async",
       "execution_style": "exploratory",
-      "availability": ["Tue-evening", "Thu-evening", "Sat-morning", "Sun-morning"]
+      "availability": [
+        "Tue-evening",
+        "Thu-evening",
+        "Sat-morning",
+        "Sun-morning"
+      ]
     },
     "collaboration_signature": {
       "conflict_style": "collaborative",
       "leadership_style": "emergent",
       "accountability": "high",
-      "help_seeking": "proactive"
+      "help_seeking": "proactive",
+      "cooperativeness": "high"
     },
     "motivation_layer": {
-      "interests": ["natural language processing", "explainable ai", "ethics in ai"],
-      "learning_goals": ["frontend development", "product management"]
+      "interests": [
+        "natural language processing",
+        "explainable ai",
+        "ethics in ai"
+      ],
+      "learning_goals": [
+        "frontend development",
+        "product management"
+      ]
     },
-    "confidence_layer": { "confidence_score": 0.81 }
+    "confidence_layer": {
+      "confidence_score": 0.81
+    }
   },
   {
     "id": "s04",
     "name": "Jordan Kim",
     "competence_signature": {
-      "skills": ["project management", "communication", "documentation"],
-      "roles": ["project-manager", "scrum-master"],
+      "skills": [
+        "project management",
+        "communication",
+        "documentation"
+      ],
+      "roles": [
+        "project-manager",
+        "scrum-master"
+      ],
       "experience_level": "intermediate"
     },
     "work_rhythm_signature": {
       "planning_style": "planner",
       "communication_style": "sync",
       "execution_style": "methodical",
-      "availability": ["Mon-morning", "Tue-morning", "Wed-morning", "Thu-morning", "Fri-morning"]
+      "availability": [
+        "Mon-morning",
+        "Tue-morning",
+        "Wed-morning",
+        "Thu-morning",
+        "Fri-morning"
+      ]
     },
     "collaboration_signature": {
       "conflict_style": "collaborative",
       "leadership_style": "facilitative",
       "accountability": "high",
-      "help_seeking": "proactive"
+      "help_seeking": "proactive",
+      "cooperativeness": "high"
     },
     "motivation_layer": {
-      "interests": ["agile methodologies", "team dynamics", "process improvement"],
-      "learning_goals": ["technical skills", "data analysis"]
+      "interests": [
+        "agile methodologies",
+        "team dynamics",
+        "process improvement"
+      ],
+      "learning_goals": [
+        "technical skills",
+        "data analysis"
+      ]
     },
-    "confidence_layer": { "confidence_score": 0.76 }
+    "confidence_layer": {
+      "confidence_score": 0.76
+    }
   },
   {
     "id": "s05",
     "name": "Fatima Al-Hassan",
     "competence_signature": {
-      "skills": ["frontend", "backend", "testing"],
-      "roles": ["fullstack-developer"],
+      "skills": [
+        "frontend",
+        "backend",
+        "testing"
+      ],
+      "roles": [
+        "fullstack-developer"
+      ],
       "experience_level": "intermediate"
     },
     "work_rhythm_signature": {
       "planning_style": "adaptive",
       "communication_style": "mixed",
       "execution_style": "iterative",
-      "availability": ["Mon-evening", "Wed-evening", "Fri-evening", "Sat-afternoon"]
+      "availability": [
+        "Mon-evening",
+        "Wed-evening",
+        "Fri-evening",
+        "Sat-afternoon"
+      ]
     },
     "collaboration_signature": {
       "conflict_style": "avoidant",
       "leadership_style": "emergent",
-      "accountability": "medium",
-      "help_seeking": "reactive"
+      "accountability": "developing",
+      "help_seeking": "reactive",
+      "cooperativeness": "developing"
     },
     "motivation_layer": {
-      "interests": ["web performance", "developer tools", "open source"],
-      "learning_goals": ["system architecture", "machine learning"]
+      "interests": [
+        "web performance",
+        "developer tools",
+        "open source"
+      ],
+      "learning_goals": [
+        "system architecture",
+        "machine learning"
+      ]
     },
-    "confidence_layer": { "confidence_score": 0.59 }
+    "confidence_layer": {
+      "confidence_score": 0.59
+    }
   },
   {
     "id": "s06",
     "name": "Marcus Williams",
     "competence_signature": {
-      "skills": ["devops", "backend", "testing"],
-      "roles": ["devops-engineer", "backend-developer"],
+      "skills": [
+        "devops",
+        "backend",
+        "testing"
+      ],
+      "roles": [
+        "devops-engineer",
+        "backend-developer"
+      ],
       "experience_level": "advanced"
     },
     "work_rhythm_signature": {
       "planning_style": "planner",
       "communication_style": "async",
       "execution_style": "methodical",
-      "availability": ["Mon-morning", "Wed-morning", "Fri-morning", "Sat-morning"]
+      "availability": [
+        "Mon-morning",
+        "Wed-morning",
+        "Fri-morning",
+        "Sat-morning"
+      ]
     },
     "collaboration_signature": {
       "conflict_style": "collaborative",
       "leadership_style": "facilitative",
       "accountability": "high",
-      "help_seeking": "proactive"
+      "help_seeking": "proactive",
+      "cooperativeness": "high"
     },
     "motivation_layer": {
-      "interests": ["infrastructure as code", "reliability engineering", "automation"],
-      "learning_goals": ["machine learning ops", "security"]
+      "interests": [
+        "infrastructure as code",
+        "reliability engineering",
+        "automation"
+      ],
+      "learning_goals": [
+        "machine learning ops",
+        "security"
+      ]
     },
-    "confidence_layer": { "confidence_score": 0.83 }
+    "confidence_layer": {
+      "confidence_score": 0.83
+    }
   },
   {
     "id": "s07",
     "name": "Yuki Tanaka",
     "competence_signature": {
-      "skills": ["design", "frontend", "documentation"],
-      "roles": ["ux-designer", "ui-developer"],
+      "skills": [
+        "design",
+        "frontend",
+        "documentation"
+      ],
+      "roles": [
+        "ux-designer",
+        "ui-developer"
+      ],
       "experience_level": "intermediate"
     },
     "work_rhythm_signature": {
       "planning_style": "spontaneous",
       "communication_style": "sync",
       "execution_style": "exploratory",
-      "availability": ["Tue-afternoon", "Thu-afternoon", "Sat-anytime", "Sun-afternoon"]
+      "availability": [
+        "Tue-afternoon",
+        "Thu-afternoon",
+        "Sat-anytime",
+        "Sun-afternoon"
+      ]
     },
     "collaboration_signature": {
       "conflict_style": "avoidant",
       "leadership_style": "emergent",
-      "accountability": "medium",
-      "help_seeking": "independent"
+      "accountability": "developing",
+      "help_seeking": "independent",
+      "cooperativeness": "developing"
     },
     "motivation_layer": {
-      "interests": ["interaction design", "motion graphics", "accessibility"],
-      "learning_goals": ["frontend engineering", "data visualization"]
+      "interests": [
+        "interaction design",
+        "motion graphics",
+        "accessibility"
+      ],
+      "learning_goals": [
+        "frontend engineering",
+        "data visualization"
+      ]
     },
-    "confidence_layer": { "confidence_score": 0.64 }
+    "confidence_layer": {
+      "confidence_score": 0.64
+    }
   },
   {
     "id": "s08",
     "name": "Chioma Eze",
     "competence_signature": {
-      "skills": ["research", "documentation", "communication"],
-      "roles": ["researcher", "technical-writer"],
+      "skills": [
+        "research",
+        "documentation",
+        "communication"
+      ],
+      "roles": [
+        "researcher",
+        "technical-writer"
+      ],
       "experience_level": "beginner"
     },
     "work_rhythm_signature": {
       "planning_style": "adaptive",
       "communication_style": "async",
       "execution_style": "iterative",
-      "availability": ["Mon-evening", "Tue-evening", "Thu-evening", "Sun-morning"]
+      "availability": [
+        "Mon-evening",
+        "Tue-evening",
+        "Thu-evening",
+        "Sun-morning"
+      ]
     },
     "collaboration_signature": {
       "conflict_style": "collaborative",
       "leadership_style": "emergent",
-      "accountability": "medium",
-      "help_seeking": "proactive"
+      "accountability": "developing",
+      "help_seeking": "proactive",
+      "cooperativeness": "developing"
     },
     "motivation_layer": {
-      "interests": ["human-computer interaction", "cognitive science", "science communication"],
-      "learning_goals": ["programming", "data analysis", "machine learning"]
+      "interests": [
+        "human-computer interaction",
+        "cognitive science",
+        "science communication"
+      ],
+      "learning_goals": [
+        "programming",
+        "data analysis",
+        "machine learning"
+      ]
     },
-    "confidence_layer": { "confidence_score": 0.41 }
+    "confidence_layer": {
+      "confidence_score": 0.41
+    }
   },
   {
     "id": "s09",
     "name": "Luca Ferreira",
     "competence_signature": {
-      "skills": ["algorithms", "ml", "backend"],
-      "roles": ["ml-engineer", "backend-developer"],
+      "skills": [
+        "algorithms",
+        "ml",
+        "backend"
+      ],
+      "roles": [
+        "ml-engineer",
+        "backend-developer"
+      ],
       "experience_level": "advanced"
     },
     "work_rhythm_signature": {
       "planning_style": "spontaneous",
       "communication_style": "async",
       "execution_style": "exploratory",
-      "availability": ["Tue-morning", "Thu-morning", "Sat-anytime", "Sun-anytime"]
+      "availability": [
+        "Tue-morning",
+        "Thu-morning",
+        "Sat-anytime",
+        "Sun-anytime"
+      ]
     },
     "collaboration_signature": {
-      "conflict_style": "confrontational",
+      "conflict_style": "assertive",
       "leadership_style": "directive",
       "accountability": "high",
-      "help_seeking": "independent"
+      "help_seeking": "independent",
+      "cooperativeness": "developing"
     },
     "motivation_layer": {
-      "interests": ["reinforcement learning", "graph algorithms", "competitive programming"],
-      "learning_goals": ["product thinking", "team leadership"]
+      "interests": [
+        "reinforcement learning",
+        "graph algorithms",
+        "competitive programming"
+      ],
+      "learning_goals": [
+        "product thinking",
+        "team leadership"
+      ]
     },
-    "confidence_layer": { "confidence_score": 0.91 }
+    "confidence_layer": {
+      "confidence_score": 0.91
+    }
   },
   {
     "id": "s10",
     "name": "Aaliyah Johnson",
     "competence_signature": {
-      "skills": ["project management", "communication", "design"],
-      "roles": ["product-manager", "project-manager"],
+      "skills": [
+        "project management",
+        "communication",
+        "design"
+      ],
+      "roles": [
+        "product-manager",
+        "project-manager"
+      ],
       "experience_level": "intermediate"
     },
     "work_rhythm_signature": {
       "planning_style": "planner",
       "communication_style": "sync",
       "execution_style": "methodical",
-      "availability": ["Mon-morning", "Tue-morning", "Wed-morning", "Thu-morning"]
+      "availability": [
+        "Mon-morning",
+        "Tue-morning",
+        "Wed-morning",
+        "Thu-morning"
+      ]
     },
     "collaboration_signature": {
       "conflict_style": "collaborative",
       "leadership_style": "directive",
       "accountability": "high",
-      "help_seeking": "proactive"
+      "help_seeking": "proactive",
+      "cooperativeness": "high"
     },
     "motivation_layer": {
-      "interests": ["product strategy", "user research", "equity in tech"],
-      "learning_goals": ["technical depth", "data-driven decision making"]
+      "interests": [
+        "product strategy",
+        "user research",
+        "equity in tech"
+      ],
+      "learning_goals": [
+        "technical depth",
+        "data-driven decision making"
+      ]
     },
-    "confidence_layer": { "confidence_score": 0.79 }
+    "confidence_layer": {
+      "confidence_score": 0.79
+    }
   },
   {
     "id": "s11",
     "name": "Rajan Patel",
     "competence_signature": {
-      "skills": ["frontend", "design", "algorithms"],
-      "roles": ["frontend-developer", "ui-developer"],
+      "skills": [
+        "frontend",
+        "design",
+        "algorithms"
+      ],
+      "roles": [
+        "frontend-developer",
+        "ui-developer"
+      ],
       "experience_level": "intermediate"
     },
     "work_rhythm_signature": {
       "planning_style": "adaptive",
       "communication_style": "mixed",
       "execution_style": "iterative",
-      "availability": ["Mon-evening", "Wed-evening", "Fri-evening", "Sun-evening"]
+      "availability": [
+        "Mon-evening",
+        "Wed-evening",
+        "Fri-evening",
+        "Sun-evening"
+      ]
     },
     "collaboration_signature": {
       "conflict_style": "collaborative",
       "leadership_style": "facilitative",
-      "accountability": "medium",
-      "help_seeking": "reactive"
+      "accountability": "developing",
+      "help_seeking": "reactive",
+      "cooperativeness": "developing"
     },
     "motivation_layer": {
-      "interests": ["creative coding", "game development", "data visualization"],
-      "learning_goals": ["backend development", "machine learning"]
+      "interests": [
+        "creative coding",
+        "game development",
+        "data visualization"
+      ],
+      "learning_goals": [
+        "backend development",
+        "machine learning"
+      ]
     },
-    "confidence_layer": { "confidence_score": 0.67 }
+    "confidence_layer": {
+      "confidence_score": 0.67
+    }
   },
   {
     "id": "s12",
     "name": "Ingrid Larsson",
     "competence_signature": {
-      "skills": ["data analysis", "research", "documentation"],
-      "roles": ["data-analyst", "researcher"],
+      "skills": [
+        "data analysis",
+        "research",
+        "documentation"
+      ],
+      "roles": [
+        "data-analyst",
+        "researcher"
+      ],
       "experience_level": "intermediate"
     },
     "work_rhythm_signature": {
       "planning_style": "planner",
       "communication_style": "async",
       "execution_style": "methodical",
-      "availability": ["Mon-morning", "Wed-morning", "Fri-morning", "Sat-morning"]
+      "availability": [
+        "Mon-morning",
+        "Wed-morning",
+        "Fri-morning",
+        "Sat-morning"
+      ]
     },
     "collaboration_signature": {
       "conflict_style": "avoidant",
       "leadership_style": "emergent",
       "accountability": "high",
-      "help_seeking": "independent"
+      "help_seeking": "independent",
+      "cooperativeness": "developing"
     },
     "motivation_layer": {
-      "interests": ["statistics", "social science research", "open data"],
-      "learning_goals": ["machine learning", "frontend development"]
+      "interests": [
+        "statistics",
+        "social science research",
+        "open data"
+      ],
+      "learning_goals": [
+        "machine learning",
+        "frontend development"
+      ]
     },
-    "confidence_layer": { "confidence_score": 0.54 }
+    "confidence_layer": {
+      "confidence_score": 0.54
+    }
   },
   {
     "id": "s13",
     "name": "Emmanuel Nkrumah",
     "competence_signature": {
-      "skills": ["backend", "devops", "algorithms"],
-      "roles": ["backend-developer", "systems-engineer"],
+      "skills": [
+        "backend",
+        "devops",
+        "algorithms"
+      ],
+      "roles": [
+        "backend-developer",
+        "systems-engineer"
+      ],
       "experience_level": "advanced"
     },
     "work_rhythm_signature": {
       "planning_style": "adaptive",
       "communication_style": "async",
       "execution_style": "iterative",
-      "availability": ["Tue-morning", "Thu-morning", "Sat-morning", "Sun-morning"]
+      "availability": [
+        "Tue-morning",
+        "Thu-morning",
+        "Sat-morning",
+        "Sun-morning"
+      ]
     },
     "collaboration_signature": {
-      "conflict_style": "confrontational",
+      "conflict_style": "assertive",
       "leadership_style": "directive",
       "accountability": "high",
-      "help_seeking": "independent"
+      "help_seeking": "independent",
+      "cooperativeness": "developing"
     },
     "motivation_layer": {
-      "interests": ["systems programming", "networking", "security"],
-      "learning_goals": ["machine learning", "product strategy"]
+      "interests": [
+        "systems programming",
+        "networking",
+        "security"
+      ],
+      "learning_goals": [
+        "machine learning",
+        "product strategy"
+      ]
     },
-    "confidence_layer": { "confidence_score": 0.86 }
+    "confidence_layer": {
+      "confidence_score": 0.86
+    }
   },
   {
     "id": "s14",
     "name": "Sofia Mendez",
     "competence_signature": {
-      "skills": ["design", "frontend", "communication"],
-      "roles": ["ux-researcher", "ui-designer"],
+      "skills": [
+        "design",
+        "frontend",
+        "communication"
+      ],
+      "roles": [
+        "ux-researcher",
+        "ui-designer"
+      ],
       "experience_level": "intermediate"
     },
     "work_rhythm_signature": {
       "planning_style": "spontaneous",
       "communication_style": "sync",
       "execution_style": "exploratory",
-      "availability": ["Mon-afternoon", "Wed-afternoon", "Fri-afternoon", "Sun-afternoon"]
+      "availability": [
+        "Mon-afternoon",
+        "Wed-afternoon",
+        "Fri-afternoon",
+        "Sun-afternoon"
+      ]
     },
     "collaboration_signature": {
       "conflict_style": "collaborative",
       "leadership_style": "facilitative",
-      "accountability": "medium",
-      "help_seeking": "proactive"
+      "accountability": "developing",
+      "help_seeking": "proactive",
+      "cooperativeness": "high"
     },
     "motivation_layer": {
-      "interests": ["inclusive design", "participatory design", "design systems"],
-      "learning_goals": ["user research methods", "frontend engineering"]
+      "interests": [
+        "inclusive design",
+        "participatory design",
+        "design systems"
+      ],
+      "learning_goals": [
+        "user research methods",
+        "frontend engineering"
+      ]
     },
-    "confidence_layer": { "confidence_score": 0.71 }
+    "confidence_layer": {
+      "confidence_score": 0.71
+    }
   },
   {
     "id": "s15",
     "name": "Kwame Asante",
     "competence_signature": {
-      "skills": ["ml", "algorithms", "research"],
-      "roles": ["ml-researcher", "data-scientist"],
+      "skills": [
+        "ml",
+        "algorithms",
+        "research"
+      ],
+      "roles": [
+        "ml-researcher",
+        "data-scientist"
+      ],
       "experience_level": "advanced"
     },
     "work_rhythm_signature": {
       "planning_style": "spontaneous",
       "communication_style": "async",
       "execution_style": "exploratory",
-      "availability": ["Wed-evening", "Thu-evening", "Sat-anytime", "Sun-anytime"]
+      "availability": [
+        "Wed-evening",
+        "Thu-evening",
+        "Sat-anytime",
+        "Sun-anytime"
+      ]
     },
     "collaboration_signature": {
       "conflict_style": "avoidant",
       "leadership_style": "emergent",
-      "accountability": "medium",
-      "help_seeking": "independent"
+      "accountability": "developing",
+      "help_seeking": "independent",
+      "cooperativeness": "low"
     },
     "motivation_layer": {
-      "interests": ["computer vision", "robotics", "scientific computing"],
-      "learning_goals": ["software engineering practices", "product development"]
+      "interests": [
+        "computer vision",
+        "robotics",
+        "scientific computing"
+      ],
+      "learning_goals": [
+        "software engineering practices",
+        "product development"
+      ]
     },
-    "confidence_layer": { "confidence_score": 0.77 }
+    "confidence_layer": {
+      "confidence_score": 0.77
+    }
   },
   {
     "id": "s16",
     "name": "Mei-Ling Chen",
     "competence_signature": {
-      "skills": ["frontend", "backend", "testing"],
-      "roles": ["fullstack-developer", "qa-engineer"],
+      "skills": [
+        "frontend",
+        "backend",
+        "testing"
+      ],
+      "roles": [
+        "fullstack-developer",
+        "qa-engineer"
+      ],
       "experience_level": "intermediate"
     },
     "work_rhythm_signature": {
       "planning_style": "planner",
       "communication_style": "mixed",
       "execution_style": "methodical",
-      "availability": ["Mon-morning", "Tue-morning", "Thu-morning", "Sat-morning"]
+      "availability": [
+        "Mon-morning",
+        "Tue-morning",
+        "Thu-morning",
+        "Sat-morning"
+      ]
     },
     "collaboration_signature": {
       "conflict_style": "collaborative",
       "leadership_style": "facilitative",
       "accountability": "high",
-      "help_seeking": "proactive"
+      "help_seeking": "proactive",
+      "cooperativeness": "high"
     },
     "motivation_layer": {
-      "interests": ["test automation", "code quality", "developer experience"],
-      "learning_goals": ["machine learning", "system design"]
+      "interests": [
+        "test automation",
+        "code quality",
+        "developer experience"
+      ],
+      "learning_goals": [
+        "machine learning",
+        "system design"
+      ]
     },
-    "confidence_layer": { "confidence_score": 0.74 }
+    "confidence_layer": {
+      "confidence_score": 0.74
+    }
   },
   {
     "id": "s17",
     "name": "Tariq Okafor",
     "competence_signature": {
-      "skills": ["data analysis", "ml", "communication"],
-      "roles": ["data-scientist", "analyst"],
+      "skills": [
+        "data analysis",
+        "ml",
+        "communication"
+      ],
+      "roles": [
+        "data-scientist",
+        "analyst"
+      ],
       "experience_level": "intermediate"
     },
     "work_rhythm_signature": {
       "planning_style": "adaptive",
       "communication_style": "sync",
       "execution_style": "iterative",
-      "availability": ["Mon-afternoon", "Tue-afternoon", "Thu-afternoon", "Fri-afternoon"]
+      "availability": [
+        "Mon-afternoon",
+        "Tue-afternoon",
+        "Thu-afternoon",
+        "Fri-afternoon"
+      ]
     },
     "collaboration_signature": {
       "conflict_style": "collaborative",
       "leadership_style": "emergent",
-      "accountability": "medium",
-      "help_seeking": "reactive"
+      "accountability": "developing",
+      "help_seeking": "reactive",
+      "cooperativeness": "developing"
     },
     "motivation_layer": {
-      "interests": ["business analytics", "data storytelling", "social impact"],
-      "learning_goals": ["machine learning engineering", "product analytics"]
+      "interests": [
+        "business analytics",
+        "data storytelling",
+        "social impact"
+      ],
+      "learning_goals": [
+        "machine learning engineering",
+        "product analytics"
+      ]
     },
-    "confidence_layer": { "confidence_score": 0.62 }
+    "confidence_layer": {
+      "confidence_score": 0.62
+    }
   },
   {
     "id": "s18",
     "name": "Nadia Volkov",
     "competence_signature": {
-      "skills": ["backend", "algorithms", "documentation"],
-      "roles": ["backend-developer", "api-designer"],
+      "skills": [
+        "backend",
+        "algorithms",
+        "documentation"
+      ],
+      "roles": [
+        "backend-developer",
+        "api-designer"
+      ],
       "experience_level": "advanced"
     },
     "work_rhythm_signature": {
       "planning_style": "planner",
       "communication_style": "async",
       "execution_style": "methodical",
-      "availability": ["Mon-morning", "Wed-morning", "Thu-morning", "Fri-morning"]
+      "availability": [
+        "Mon-morning",
+        "Wed-morning",
+        "Thu-morning",
+        "Fri-morning"
+      ]
     },
     "collaboration_signature": {
-      "conflict_style": "confrontational",
+      "conflict_style": "assertive",
       "leadership_style": "facilitative",
       "accountability": "high",
-      "help_seeking": "independent"
+      "help_seeking": "independent",
+      "cooperativeness": "developing"
     },
     "motivation_layer": {
-      "interests": ["api design", "software architecture", "formal methods"],
-      "learning_goals": ["machine learning", "frontend development"]
+      "interests": [
+        "api design",
+        "software architecture",
+        "formal methods"
+      ],
+      "learning_goals": [
+        "machine learning",
+        "frontend development"
+      ]
     },
-    "confidence_layer": { "confidence_score": 0.84 }
+    "confidence_layer": {
+      "confidence_score": 0.84
+    }
   },
   {
     "id": "s19",
     "name": "Hamid Karimi",
     "competence_signature": {
-      "skills": ["devops", "testing", "backend"],
-      "roles": ["sre", "devops-engineer"],
+      "skills": [
+        "devops",
+        "testing",
+        "backend"
+      ],
+      "roles": [
+        "sre",
+        "devops-engineer"
+      ],
       "experience_level": "intermediate"
     },
     "work_rhythm_signature": {
       "planning_style": "adaptive",
       "communication_style": "async",
       "execution_style": "iterative",
-      "availability": ["Tue-morning", "Wed-morning", "Fri-morning", "Sat-afternoon"]
+      "availability": [
+        "Tue-morning",
+        "Wed-morning",
+        "Fri-morning",
+        "Sat-afternoon"
+      ]
     },
     "collaboration_signature": {
       "conflict_style": "avoidant",
       "leadership_style": "emergent",
-      "accountability": "medium",
-      "help_seeking": "reactive"
+      "accountability": "developing",
+      "help_seeking": "reactive",
+      "cooperativeness": "low"
     },
     "motivation_layer": {
-      "interests": ["observability", "chaos engineering", "platform engineering"],
-      "learning_goals": ["machine learning", "product management"]
+      "interests": [
+        "observability",
+        "chaos engineering",
+        "platform engineering"
+      ],
+      "learning_goals": [
+        "machine learning",
+        "product management"
+      ]
     },
-    "confidence_layer": { "confidence_score": 0.55 }
+    "confidence_layer": {
+      "confidence_score": 0.55
+    }
   },
   {
     "id": "s20",
     "name": "Zara Mbeki",
     "competence_signature": {
-      "skills": ["project management", "research", "communication"],
-      "roles": ["product-manager", "researcher"],
+      "skills": [
+        "project management",
+        "research",
+        "communication"
+      ],
+      "roles": [
+        "product-manager",
+        "researcher"
+      ],
       "experience_level": "beginner"
     },
     "work_rhythm_signature": {
       "planning_style": "planner",
       "communication_style": "sync",
       "execution_style": "methodical",
-      "availability": ["Mon-morning", "Tue-morning", "Wed-morning", "Thu-afternoon", "Fri-morning"]
+      "availability": [
+        "Mon-morning",
+        "Tue-morning",
+        "Wed-morning",
+        "Thu-afternoon",
+        "Fri-morning"
+      ]
     },
     "collaboration_signature": {
       "conflict_style": "collaborative",
       "leadership_style": "facilitative",
       "accountability": "high",
-      "help_seeking": "proactive"
+      "help_seeking": "proactive",
+      "cooperativeness": "high"
     },
     "motivation_layer": {
-      "interests": ["edtech", "human-centered design", "social entrepreneurship"],
-      "learning_goals": ["technical skills", "data analysis", "machine learning"]
+      "interests": [
+        "edtech",
+        "human-centered design",
+        "social entrepreneurship"
+      ],
+      "learning_goals": [
+        "technical skills",
+        "data analysis",
+        "machine learning"
+      ]
     },
-    "confidence_layer": { "confidence_score": 0.38 }
+    "confidence_layer": {
+      "confidence_score": 0.38
+    }
   }
 ]

@@ -1,7 +1,11 @@
 """
 Keyword-based mock implementation of BehavioralAnalyzer.
-Replace this class with an LLM-backed implementation to upgrade the prototype.
-See interfaces.py for the contract.
+
+NOTE: this analyzer is no longer called in the MCQ scoring path.
+The L4 deterministic scorer (scoring/dimension_scorer.py) handles all
+MCQ-based assessment.  This mock is retained for potential future use
+in L3 evidence-extraction from free-text conversation transcripts.
+See ai/interfaces.py for the contract.
 """
 from __future__ import annotations
 from typing import List, TYPE_CHECKING
@@ -13,12 +17,14 @@ if TYPE_CHECKING:
 
 # ---------------------------------------------------------------------------
 # Keyword maps — each dimension maps category → trigger words
+# vocabulary updated: "confrontational" renamed "assertive" throughout
 # ---------------------------------------------------------------------------
 _CONFLICT = {
     "collaborative":   ["discuss", "together", "understand", "listen", "check in", "talk", "share",
                         "empathize", "approach", "address", "meet", "open", "honest"],
-    "confrontational": ["confront", "call out", "address directly", "tell them", "challenge",
-                        "push back", "demand", "escalate", "raise", "assert"],
+    "assertive":       ["confront", "call out", "address directly", "tell them", "challenge",
+                        "push back", "demand", "escalate", "raise", "assert", "direct",
+                        "explicit", "clear expectations"],
     "avoidant":        ["avoid", "ignore", "wait", "hope", "maybe later", "not my place",
                         "uncomfortable", "stay out", "move on", "drop"],
 }
@@ -50,10 +56,10 @@ _COMMUNICATION = {
 }
 
 _ACCOUNTABILITY = {
-    "high":   ["commit", "own", "responsible", "accountable", "follow through",
-               "deliver", "promise", "ensure", "make sure", "on time"],
-    "medium": ["try", "do my best", "hope", "expect", "should", "attempt"],
-    "low":    ["depends", "hard to say", "not always", "if possible", "busy"],
+    "high":      ["commit", "own", "responsible", "accountable", "follow through",
+                  "deliver", "promise", "ensure", "make sure", "on time"],
+    "developing": ["try", "do my best", "hope", "expect", "should", "attempt"],
+    "low":       ["depends", "hard to say", "not always", "if possible", "busy"],
 }
 
 _HELP_SEEKING = {
@@ -63,6 +69,13 @@ _HELP_SEEKING = {
                   "last resort", "when i have to"],
     "independent": ["figure it out", "on my own", "self-sufficient", "research first",
                     "independently", "without help", "prefer to solve"],
+}
+
+_COOPERATIVENESS = {
+    "high":      ["check in on", "support", "help teammate", "responsive", "reply quickly",
+                  "make sure everyone", "listen actively", "include", "encourage"],
+    "developing": ["sometimes", "when i can", "try to respond", "occasionally"],
+    "low":       ["ignore", "don't respond", "not my job", "they can figure it out"],
 }
 
 _CONFIDENCE_BOOSTERS = [
@@ -81,15 +94,12 @@ _EXECUTION = {
 
 
 def _score(text: str, keyword_map: dict[str, list[str]]) -> str:
-    """Return the category with the most keyword hits in text."""
     lower = text.lower()
     scores = {cat: sum(1 for kw in kws if kw in lower) for cat, kws in keyword_map.items()}
-    best = max(scores, key=scores.get)
-    return best
+    return max(scores, key=scores.get)
 
 
 def _score_all(responses: list[dict]) -> str:
-    """Concatenate all response texts for bulk scoring."""
     return " ".join(r.get("response_text", "") for r in responses)
 
 
@@ -97,8 +107,6 @@ class MockBehavioralAnalyzer(BehavioralAnalyzer):
     def analyze(self, request: "AssessmentRequest") -> dict:
         raw = [r.model_dump() for r in request.responses]
         combined = _score_all(raw)
-
-        # Boost signals from option choices
         option_text = " ".join(r.get("option_id", "") for r in raw)
         full_text = combined + " " + option_text
 
@@ -115,5 +123,6 @@ class MockBehavioralAnalyzer(BehavioralAnalyzer):
             "leadership_style":     _score(full_text, _LEADERSHIP),
             "accountability":       _score(full_text, _ACCOUNTABILITY),
             "help_seeking":         _score(full_text, _HELP_SEEKING),
+            "cooperativeness":      _score(full_text, _COOPERATIVENESS),
             "confidence_score":     confidence_score,
         }

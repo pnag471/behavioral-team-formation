@@ -1,7 +1,11 @@
 """
 Rule-based mock implementations of ExplanationGenerator and NormGenerator.
 Replace with LLM-backed classes to upgrade the prototype.
-See interfaces.py for the contract.
+See ai/interfaces.py for the contract.
+
+Vocabulary updated:
+  "confrontational" → "assertive"   (conflict_style)
+  "medium"          → "developing"  (accountability)
 """
 from __future__ import annotations
 from typing import List, TYPE_CHECKING
@@ -27,10 +31,10 @@ _NORMS: dict[str, dict[str, tuple[str, str]]] = {
     "conflict": {
         "collaborative": ("Conflict Resolution",
                           "Surface disagreements early in retrospectives; use structured debate — each person states their concern before proposing a solution."),
-        "confrontational": ("Conflict Resolution",
-                            "Establish a 24-hour cooling-off rule before escalating technical disagreements to the full team."),
-        "avoidant": ("Conflict Resolution",
-                     "Assign a rotating 'concern-raiser' role each sprint — that person is explicitly tasked with naming tensions before they accumulate."),
+        "assertive":     ("Conflict Resolution",
+                          "Channel direct feedback toward task substance, not personal criticism; establish a 24-hour reflection period before escalating to the full team."),
+        "avoidant":      ("Conflict Resolution",
+                          "Assign a rotating 'concern-raiser' role each sprint — that person is explicitly tasked with naming tensions before they accumulate."),
     },
     "leadership": {
         "directive":    ("Decision Making",
@@ -49,31 +53,30 @@ _NORMS: dict[str, dict[str, tuple[str, str]]] = {
                          "Keep a rolling two-week plan; flag blockers at least three days before hard deadlines."),
     },
     "accountability": {
-        "high":     ("Accountability",
-                     "Self-reported progress updates every two days in the shared channel; no surprises at deadline."),
-        "medium":   ("Accountability",
-                     "Weekly structured check-in with explicit status: Done / In Progress / Blocked."),
-        "low":      ("Accountability",
-                     "Pair each task with a named owner and a due date; review ownership assignments at every sync meeting."),
+        "high":      ("Accountability",
+                      "Self-reported progress updates every two days in the shared channel; no surprises at deadline."),
+        "developing": ("Accountability",
+                       "Weekly structured check-in with explicit status: Done / In Progress / Blocked."),
+        "low":       ("Accountability",
+                      "Pair each task with a named owner and a due date; review ownership assignments at every sync meeting."),
     },
 }
 
 
 def _majority(values: List[str]) -> str:
-    """Return the most common value in a list."""
     return Counter(values).most_common(1)[0][0]
 
 
 def _build_norms(students: "List[Student]") -> "List[TeamNorm]":
     from app.models import TeamNorm
 
-    comm    = _majority([s.work_rhythm_signature.communication_style for s in students])
+    comm     = _majority([s.work_rhythm_signature.communication_style for s in students])
     conflict = _majority([s.collaboration_signature.conflict_style for s in students])
-    leader  = _majority([s.collaboration_signature.leadership_style for s in students])
-    plan    = _majority([s.work_rhythm_signature.planning_style for s in students])
-    account = _majority([s.collaboration_signature.accountability for s in students])
+    leader   = _majority([s.collaboration_signature.leadership_style for s in students])
+    plan     = _majority([s.work_rhythm_signature.planning_style for s in students])
+    account  = _majority([s.collaboration_signature.accountability for s in students])
 
-    # Map directive majority → "directive" key even if only 1 person is directive
+    # Spread directive members' impact on the norm
     directive_count = sum(1 for s in students if s.collaboration_signature.leadership_style == "directive")
     if directive_count >= 1 and leader != "directive":
         leader = "directive"
@@ -97,7 +100,6 @@ def _norms_lookup(dimension: str, key: str) -> tuple[str, str]:
     bucket = _NORMS.get(dimension, {})
     if key in bucket:
         return bucket[key]
-    # fallback to first entry
     return list(bucket.values())[0]
 
 
@@ -111,12 +113,16 @@ class MockExplainer(ExplanationGenerator, NormGenerator):
 
         sb = team.score_breakdown
         member_names = [m.name for m in team.members]
-        name_list = ", ".join(member_names[:-1]) + f" and {member_names[-1]}" if len(member_names) > 1 else member_names[0]
+        name_list = (
+            ", ".join(member_names[:-1]) + f" and {member_names[-1]}"
+            if len(member_names) > 1
+            else member_names[0]
+        )
 
         # ---- Strengths ----
         strengths: list[str] = []
         if sb.skill_coverage >= 0.7:
-            skill_union = set()
+            skill_union: set[str] = set()
             for s in students:
                 skill_union.update(s.competence_signature.skills)
             strengths.append(
@@ -124,7 +130,7 @@ class MockExplainer(ExplanationGenerator, NormGenerator):
                 + ", ".join(list(skill_union)[:3]) + "."
             )
         if sb.behavioral_compat >= 0.7:
-            strengths.append("High behavioral compatibility: working styles complement each other across planning, communication, and execution dimensions.")
+            strengths.append("High behavioral compatibility: working styles complement each other across validated team dimensions.")
         facilitative = [s for s in students if s.collaboration_signature.leadership_style == "facilitative"]
         if facilitative:
             strengths.append(f"{facilitative[0].name} brings a facilitative leadership style, well-suited for keeping the team aligned without micromanaging.")
@@ -136,6 +142,9 @@ class MockExplainer(ExplanationGenerator, NormGenerator):
         high_account = [s for s in students if s.collaboration_signature.accountability == "high"]
         if len(high_account) >= len(students) - 1:
             strengths.append("Near-universal high accountability — members are likely to follow through on commitments without external tracking.")
+        high_coop = [s for s in students if s.collaboration_signature.cooperativeness == "high"]
+        if len(high_coop) >= len(students) - 1:
+            strengths.append("High cooperativeness across the team — members are likely to support each other and maintain a positive interpersonal environment.")
         if not strengths:
             strengths.append("Team members bring a mix of perspectives that can spark creative problem-solving.")
 
@@ -156,7 +165,12 @@ class MockExplainer(ExplanationGenerator, NormGenerator):
         low_account = [s for s in students if s.collaboration_signature.accountability == "low"]
         if low_account:
             risks.append(
-                f"{low_account[0].name} has lower self-reported accountability — explicit task ownership and check-in cadences are recommended."
+                f"{low_account[0].name} has low accountability — explicit task ownership and check-in cadences are recommended."
+            )
+        low_coop = [s for s in students if s.collaboration_signature.cooperativeness == "low"]
+        if low_coop:
+            risks.append(
+                f"{low_coop[0].name} shows low cooperativeness — proactive team communication norms will be especially important."
             )
         if sb.conflict_risk >= 0.6:
             risks.append("Elevated conflict risk from mixed conflict-resolution styles — invest in team norms during the first week.")
