@@ -1,7 +1,7 @@
 from __future__ import annotations
 import itertools
 import random
-from typing import List
+from typing import List, Tuple
 
 from fastapi import APIRouter, HTTPException
 
@@ -13,11 +13,12 @@ from app.models import (
     TeamNorm,
     TeamScoreBreakdown,
 )
+from scoring.dimension_scorer import get_rubric
 
 router = APIRouter(prefix="/teams", tags=["teams"])
 
 # ---------------------------------------------------------------------------
-# Reference skill set for coverage scoring
+# Reference skill set for complementary_coverage scoring
 # ---------------------------------------------------------------------------
 REFERENCE_SKILLS = {
     "frontend", "backend", "ml", "data analysis", "project management",
@@ -27,78 +28,127 @@ REFERENCE_SKILLS = {
 
 
 # ---------------------------------------------------------------------------
-# Compatibility tables — pairwise scoring per behavioral dimension
+# Rubric accessors
 # ---------------------------------------------------------------------------
-_CONFLICT_COMPAT = {
-    ("collaborative",   "collaborative"):   1.0,
-    ("collaborative",   "confrontational"): 0.6,
-    ("collaborative",   "avoidant"):        0.7,
-    ("confrontational", "confrontational"): 0.3,
-    ("confrontational", "avoidant"):        0.4,
-    ("avoidant",        "avoidant"):        0.5,
-}
 
-_LEADERSHIP_COMPAT = {
-    ("facilitative", "facilitative"): 0.9,
-    ("facilitative", "directive"):    0.85,
-    ("facilitative", "emergent"):     0.8,
-    ("directive",    "directive"):    0.3,
-    ("directive",    "emergent"):     0.6,
-    ("emergent",     "emergent"):     0.65,
-}
-
-_PLANNING_COMPAT = {
-    ("planner",      "planner"):     0.8,
-    ("planner",      "adaptive"):    0.9,
-    ("planner",      "spontaneous"): 0.65,
-    ("adaptive",     "adaptive"):    0.85,
-    ("adaptive",     "spontaneous"): 0.75,
-    ("spontaneous",  "spontaneous"): 0.6,
-}
-
-_ACCOUNTABILITY_COMPAT = {
-    ("high",   "high"):   1.0,
-    ("high",   "medium"): 0.75,
-    ("high",   "low"):    0.4,
-    ("medium", "medium"): 0.7,
-    ("medium", "low"):    0.5,
-    ("low",    "low"):    0.35,
-}
+def _get_student_dim(student: Student, dim_name: str, dim_def: dict):
+    """Read a dimension value from the appropriate Student sub-object."""
+    group = dim_def.get("group", "collaboration")
+    default = dim_def.get("default_value")
+    if group == "work_rhythm":
+        return getattr(student.work_rhythm_signature, dim_name, default)
+    if group == "collaboration":
+        return getattr(student.collaboration_signature, dim_name, default)
+    return default
 
 
-def _lookup(table: dict, a: str, b: str) -> float:
-    key = (a, b) if (a, b) in table else (b, a)
-    return table.get(key, 0.5)
+def _is_unknown(student: Student, dim_name: str) -> bool:
+    return dim_name in (student.under_determined_dims or [])
 
 
 # ---------------------------------------------------------------------------
-# Individual score components
+# Per-team scoring for each composition rule
+# ---------------------------------------------------------------------------
+
+def _ordinal_team_mean(students: List[Student], dim_name: str, dim_def: dict) -> float:
+    """
+    Mean ordinal level for known members.  Unknown members are excluded.
+    Returns a value in [0, 1].  Returns 0.5 when all members are unknown.
+
+    composition_rule: high_mean_with_floor
+    Floor is enforced separately in _check_floor_violations(); this function
+    only scores the mean so the matcher can rank candidate teams.
+    """
+    allowed: List[str] = dim_def["allowed_values"]
+    level_map = {v: i for i, v in enumerate(allowed)}
+    max_level = len(allowed) - 1
+
+    known_levels = [
+        level_map.get(_get_student_dim(s, dim_name, dim_def), max_level // 2)
+        for s in students
+        if not _is_unknown(s, dim_name)
+    ]
+
+    if not known_levels:
+        return 0.5
+    return sum(known_levels) / (len(known_levels) * max_level)
+
+
+def _soft_compat_score(students: List[Student], dim_name: str, dim_def: dict) -> float:
+    """
+    Slight REWARD for value diversity in a team: more distinct values among
+    known members → higher score.  Range [0.7, 1.0].
+
+    composition_rule: soft_compatibility
+
+    Implementation: reward-for-diversity (not penalise-mismatch).
+    A fully homogeneous team scores 0.7; a fully diverse team scores 1.0.
+    """
+    # TODO(team-decision): leadership_style is soft_compatibility (rewards SIMILAR
+    # styles when there is only one member with each style and n_distinct/n is high).
+    # This might contradict complementary-leadership intent — consider switching to
+    # complementary_coverage, which explicitly rewards covering all styles.
+    # File: backend/app/matching.py  — confirm which rule is correct.
+    values = [
+        _get_student_dim(s, dim_name, dim_def)
+        for s in students
+        if not _is_unknown(s, dim_name)
+    ]
+    if not values:
+        return 0.85  # all unknown → neutral
+    n_distinct = len(set(values))
+    return 0.7 + 0.3 * (n_distinct / len(values))
+
+
+def _behavioral_compat(students: List[Student]) -> float:
+    """
+    Team-level behavioral compatibility score, driven by rubric composition_rule.
+
+    Normalised by sum of non-zero weights so missing a dimension does not
+    deflate the score.
+    """
+    if len(students) < 2:
+        return 1.0
+
+    rubric = get_rubric()
+    weighted_score = 0.0
+    total_weight = 0.0
+
+    for dim_name, dim_def in rubric["dimensions"].items():
+        if dim_def.get("type") == "derived":
+            continue
+        rule = dim_def.get("composition_rule")
+        weight = dim_def.get("matching_weight", 0.0)
+        if weight == 0.0 or not rule:
+            continue
+
+        if rule == "high_mean_with_floor":
+            dim_score = _ordinal_team_mean(students, dim_name, dim_def)
+        elif rule == "soft_compatibility":
+            # TODO(team-decision): conflict_style is zeroed (weight=0.0 in rubric)
+            # until the question bank distinguishes task vs relationship conflict.
+            # File: backend/app/matching.py  — confirm this is correct.
+            dim_score = _soft_compat_score(students, dim_name, dim_def)
+        else:
+            continue
+
+        weighted_score += weight * dim_score
+        total_weight += weight
+
+    return weighted_score / total_weight if total_weight > 0 else 0.5
+
+
+# ---------------------------------------------------------------------------
+# Individual score components (deterministic)
 # ---------------------------------------------------------------------------
 
 def _skill_coverage(students: List[Student]) -> float:
-    team_skills = set()
+    """complementary_coverage: fraction of REFERENCE_SKILLS covered by the team."""
+    team_skills: set[str] = set()
     for s in students:
         team_skills.update(s.competence_signature.skills)
     overlap = team_skills & REFERENCE_SKILLS
     return len(overlap) / len(REFERENCE_SKILLS)
-
-
-def _behavioral_compat(students: List[Student]) -> float:
-    if len(students) < 2:
-        return 1.0
-    scores = []
-    for a, b in itertools.combinations(students, 2):
-        cs = a.collaboration_signature
-        bs = b.collaboration_signature
-        pair_score = (
-            _lookup(_CONFLICT_COMPAT, cs.conflict_style, bs.conflict_style) * 0.35
-            + _lookup(_LEADERSHIP_COMPAT, cs.leadership_style, bs.leadership_style) * 0.30
-            + _lookup(_PLANNING_COMPAT, a.work_rhythm_signature.planning_style,
-                      b.work_rhythm_signature.planning_style) * 0.20
-            + _lookup(_ACCOUNTABILITY_COMPAT, cs.accountability, bs.accountability) * 0.15
-        )
-        scores.append(pair_score)
-    return sum(scores) / len(scores)
 
 
 def _availability_overlap(students: List[Student]) -> float:
@@ -109,15 +159,12 @@ def _availability_overlap(students: List[Student]) -> float:
         set_a = set(a.work_rhythm_signature.availability)
         set_b = set(b.work_rhythm_signature.availability)
         union = set_a | set_b
-        if not union:
-            scores.append(0.5)
-        else:
-            scores.append(len(set_a & set_b) / len(union))
+        scores.append(len(set_a & set_b) / len(union) if union else 0.5)
     return sum(scores) / len(scores)
 
 
 def _shared_interests(students: List[Student]) -> float:
-    all_interests: list[set] = [
+    all_interests = [
         set(s.motivation_layer.interests + s.motivation_layer.learning_goals)
         for s in students
     ]
@@ -137,11 +184,15 @@ def _conflict_risk(students: List[Student]) -> float:
     total_pairs = 0
     for a, b in itertools.combinations(students, 2):
         total_pairs += 1
-        ca, cb = a.collaboration_signature.conflict_style, b.collaboration_signature.conflict_style
-        if ca != cb and not ("collaborative" in (ca, cb)):
+        ca = a.collaboration_signature.conflict_style
+        cb = b.collaboration_signature.conflict_style
+        if ca != cb and "collaborative" not in (ca, cb):
             mismatch_count += 1
     mismatch_rate = mismatch_count / total_pairs
-    directive_count = sum(1 for s in students if s.collaboration_signature.leadership_style == "directive")
+    directive_count = sum(
+        1 for s in students
+        if s.collaboration_signature.leadership_style == "directive"
+    )
     directive_penalty = max(0.0, (directive_count - 1) * 0.15)
     return min(1.0, mismatch_rate * 0.7 + directive_penalty)
 
@@ -175,7 +226,119 @@ def _normalize_weights(weights: dict) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# SQLite helper — mirrors the same pattern in explainability.py
+# Floor and balance (high_mean_with_floor objective)
+# ---------------------------------------------------------------------------
+
+def _floor_dims() -> dict:
+    rubric = get_rubric()
+    return {
+        name: dim
+        for name, dim in rubric["dimensions"].items()
+        if dim.get("composition_rule") == "high_mean_with_floor"
+        and dim.get("type") == "ordinal"
+    }
+
+
+def _is_floor_level(student: Student, dim_name: str, dim_def: dict) -> bool:
+    if _is_unknown(student, dim_name):
+        return False  # unknown does not violate the floor
+    value = _get_student_dim(student, dim_name, dim_def)
+    return value == dim_def["allowed_values"][0]  # lowest level
+
+
+def _check_feasibility(
+    students: List[Student], n_teams: int
+) -> Tuple[bool, dict]:
+    """
+    Returns (is_feasible, {dim_name: count_floor_level_students}).
+
+    Infeasible when any floor dim has more students at the lowest level
+    than there are teams — cannot spread them one-per-team.
+    """
+    dims = _floor_dims()
+    infeasible: dict[str, int] = {}
+    for dim_name, dim_def in dims.items():
+        count = sum(1 for s in students if _is_floor_level(s, dim_name, dim_def))
+        if count > n_teams:
+            infeasible[dim_name] = count
+    return len(infeasible) == 0, infeasible
+
+
+def _check_floor_violations(
+    teams: List[List[Student]],
+) -> Tuple[bool, List[str], List[str]]:
+    """
+    Returns (feasible, floor_violation_messages, under_determined_team_ids).
+
+    floor_violation_messages: list of strings describing each violation.
+    under_determined_team_ids: teams where ≥1 member has unknown floor dims.
+    """
+    dims = _floor_dims()
+    violations: List[str] = []
+    under_determined: List[str] = []
+
+    for team_idx, team in enumerate(teams):
+        team_id = f"team-{team_idx + 1}"
+        has_unknown = False
+        for dim_name, dim_def in dims.items():
+            for student in team:
+                if _is_unknown(student, dim_name):
+                    has_unknown = True
+                elif _is_floor_level(student, dim_name, dim_def):
+                    violations.append(
+                        f"{team_id}: '{student.name}' has {dim_name}="
+                        f"{dim_def['allowed_values'][0]} (floor level)"
+                    )
+        if has_unknown:
+            under_determined.append(team_id)
+
+    return len(violations) == 0, violations, under_determined
+
+
+def _partition_floor_min(teams: List[List[Student]]) -> float:
+    """
+    Minimum per-team floor-dim mean across all teams and floor dims.
+    Used by maximin improve to equalize team quality.
+    """
+    dims = _floor_dims()
+    if not dims:
+        return 1.0
+    scores = [
+        _ordinal_team_mean(team, dim_name, dim_def)
+        for team in teams
+        for dim_name, dim_def in dims.items()
+    ]
+    return min(scores) if scores else 0.5
+
+
+def _maximin_improve(teams: List[List[Student]]) -> List[List[Student]]:
+    """
+    Pairwise swap pass that maximises min(team_floor_mean across all teams).
+
+    Accepts a swap only if it increases the partition floor minimum.
+    This equalises team means on validated ordinal dims (maximin objective)
+    without creating a within-team variance penalty (which would concentrate
+    weak members — the Bell 2007 bad-apple problem).
+    """
+    improved = True
+    while improved:
+        improved = False
+        for i in range(len(teams)):
+            for j in range(i + 1, len(teams)):
+                for a_idx in range(len(teams[i])):
+                    for b_idx in range(len(teams[j])):
+                        original = _partition_floor_min(teams)
+                        teams[i][a_idx], teams[j][b_idx] = teams[j][b_idx], teams[i][a_idx]
+                        new_val = _partition_floor_min(teams)
+                        if new_val > original + 1e-6:
+                            improved = True
+                        else:
+                            teams[i][a_idx], teams[j][b_idx] = teams[j][b_idx], teams[i][a_idx]
+    return teams
+
+
+# ---------------------------------------------------------------------------
+# DB helper
 # ---------------------------------------------------------------------------
 
 def _db_student_to_model(s) -> Student:
@@ -187,43 +350,91 @@ def _db_student_to_model(s) -> Student:
         collaboration_signature=s.collaboration_signature,
         motivation_layer=s.motivation_layer,
         confidence_layer=s.confidence_layer,
+        under_determined_dims=s.under_determined_dims or [],
     )
 
 
 # ---------------------------------------------------------------------------
-# Greedy team builder (unchanged — used by both behavioral and skill modes)
+# Greedy team builder with floor-first seeding
 # ---------------------------------------------------------------------------
 
-def _greedy_build(students: List[Student], team_size: int, weights: dict) -> List[List[Student]]:
-    remaining = list(students)
-    teams: List[List[Student]] = []
+def _greedy_build(
+    students: List[Student], team_size: int, weights: dict
+) -> List[List[Student]]:
+    """
+    Greedy team builder.
 
-    while len(remaining) >= team_size:
-        seed = max(remaining, key=lambda s: len(set(s.competence_signature.skills) & REFERENCE_SKILLS))
-        team = [seed]
-        remaining.remove(seed)
+    Floor-level students (known lowest level on any floor dim) are assigned
+    round-robin first so at most one lands per team.  Remaining students are
+    added greedily by total score.
 
-        while len(team) < team_size and remaining:
-            best_student = max(
+    TODO(team-decision): seeding is currently skills-coverage-first for non-floor
+    students.  Consider floor-dim-score-first seeding to balance high-quality
+    members across teams before the maximin pass.
+    File: backend/app/matching.py  — confirm seeding strategy.
+    """
+    dims = _floor_dims()
+
+    def is_floor_student(s: Student) -> bool:
+        return any(_is_floor_level(s, dn, dd) for dn, dd in dims.items())
+
+    floor_students = [s for s in students if is_floor_student(s)]
+    other_students = [s for s in students if not is_floor_student(s)]
+
+    n_teams = len(students) // team_size
+    teams: List[List[Student]] = [[] for _ in range(n_teams)]
+
+    # Assign floor-level students round-robin (one per team max)
+    for i, s in enumerate(floor_students):
+        teams[i % n_teams].append(s)
+
+    # Fill remaining spots greedily by total score
+    remaining = list(other_students)
+
+    # Seed each team that lacks a starter with the highest-skill remaining student
+    for team in teams:
+        if not team and remaining:
+            seed = max(
                 remaining,
-                key=lambda candidate: _total_score(team + [candidate], weights),
+                key=lambda s: len(set(s.competence_signature.skills) & REFERENCE_SKILLS),
             )
-            team.append(best_student)
-            remaining.remove(best_student)
+            team.append(seed)
+            remaining.remove(seed)
 
-        teams.append(team)
+    while remaining:
+        # Find best (team, candidate) pair
+        best_score = -float("inf")
+        best_team_idx = 0
+        best_student = remaining[0]
 
-    for leftover in remaining:
+        for team_idx, team in enumerate(teams):
+            if len(team) >= team_size:
+                continue
+            for candidate in remaining:
+                s = _total_score(team + [candidate], weights)
+                if s > best_score:
+                    best_score = s
+                    best_team_idx = team_idx
+                    best_student = candidate
+
+        teams[best_team_idx].append(best_student)
+        remaining.remove(best_student)
+
+    # Distribute any true leftovers (when len(students) % team_size != 0)
+    leftover = [s for s in students if not any(s in t for t in teams)]
+    for s in leftover:
         best_team_idx = max(
             range(len(teams)),
-            key=lambda i: _total_score(teams[i] + [leftover], weights),
+            key=lambda i: _total_score(teams[i] + [s], weights),
         )
-        teams[best_team_idx].append(leftover)
+        teams[best_team_idx].append(s)
 
     return teams
 
 
-def _two_opt_improve(teams: List[List[Student]], weights: dict) -> List[List[Student]]:
+def _two_opt_improve(
+    teams: List[List[Student]], weights: dict
+) -> List[List[Student]]:
     improved = True
     while improved:
         improved = False
@@ -246,33 +457,26 @@ def _two_opt_improve(teams: List[List[Student]], weights: dict) -> List[List[Stu
 # ---------------------------------------------------------------------------
 
 def random_assignment(students: List[Student], team_size: int) -> List[List[Student]]:
-    """Shuffle students randomly and slice into teams. No optimization."""
     pool = list(students)
     random.shuffle(pool)
     teams: List[List[Student]] = []
     while len(pool) >= team_size:
         teams.append(pool[:team_size])
         pool = pool[team_size:]
-    # Distribute leftover students across teams
     for i, leftover in enumerate(pool):
         teams[i % len(teams)].append(leftover)
     return teams
 
 
 def skill_based_assignment(students: List[Student], team_size: int) -> List[List[Student]]:
-    """Greedy + 2-opt optimizing skill coverage only — ignores behavioral dimensions."""
-    skill_weights = {
-        "skill_coverage": 1.0,
-        "behavioral_compat": 0.0,
-        "availability_overlap": 0.0,
-        "shared_interests": 0.0,
-    }
-    raw_teams = _greedy_build(students, team_size, skill_weights)
-    return _two_opt_improve(raw_teams, skill_weights)
+    skill_weights = {"skill_coverage": 1.0, "behavioral_compat": 0.0,
+                     "availability_overlap": 0.0, "shared_interests": 0.0}
+    raw = _greedy_build(students, team_size, skill_weights)
+    return _two_opt_improve(raw, skill_weights)
 
 
 # ---------------------------------------------------------------------------
-# Shared team-object builder
+# Shared team-object builder (norms generated separately, on demand)
 # ---------------------------------------------------------------------------
 
 def _build_teams(
@@ -280,13 +484,14 @@ def _build_teams(
     mode: str,
     behavioral_weights: dict,
 ) -> List[Team]:
-    from ai.claude_explainer import ClaudeExplainer
-
-    explainer = ClaudeExplainer()
+    """
+    Convert raw student groups to Team objects.  Norms are NOT generated here
+    (LLM calls don't belong inside formation); they are generated on-demand
+    in GET /teams/{id}/explanation.
+    """
     skill_weights = {"skill_coverage": 1.0, "behavioral_compat": 0.0,
                      "availability_overlap": 0.0, "shared_interests": 0.0}
 
-    # For confidence calculation we need the "primary" score of each group
     if mode == "random":
         primary_scores = [0.0] * len(raw_groups)
     elif mode == "skill":
@@ -342,12 +547,7 @@ def _build_teams(
             for s in group
         ]
 
-        norms = explainer.suggest_norms(
-            Team(id=team_id, members=members, score_breakdown=breakdown),
-            group,
-        )
-
-        result.append(Team(id=team_id, members=members, score_breakdown=breakdown, team_norms=norms))
+        result.append(Team(id=team_id, members=members, score_breakdown=breakdown, team_norms=[]))
 
     return result
 
@@ -372,6 +572,26 @@ def generate_teams(request: TeamGenerationRequest):
 
     mode = request.formation_mode
     behavioral_weights = _normalize_weights(request.weights)
+    n_teams = len(students) // request.team_size
+
+    # Feasibility check for floor dimensions before running optimization
+    if mode == "behavioral":
+        feasible_pre, infeasible_dims = _check_feasibility(students, n_teams)
+        if not feasible_pre:
+            raise HTTPException(
+                status_code=422,
+                detail={
+                    "error": "infeasible_partition",
+                    "message": (
+                        "Too many students at the lowest level on floor dimensions "
+                        "to spread them one-per-team. Cannot form valid teams."
+                    ),
+                    "infeasible_dims": {
+                        dim: f"{count} students at floor level but only {n_teams} teams"
+                        for dim, count in infeasible_dims.items()
+                    },
+                },
+            )
 
     if mode == "random":
         raw_groups = random_assignment(students, request.team_size)
@@ -380,10 +600,14 @@ def generate_teams(request: TeamGenerationRequest):
     else:
         raw_groups = _greedy_build(students, request.team_size, behavioral_weights)
         raw_groups = _two_opt_improve(raw_groups, behavioral_weights)
+        raw_groups = _maximin_improve(raw_groups)
 
     result = _build_teams(raw_groups, mode, behavioral_weights)
 
-    # Persist to SQLite
+    # Post-formation floor check (informational — optimization may not eliminate all violations)
+    floor_ok, floor_violations, under_determined_teams = _check_floor_violations(raw_groups)
+
+    # Persist teams
     db = SessionLocal()
     try:
         db.query(TeamDB).delete()
@@ -392,14 +616,19 @@ def generate_teams(request: TeamGenerationRequest):
                 id=team.id,
                 members=[m.model_dump() for m in team.members],
                 score_breakdown=team.score_breakdown.model_dump(),
-                team_norms=[n.model_dump() for n in team.team_norms],
+                team_norms=[],
                 formation_mode=mode,
             ))
         db.commit()
     finally:
         db.close()
 
-    return {"teams": result}
+    return {
+        "teams": result,
+        "feasible": floor_ok,
+        "floor_violations": floor_violations,
+        "under_determined_teams": under_determined_teams,
+    }
 
 
 @router.get("/teams")

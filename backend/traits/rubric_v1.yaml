@@ -1,0 +1,278 @@
+schema_version: "v1"
+
+# ---------------------------------------------------------------------------
+# L0 Trait Rubric — single versioned source of truth.
+#
+# Every LLM prompt, scoring function, and compatibility algorithm MUST read
+# from this file.  No dimension definitions live anywhere else.
+#
+# Fields per dimension
+# --------------------
+# type:              categorical | ordinal | derived
+# group:             work_rhythm | collaboration | confidence
+# composition_rule:  how the TEAM-LEVEL objective is computed
+#
+#   high_mean_with_floor    ordinal; maximize team mean level; enforce a hard
+#                           floor (no team member at the lowest allowed_value).
+#                           Balance means ACROSS teams (maximin objective).
+#                           NOTE: no within-team variance penalty — that
+#                           objective concentrates weak members together,
+#                           violating the bad-apple finding from Bell (2007).
+#
+#   soft_compatibility      categorical; slight REWARD for value diversity in
+#                           a team (more distinct values among members = higher
+#                           score); range [0.7, 1.0]; low weight; NOT
+#                           performance-validated.  The reward-for-diversity
+#                           direction is what the matcher code implements.
+#                           Do not confuse with "penalise mismatch" — these
+#                           are opposite signs for extreme homogeneity.
+#
+#   complementary_coverage  categorical; score by fraction of distinct values
+#                           covered relative to a reference set; higher
+#                           coverage = better. DEFINED and IMPLEMENTED:
+#                           applied to skills via REFERENCE_SKILLS in
+#                           matching.py:_skill_coverage().  NOT yet applied
+#                           to any rubric dimension (leadership_style is a
+#                           candidate — see TODO below).
+#
+# evidence_basis:    validated | preference | weak
+# matching_weight:   relative weight inside _behavioral_compat(); the matcher
+#                    normalises by sum(weights) so they need not sum to 1.0.
+# allowed_values:    for ordinal, ordered poor → strong (index 0 = poorest).
+# default_value:     for DISPLAY only; NEVER passed to floor or balance
+#                    scoring. Unknown dimensions are tracked separately via
+#                    Student.under_determined_dims.
+# ---------------------------------------------------------------------------
+
+dimensions:
+
+  # =========================================================================
+  # WORK RHYTHM  (group: work_rhythm)
+  # =========================================================================
+
+  planning_style:
+    type: categorical
+    group: work_rhythm
+    composition_rule: soft_compatibility
+    evidence_basis: preference
+    source: >
+      No published evidence establishes one planning style as superior for
+      student project teams.  Low-weight preference signal only.
+    description: >
+      How a person structures time and tasks.  Planners work from explicit
+      timelines and milestones; spontaneous individuals prefer emergence and
+      flexibility; adaptive individuals adjust cadence with changing context.
+    allowed_values:
+      - planner
+      - spontaneous
+      - adaptive
+    default_value: adaptive
+    matching_weight: 0.025
+
+  communication_style:
+    type: categorical
+    group: work_rhythm
+    composition_rule: soft_compatibility
+    evidence_basis: preference
+    source: >
+      No evidence that a communication modality causes better outcomes in
+      student teams once basic coordination norms are in place.
+    description: >
+      Preferred mode of information exchange: async (written channels),
+      sync (real-time discussion), or mixed (context-dependent).
+    allowed_values:
+      - async
+      - sync
+      - mixed
+    default_value: mixed
+    matching_weight: 0.025
+
+  execution_style:
+    type: categorical
+    group: work_rhythm
+    composition_rule: soft_compatibility
+    evidence_basis: preference
+    source: >
+      Cognitive-style variation lacks causal evidence for team performance in
+      the student-project context.  Low-weight preference signal.
+    description: >
+      How a person approaches completing work: methodical (step-by-step),
+      iterative (build-feedback-refine), or exploratory (open-ended discovery).
+    allowed_values:
+      - methodical
+      - iterative
+      - exploratory
+    default_value: iterative
+    matching_weight: 0.025
+
+  # =========================================================================
+  # COLLABORATION  (group: collaboration)
+  # =========================================================================
+
+  conflict_style:
+    type: categorical
+    group: collaboration
+    composition_rule: soft_compatibility
+    evidence_basis: weak
+    # TODO(team-decision): conflict_style is zeroed (matching_weight: 0.0) until
+    # the question bank distinguishes task conflict from relationship conflict.
+    # File: backend/traits/rubric_v1.yaml  — confirm this is correct.
+    # Reference: De Dreu & Weingart (2003); Jehn (1995) — see source below.
+    source: >
+      De Dreu & Weingart (2003) J. Applied Psych 88(4):741-749; Jehn (1995)
+      ASQ 40(2):256-282.  Relationship conflict (interpersonal friction) harms
+      performance; task conflict (substantive disagreement) shows mixed effects.
+      The current MCQ bank cannot separate relationship from task conflict
+      orientation, making scored values unreliable for matching.  Weight is
+      zeroed until a redesigned bank resolves this.
+      RENAME NOTE: 'confrontational' has been renamed 'assertive' throughout
+      the codebase. Direct/assertive engagement with task substance is NOT the
+      same as relationship-conflict propensity.  See CHANGES.md §conflict_style.
+    description: >
+      How a person engages with disagreement.  'avoidant': suppresses both
+      task and interpersonal conflict; issues may fester.  'assertive': engages
+      directly with task substance; directness does NOT imply
+      relationship-hostility.  'collaborative': seeks mutual understanding;
+      separates issue from person.
+    allowed_values:
+      - avoidant
+      - assertive
+      - collaborative
+    default_value: collaborative
+    matching_weight: 0.0
+
+  leadership_style:
+    type: categorical
+    group: collaboration
+    composition_rule: soft_compatibility
+    # TODO(team-decision): leadership_style uses soft_compatibility (slight reward
+    # for SIMILAR styles).  This may contradict the complementary-leadership
+    # intent; switching to complementary_coverage would reward teams that cover
+    # directive + facilitative + emergent.  Decide with team.
+    # File: backend/traits/rubric_v1.yaml  — confirm which rule is correct.
+    evidence_basis: preference
+    source: >
+      Leadership-style complementarity is cited practitioner-side but controlled
+      student-team evidence is thin.  Low-weight soft signal.
+    description: >
+      How a person takes initiative in group contexts.  'directive': takes
+      charge and assigns tasks.  'facilitative': structures group process and
+      enables others.  'emergent': steps up only when needed.
+    allowed_values:
+      - directive
+      - facilitative
+      - emergent
+    default_value: facilitative
+    matching_weight: 0.10
+
+  accountability:
+    type: ordinal
+    group: collaboration
+    composition_rule: high_mean_with_floor
+    evidence_basis: validated
+    source: >
+      Peeters et al. (2006) Eur. J. Personality 20(5):377-396: team MEAN
+      conscientiousness predicts student project performance; Bell (2007)
+      J. Applied Psych 92(3):595-615: team MINIMUM conscientiousness is a
+      significant predictor (bad-apple effect).  Ohland et al. (2012)
+      AMLE 11(4):609-630; Loughry et al. (2007) Ed. & Psych. Measurement:
+      CATME 'contributing to the team's work' dimension.
+    description: >
+      Degree to which a person makes explicit commitments and reliably delivers.
+      Higher is universally better.  Floor: no team may include a member at
+      the 'low' level (bad-apple effect per Bell 2007).
+      BEHAVIORAL ANCHORS (BARS-style, CATME-inspired)
+      — PROPOSED; NEEDS HUMAN SIGN-OFF (see CHANGES.md §NEEDS-SIGN-OFF):
+        low (poor):        Rarely completes assigned work on time; commits
+                           without follow-through; needs repeated reminders;
+                           unresponsive to team messages about deadlines.
+        developing:        Completes most work but occasionally misses deadlines
+                           or delivers incomplete items; inconsistent proactive
+                           communication about blockers.
+        high (strong):     Consistently delivers on explicit commitments by
+                           the deadline; communicates blockers early; no
+                           surprise failures at submission time.
+    allowed_values:
+      - low         # poor
+      - developing  # mid
+      - high        # strong
+    default_value: developing
+    matching_weight: 0.35
+
+  help_seeking:
+    type: categorical
+    group: collaboration
+    composition_rule: soft_compatibility
+    evidence_basis: preference
+    source: >
+      Proactive help-seeking is generally adaptive but independent problem-
+      solving is valued in some roles.  No clean causal evidence for student
+      team performance independent of other factors.
+    description: >
+      When and how a person seeks assistance.  'proactive': asks early before
+      stuck.  'reactive': asks when stuck.  'independent': prefers to solve
+      alone first.
+    allowed_values:
+      - proactive
+      - reactive
+      - independent
+    default_value: proactive
+    matching_weight: 0.025
+
+  cooperativeness:
+    type: ordinal
+    group: collaboration
+    composition_rule: high_mean_with_floor
+    evidence_basis: validated
+    source: >
+      Peeters et al. (2006) Eur. J. Personality 20(5):377-396: team MEAN
+      agreeableness predicts student project performance.  Bell (2007)
+      J. Applied Psych 92(3):595-615: team MINIMUM agreeableness is a
+      significant performance predictor (bad-apple effect).  Ohland et al.
+      (2012) AMLE 11(4):609-630; Loughry et al. (2007) Ed. & Psych.
+      Measurement: CATME 'interacting with teammates' dimension.
+    description: >
+      Degree to which a person actively supports teammates' participation,
+      responds to team communications, and creates a productive interpersonal
+      environment.  Distinct from conflict_style and leadership_style.
+      Floor: no team may include a member at the 'low' level.
+      BEHAVIORAL ANCHORS (BARS-style, CATME 'interacting with teammates')
+      — PROPOSED; NEEDS HUMAN SIGN-OFF (see CHANGES.md §NEEDS-SIGN-OFF):
+        low (poor):        Rarely responds to teammates' messages; dismisses
+                           others' ideas; does not check in; makes
+                           collaboration feel costly for others.
+        developing:        Responds to most team communications; engages when
+                           personally interested; occasionally delays follow-up.
+        high (strong):     Consistently engages with and amplifies teammates'
+                           contributions; responds promptly; proactively checks
+                           in; creates an environment where others feel
+                           comfortable contributing.
+    allowed_values:
+      - low         # poor
+      - developing  # mid
+      - high        # strong
+    default_value: developing
+    matching_weight: 0.35
+
+  # =========================================================================
+  # CONFIDENCE  (group: confidence)  —  DERIVED; not a scoreable trait
+  # =========================================================================
+
+  confidence_score:
+    type: derived
+    group: confidence
+    composition_rule: null
+    evidence_basis: weak
+    source: >
+      'Self-assurance' is not directly observable from MCQ option choices.
+      The prior implementation derived it from other dimensions (circular proxy
+      — now removed).  REDEFINED: confidence_score is SCORER MEASUREMENT
+      CONFIDENCE: the mean fraction of dimensions for which sufficient MCQ
+      signals were received.  It is a quality-of-evidence indicator for the
+      profile, NOT a student personality trait.  See CHANGES.md §confidence_score.
+    description: >
+      Profile measurement confidence: mean signal coverage across all non-
+      derived dimensions.  Range [0, 1].  Higher means more MCQ responses
+      contributed signals to scoring.  Does NOT represent student self-assurance.
+    range: [0.0, 1.0]
+    matching_weight: 0.0
