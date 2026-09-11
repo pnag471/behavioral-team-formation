@@ -183,12 +183,143 @@ rest:
 - **Availability overlap (default 20%)** and **shared interests (default 10%)** — straightforward
   overlap between members' free-time slots and stated interests/goals.
 
-The optimizer itself runs in three passes: greedy construction (seed each team, then repeatedly add
-whichever remaining student most improves that team's score), a 2-opt pass (try swapping pairs of
-students between teams if it improves both), and a maximin pass that specifically evens out the
-floor-protected dimensions across teams so no single team is left worse off than the others. Before any
-of this runs, the system checks feasibility — if there are more low-accountability students than
-teams, for instance, it refuses to generate teams rather than silently producing an unfair split.
+The optimizer itself runs in three constraint-safe passes: greedy construction (seed each team, then
+repeatedly add whichever remaining student most improves that team's score), a 2-opt pass (try swapping
+pairs of students between teams if it improves both, without ever regressing skill coverage below what
+greedy already achieved), and a maximin pass that specifically evens out the floor-protected dimensions
+across teams so no single team is left worse off than the others, without undoing 2-opt's score gains.
+Before any of this runs, the system checks feasibility against the request's `floor_policy`
+(`one_low_per_team`, the default — spread low-accountability/cooperativeness students round-robin, at
+most one per team; or `zero_tolerance` — reject any roster containing one at all) — see
+`TeamGenerationRequest.floor_policy`.
+
+Three further passes are available but **off by default**, each gated by its own request field so default
+matching behavior never changes unless an instructor explicitly opts in. They run in this order —
+maximin → ability → fairness → familiarity:
+- **`fairness.enabled`** — runs `_fairness_improve` after maximin, raising the worst-off individual
+  student's utility (a per-student value built from skill/behavioral/availability/interest fit — see
+  `app/matching.py`'s individual-utility framework) without regressing the score objective or the
+  floor-minimum. Utility itself is always computed and returned (`fairness_summary` on every response),
+  whether or not this pass runs.
+- **`ability.enabled`** — runs `_ability_balance_improve` after maximin (before fairness), narrowing the
+  gap between the strongest and weakest team's mean *ability* — a `[0.0, 1.0]`-scale signal
+  (`CompetenceSignature.ability_score`, falling back to `experience_level` when unset) that is
+  DISTINCT from skill coverage: coverage asks whether the team collectively has each required skill;
+  ability asks how strong each individual member is. "Balanced ability" is treated as a research
+  hypothesis to test, not an established target — see `AbilityConfig`'s docstring. Ability metrics
+  (`ability_summary` on every response) are always computed regardless of this flag.
+- **`familiarity.enabled`** — runs `_familiarity_balance_improve` last, pulling each team's prior-
+  familiarity density toward a configured `[lower_bound, upper_bound]` band (below = may lack coordination
+  support, above = possible cluster concentration) and shrinking any pre-existing `connected_familiarity_
+  cluster` (see below) that exceeds `max_clique_fraction` of a team. Familiarity is a RELATIONSHIP between
+  two students (the `familiarity` DB table / `POST /familiarity`, symmetric, `[0.0, 1.0]` scale — see
+  `FamiliarityEdge`'s docstring), not a property of one, and a missing edge is UNKNOWN, never coerced to
+  zero. A roster with no recorded edges at all makes this pass a no-op even when enabled. Familiarity
+  metrics (`familiarity_summary` on every response) are always computed regardless of this flag. None of the
+  band/threshold defaults are validated for this population — see `FamiliarityConfig`'s docstring.
+  A team's **`connected_familiarity_cluster`** is computed from that team's own *team-induced* subgraph
+  (only that team's members, only the edges between them, kept at/above `clique_edge_threshold`) — NOT the
+  whole-roster graph. This matters: two teammates connected only through a path running through a student on
+  a *different* team are never counted as clustered (Part 4.5 fixed a bug where the whole-roster version of
+  this computation could do exactly that). It is called a "cluster," not a "clique," because a connected
+  component only requires a *path* between members, not every pair directly connected — cohesion fields
+  (`known_internal_edge_coverage`, `mean_known_internal_strength`, `thresholded_internal_edge_density`,
+  `is_quasi_clique`) on `largest_connected_cluster` distinguish a loose chain/star from an actual clique.
+  Each team also reports `known_pair_coverage` (known / all-possible teammate pairs); below the configurable
+  `minimum_known_pair_coverage` (default 0.5), `band_status` becomes `"insufficient_data"` instead of a
+  below/within/above verdict resting on too little evidence, and the optimizer does not penalize that team
+  for its density by default (`penalize_insufficient_data`, off by default).
+- **`preference.enabled`** — runs `_preference_repair_improve` last (after familiarity), reducing unmet
+  HIGH-priority "prefer" entries, avoidance violations, and general preference dissatisfaction across the
+  assignment. A preference is a DIRECTED statement from ONE student about a target (another student, by
+  rank/tie, or optionally a team characteristic like `{"skill": "backend"}`) or an avoidance request — see
+  `PreferenceEntry`'s docstring for the full schema (ranked/tied/avoid/missing). A student with NO submitted
+  entries has MISSING preference data, never scored as dissatisfaction. Preference/stability metrics
+  (`preference_summary` on every response) are ALWAYS computed regardless of this flag —
+  `preference.enabled` controls only whether they are also used to CHOOSE the assignment (Part 5.5 —
+  detection/evaluation was already unconditional in Part 5, but this distinction is now verified explicitly:
+  see `test_preference_instability_detected_by_part5_engine_without_repair_enabled`).
+  **Avoidance** (Part 5.5 clarified into three tiers): a plain `avoid` entry is a SOFT signal (reported
+  only); `priority="high"` weights it more heavily wherever `preference.enabled=true` but is STILL not
+  structurally enforced by priority alone; `preference.hard_avoidance=true` promotes avoidance AS A WHOLE
+  into a genuine HARD CONSTRAINT, enforced by `_hard_avoidance_repair` INDEPENDENTLY of
+  `preference.enabled` — exactly like skill-coverage/floor-policy are always enforced regardless of whether
+  ability/fairness/familiarity optimization is on. That pass actively REDUCES pre-existing violations when a
+  hard-constraint-safe fix exists (not merely refuses to worsen them), and reports any it cannot resolve
+  (an "unavoidable violation") rather than hiding it. Avoidance is honored UNILATERALLY (a request from A
+  about B protects A regardless of reciprocity, checked in both directions for every teammate pair), and an
+  OMITTED preference is never interpreted as an avoidance request. The API (`POST /preferences`) rejects a
+  contradictory prefer+avoid pair for the same target at write time.
+  **Stability** is formally defined via three DISTINCT notions (see `app/matching.py`'s preference-framework
+  module docstring for the full treatment, including exhaustively verified edge-case behavior — ties,
+  unranked/unnamed current teammates, missing data, characteristic preferences, avoidance non-interaction —
+  for the blocking-pair shortcut): a **blocking pair** is a cheap, DELIBERATELY CONSERVATIVE envy diagnostic
+  (two students on different teams who each rank the other strictly ahead of every one of their own current
+  teammates); a **blocking swap** is the executable, BOTH-sides-strictly-improve 1-for-1 exchange this
+  system's own repair mechanism can act on — **the documented default** `PreferenceSummary.is_stable` is
+  checked against (configurable via `preference.stability_definition`); a **beneficial feasible move**
+  (Part 5.5 — renamed from "blocking move", which overclaimed a two-sided guarantee it never provided) is an
+  explicitly ONE-SIDED, project-specific deviation measure — only the MOVING student's utility must improve,
+  the RECEIVING team's HARD constraints (not its members' preferences or consent) must remain satisfied, and
+  it is NOT a classical stable-matching guarantee. All three are always computed and reported
+  (`n_blocking_pairs`/`n_blocking_swaps`/`n_beneficial_feasible_moves`) regardless of which is authoritative
+  for `is_stable`. A SEPARATE, genuinely non-swap-mediated **unilateral vacancy move** diagnostic
+  (`app.matching.compute_unilateral_vacancy_moves`) exists for systems with FLEXIBLE team sizes — it is a
+  no-op under this system's default EXACT team sizes and only ever activates via an explicit
+  `TeamSizeConfig(min_team_size=..., max_team_size=..., allow_unilateral_moves=True)`; team sizes are never
+  silently reinterpreted as flexible.
+  **Privacy:** `PreferenceSummary`/`PreferenceStudentStats` are aggregate-only (counts/scores/booleans) —
+  they never carry a target's identity, and there is deliberately no bulk "list everyone's preferences"
+  endpoint (`GET /preferences/{student_id}` returns only that student's own outgoing entries) — see
+  `app/preferences.py`'s module docstring.
+
+### Named optimization profiles (Part 6)
+
+Rather than an instructor manually toggling five independent `*.enabled` flags, `POST /teams/generate`
+accepts a top-level `profile` field (default `"legacy"`). A profile resolves — via
+`app.matching.resolve_profile`, precedence **system defaults → named profile → explicit request
+overrides** — into one complete `TeamGenerationRequest`, returned on every response under `"profile"`
+(name, `is_experimental`, description, full `effective_settings`) so a caller always knows exactly what
+ran. Five profiles ship: `legacy` (not experimental — reproduces Parts 1–5.6 exactly; what an existing
+client that omits `profile` gets), and four EXPERIMENTAL profiles — `research_balanced` (every optional
+pass on), `fairness_priority`, `skill_priority`, `preference_priority` — each prioritizing one criterion
+while still preserving every hard constraint. **None of the experimental profiles is claimed to be
+optimal for any real population** — see [`docs/optimization_profiles.md`](optimization_profiles.md) for
+full settings, an empirical seed-roster/fixture/synthetic-roster comparison across all five (with
+tradeoffs named, not just improvements), and measured runtime cost per profile.
+
+Every optional pass still runs in the same fixed order this codebase has always used — ability →
+fairness → familiarity → hard_avoidance → preference — but `generate_teams()` now routes them through
+`_run_optional_passes`, which adds an **orchestration-level acceptance policy** on top of each pass's own
+internal guarantees: after every pass, three PROTECTED metrics (total score, floor-minimum, minimum skill
+coverage — plus the resolved profile's own stated priority metric, if any) are re-checked against their
+value immediately before that pass ran; if any regressed beyond a configurable tolerance, the pass's
+entire effect is discarded, not partially trusted. This catches cross-pass or cumulative-within-pass
+drift no single pass's own per-swap check could see alone. The exact before/after values for every pass
+that ran are returned on the response as `"optimization_trace"`.
+
+Every response also carries `"normalized_objective"` — a REPORTING-only (never itself decides which
+assignment is returned) breakdown of all seven research criteria on one documented `[0,1]` scale, with
+missing data EXCLUDED and remaining weights renormalized rather than a component ever being scored a
+fabricated zero. See `optimization_profiles.md` for the full component table and this system's explicit
+check for double-counting overlap between related signals (e.g. team-level behavioral compatibility vs.
+each student's own individual-utility fit).
+
+`app.matching.CRITERION_REGISTRY` centralizes, for every criterion this system tracks, whether it is a
+hard constraint, a soft objective, an evaluation-only metric, or optional post-processing — and why —
+so a research hypothesis (e.g. "balanced ability helps") is never silently promoted to a hard constraint
+just because a pass exists for it.
+
+**Part 6.5** validated the Part 6 profile system before a real student study rather than extending it:
+fixed a genuine `research_balanced` performance problem (26.1s → 1.4s at 80 students, via incremental
+per-team caching — see [`docs/performance.md`](performance.md)), measured whether the 5 profiles actually
+produce distinguishable assignments (9 of 13 test datasets collapse to an identical partition across every
+profile — see [`docs/profile_distinctness.md`](profile_distinctness.md)), added a defensive NaN/infinity
+guard to `_run_optional_passes`' cross-pass regression check (a metric bug that produced NaN could
+previously bypass the check silently, since `NaN < x` is always `False` in Python), and added an
+experiment-readiness check (`app.evaluation.experiment_readiness`) instructors/researchers can run before a
+study to see whether two profiles are likely to produce distinguishable conditions on a SPECIFIC roster.
+See `research_alignment_audit.md`'s Part 6.5 update for the full account.
 
 Every generated team also gets an **explanation** on demand
 ([`GET /teams/{id}/explanation`](../backend/app/explainability.py)) — a Gemini call that turns the raw

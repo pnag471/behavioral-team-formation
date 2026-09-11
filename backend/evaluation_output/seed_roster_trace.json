@@ -1,0 +1,554 @@
+{
+  "roster_size": 20,
+  "team_size": 4,
+  "stages": {
+    "greedy": {
+      "assignment": [
+        [
+          "Kwame Asante",
+          "Fatima Al-Hassan",
+          "Rajan Patel",
+          "Yuki Tanaka"
+        ],
+        [
+          "Hamid Karimi",
+          "Sofia Mendez",
+          "Luca Ferreira",
+          "Chioma Eze"
+        ],
+        [
+          "Amara Osei",
+          "Marcus Williams",
+          "Tariq Okafor",
+          "Nadia Volkov"
+        ],
+        [
+          "Diego Reyes",
+          "Jordan Kim",
+          "Aaliyah Johnson",
+          "Ingrid Larsson"
+        ],
+        [
+          "Priya Sharma",
+          "Emmanuel Nkrumah",
+          "Mei-Ling Chen",
+          "Zara Mbeki"
+        ]
+      ],
+      "objective": 2.9403273809523807,
+      "floor_min": 0.375,
+      "skill_coverage_min": 0.6666666666666666
+    },
+    "two_opt": {
+      "assignment": [
+        [
+          "Kwame Asante",
+          "Fatima Al-Hassan",
+          "Tariq Okafor",
+          "Amara Osei"
+        ],
+        [
+          "Hamid Karimi",
+          "Rajan Patel",
+          "Luca Ferreira",
+          "Chioma Eze"
+        ],
+        [
+          "Yuki Tanaka",
+          "Marcus Williams",
+          "Zara Mbeki",
+          "Nadia Volkov"
+        ],
+        [
+          "Diego Reyes",
+          "Jordan Kim",
+          "Sofia Mendez",
+          "Priya Sharma"
+        ],
+        [
+          "Ingrid Larsson",
+          "Emmanuel Nkrumah",
+          "Mei-Ling Chen",
+          "Aaliyah Johnson"
+        ]
+      ],
+      "objective": 3.07155753968254,
+      "floor_min": 0.375,
+      "skill_coverage_min": 0.8333333333333334,
+      "identical_to_greedy": false
+    },
+    "maximin": {
+      "assignment": [
+        [
+          "Kwame Asante",
+          "Fatima Al-Hassan",
+          "Tariq Okafor",
+          "Amara Osei"
+        ],
+        [
+          "Hamid Karimi",
+          "Rajan Patel",
+          "Luca Ferreira",
+          "Chioma Eze"
+        ],
+        [
+          "Yuki Tanaka",
+          "Marcus Williams",
+          "Zara Mbeki",
+          "Nadia Volkov"
+        ],
+        [
+          "Diego Reyes",
+          "Jordan Kim",
+          "Sofia Mendez",
+          "Priya Sharma"
+        ],
+        [
+          "Ingrid Larsson",
+          "Emmanuel Nkrumah",
+          "Mei-Ling Chen",
+          "Aaliyah Johnson"
+        ]
+      ],
+      "objective": 3.07155753968254,
+      "floor_min": 0.375,
+      "skill_coverage_min": 0.8333333333333334,
+      "identical_to_two_opt": true
+    }
+  },
+  "optional_passes": {
+    "ability": {
+      "before_target_metric": 0.1825,
+      "after_target_metric": 0.1825,
+      "target_metric_direction": "minimize",
+      "target_metric_improved": false,
+      "before_objective": 3.07155753968254,
+      "after_objective": 3.07155753968254,
+      "before_floor_min": 0.375,
+      "after_floor_min": 0.375,
+      "assignment_before": [
+        [
+          "Kwame Asante",
+          "Fatima Al-Hassan",
+          "Tariq Okafor",
+          "Amara Osei"
+        ],
+        [
+          "Hamid Karimi",
+          "Rajan Patel",
+          "Luca Ferreira",
+          "Chioma Eze"
+        ],
+        [
+          "Yuki Tanaka",
+          "Marcus Williams",
+          "Zara Mbeki",
+          "Nadia Volkov"
+        ],
+        [
+          "Diego Reyes",
+          "Jordan Kim",
+          "Sofia Mendez",
+          "Priya Sharma"
+        ],
+        [
+          "Ingrid Larsson",
+          "Emmanuel Nkrumah",
+          "Mei-Ling Chen",
+          "Aaliyah Johnson"
+        ]
+      ],
+      "assignment_after": [
+        [
+          "Kwame Asante",
+          "Fatima Al-Hassan",
+          "Tariq Okafor",
+          "Amara Osei"
+        ],
+        [
+          "Hamid Karimi",
+          "Rajan Patel",
+          "Luca Ferreira",
+          "Chioma Eze"
+        ],
+        [
+          "Yuki Tanaka",
+          "Marcus Williams",
+          "Zara Mbeki",
+          "Nadia Volkov"
+        ],
+        [
+          "Diego Reyes",
+          "Jordan Kim",
+          "Sofia Mendez",
+          "Priya Sharma"
+        ],
+        [
+          "Ingrid Larsson",
+          "Emmanuel Nkrumah",
+          "Mei-Ling Chen",
+          "Aaliyah Johnson"
+        ]
+      ],
+      "assignment_unchanged": true,
+      "candidates_considered": 160,
+      "accepted": 0,
+      "hard_constraint_rejections": 139,
+      "primary_objective_rejections": 21,
+      "protected_metric_rejections": 0,
+      "no_improvement_rejections": 0,
+      "hard_constraint_rejections_that_would_have_improved_target": 34,
+      "primary_objective_rejections_that_would_have_improved_target": 3,
+      "protected_metric_rejections_that_would_have_improved_target": 0,
+      "sweeps_run": 1
+    },
+    "fairness": {
+      "before_target_metric": 0.47619047619047616,
+      "after_target_metric": 0.47619047619047616,
+      "target_metric_direction": "maximize",
+      "target_metric_improved": false,
+      "before_objective": 3.07155753968254,
+      "after_objective": 3.07155753968254,
+      "before_floor_min": 0.375,
+      "after_floor_min": 0.375,
+      "assignment_before": [
+        [
+          "Kwame Asante",
+          "Fatima Al-Hassan",
+          "Tariq Okafor",
+          "Amara Osei"
+        ],
+        [
+          "Hamid Karimi",
+          "Rajan Patel",
+          "Luca Ferreira",
+          "Chioma Eze"
+        ],
+        [
+          "Yuki Tanaka",
+          "Marcus Williams",
+          "Zara Mbeki",
+          "Nadia Volkov"
+        ],
+        [
+          "Diego Reyes",
+          "Jordan Kim",
+          "Sofia Mendez",
+          "Priya Sharma"
+        ],
+        [
+          "Ingrid Larsson",
+          "Emmanuel Nkrumah",
+          "Mei-Ling Chen",
+          "Aaliyah Johnson"
+        ]
+      ],
+      "assignment_after": [
+        [
+          "Kwame Asante",
+          "Fatima Al-Hassan",
+          "Tariq Okafor",
+          "Amara Osei"
+        ],
+        [
+          "Hamid Karimi",
+          "Rajan Patel",
+          "Luca Ferreira",
+          "Chioma Eze"
+        ],
+        [
+          "Yuki Tanaka",
+          "Marcus Williams",
+          "Zara Mbeki",
+          "Nadia Volkov"
+        ],
+        [
+          "Diego Reyes",
+          "Jordan Kim",
+          "Sofia Mendez",
+          "Priya Sharma"
+        ],
+        [
+          "Ingrid Larsson",
+          "Emmanuel Nkrumah",
+          "Mei-Ling Chen",
+          "Aaliyah Johnson"
+        ]
+      ],
+      "assignment_unchanged": true,
+      "candidates_considered": 160,
+      "accepted": 0,
+      "hard_constraint_rejections": 139,
+      "primary_objective_rejections": 21,
+      "protected_metric_rejections": 0,
+      "no_improvement_rejections": 0,
+      "hard_constraint_rejections_that_would_have_improved_target": 16,
+      "primary_objective_rejections_that_would_have_improved_target": 5,
+      "protected_metric_rejections_that_would_have_improved_target": 0,
+      "sweeps_run": 1
+    },
+    "familiarity": {
+      "before_target_metric": 0.0,
+      "after_target_metric": 0.0,
+      "target_metric_direction": "minimize",
+      "target_metric_improved": false,
+      "before_objective": 3.07155753968254,
+      "after_objective": 3.07155753968254,
+      "before_floor_min": 0.375,
+      "after_floor_min": 0.375,
+      "assignment_before": [
+        [
+          "Kwame Asante",
+          "Fatima Al-Hassan",
+          "Tariq Okafor",
+          "Amara Osei"
+        ],
+        [
+          "Hamid Karimi",
+          "Rajan Patel",
+          "Luca Ferreira",
+          "Chioma Eze"
+        ],
+        [
+          "Yuki Tanaka",
+          "Marcus Williams",
+          "Zara Mbeki",
+          "Nadia Volkov"
+        ],
+        [
+          "Diego Reyes",
+          "Jordan Kim",
+          "Sofia Mendez",
+          "Priya Sharma"
+        ],
+        [
+          "Ingrid Larsson",
+          "Emmanuel Nkrumah",
+          "Mei-Ling Chen",
+          "Aaliyah Johnson"
+        ]
+      ],
+      "assignment_after": [
+        [
+          "Kwame Asante",
+          "Fatima Al-Hassan",
+          "Tariq Okafor",
+          "Amara Osei"
+        ],
+        [
+          "Hamid Karimi",
+          "Rajan Patel",
+          "Luca Ferreira",
+          "Chioma Eze"
+        ],
+        [
+          "Yuki Tanaka",
+          "Marcus Williams",
+          "Zara Mbeki",
+          "Nadia Volkov"
+        ],
+        [
+          "Diego Reyes",
+          "Jordan Kim",
+          "Sofia Mendez",
+          "Priya Sharma"
+        ],
+        [
+          "Ingrid Larsson",
+          "Emmanuel Nkrumah",
+          "Mei-Ling Chen",
+          "Aaliyah Johnson"
+        ]
+      ],
+      "assignment_unchanged": true,
+      "candidates_considered": 160,
+      "accepted": 0,
+      "hard_constraint_rejections": 139,
+      "primary_objective_rejections": 21,
+      "protected_metric_rejections": 0,
+      "no_improvement_rejections": 0,
+      "hard_constraint_rejections_that_would_have_improved_target": 0,
+      "primary_objective_rejections_that_would_have_improved_target": 0,
+      "protected_metric_rejections_that_would_have_improved_target": 0,
+      "sweeps_run": 1
+    },
+    "preference": {
+      "before_target_metric": 0.0,
+      "after_target_metric": 0.0,
+      "target_metric_direction": "minimize",
+      "target_metric_improved": false,
+      "before_objective": 3.07155753968254,
+      "after_objective": 3.07155753968254,
+      "before_floor_min": 0.375,
+      "after_floor_min": 0.375,
+      "assignment_before": [
+        [
+          "Kwame Asante",
+          "Fatima Al-Hassan",
+          "Tariq Okafor",
+          "Amara Osei"
+        ],
+        [
+          "Hamid Karimi",
+          "Rajan Patel",
+          "Luca Ferreira",
+          "Chioma Eze"
+        ],
+        [
+          "Yuki Tanaka",
+          "Marcus Williams",
+          "Zara Mbeki",
+          "Nadia Volkov"
+        ],
+        [
+          "Diego Reyes",
+          "Jordan Kim",
+          "Sofia Mendez",
+          "Priya Sharma"
+        ],
+        [
+          "Ingrid Larsson",
+          "Emmanuel Nkrumah",
+          "Mei-Ling Chen",
+          "Aaliyah Johnson"
+        ]
+      ],
+      "assignment_after": [
+        [
+          "Kwame Asante",
+          "Fatima Al-Hassan",
+          "Tariq Okafor",
+          "Amara Osei"
+        ],
+        [
+          "Hamid Karimi",
+          "Rajan Patel",
+          "Luca Ferreira",
+          "Chioma Eze"
+        ],
+        [
+          "Yuki Tanaka",
+          "Marcus Williams",
+          "Zara Mbeki",
+          "Nadia Volkov"
+        ],
+        [
+          "Diego Reyes",
+          "Jordan Kim",
+          "Sofia Mendez",
+          "Priya Sharma"
+        ],
+        [
+          "Ingrid Larsson",
+          "Emmanuel Nkrumah",
+          "Mei-Ling Chen",
+          "Aaliyah Johnson"
+        ]
+      ],
+      "assignment_unchanged": true,
+      "candidates_considered": 160,
+      "accepted": 0,
+      "hard_constraint_rejections": 139,
+      "primary_objective_rejections": 21,
+      "protected_metric_rejections": 0,
+      "no_improvement_rejections": 0,
+      "hard_constraint_rejections_that_would_have_improved_target": 0,
+      "primary_objective_rejections_that_would_have_improved_target": 0,
+      "protected_metric_rejections_that_would_have_improved_target": 0,
+      "sweeps_run": 1
+    }
+  },
+  "production_orchestration_cross_check": {
+    "final_assignment": [
+      [
+        "Kwame Asante",
+        "Fatima Al-Hassan",
+        "Tariq Okafor",
+        "Amara Osei"
+      ],
+      [
+        "Hamid Karimi",
+        "Rajan Patel",
+        "Luca Ferreira",
+        "Chioma Eze"
+      ],
+      [
+        "Yuki Tanaka",
+        "Marcus Williams",
+        "Zara Mbeki",
+        "Nadia Volkov"
+      ],
+      [
+        "Diego Reyes",
+        "Jordan Kim",
+        "Sofia Mendez",
+        "Priya Sharma"
+      ],
+      [
+        "Ingrid Larsson",
+        "Emmanuel Nkrumah",
+        "Mei-Ling Chen",
+        "Aaliyah Johnson"
+      ]
+    ],
+    "matches_shadow_trace_final_assignment": true,
+    "per_pass_trace": [
+      {
+        "pass": "ability",
+        "before": {
+          "total_score": 3.07155753968254,
+          "floor_min": 0.375,
+          "skill_coverage_min": 0.8333333333333334
+        },
+        "after": {
+          "total_score": 3.07155753968254,
+          "floor_min": 0.375,
+          "skill_coverage_min": 0.8333333333333334
+        },
+        "accepted": true
+      },
+      {
+        "pass": "fairness",
+        "before": {
+          "total_score": 3.07155753968254,
+          "floor_min": 0.375,
+          "skill_coverage_min": 0.8333333333333334
+        },
+        "after": {
+          "total_score": 3.07155753968254,
+          "floor_min": 0.375,
+          "skill_coverage_min": 0.8333333333333334
+        },
+        "accepted": true
+      },
+      {
+        "pass": "familiarity",
+        "before": {
+          "total_score": 3.07155753968254,
+          "floor_min": 0.375,
+          "skill_coverage_min": 0.8333333333333334
+        },
+        "after": {
+          "total_score": 3.07155753968254,
+          "floor_min": 0.375,
+          "skill_coverage_min": 0.8333333333333334
+        },
+        "accepted": true
+      },
+      {
+        "pass": "preference",
+        "before": {
+          "total_score": 3.07155753968254,
+          "floor_min": 0.375,
+          "skill_coverage_min": 0.8333333333333334
+        },
+        "after": {
+          "total_score": 3.07155753968254,
+          "floor_min": 0.375,
+          "skill_coverage_min": 0.8333333333333334
+        },
+        "accepted": true
+      }
+    ]
+  }
+}

@@ -12,7 +12,9 @@
         "ui-developer",
         "design-lead"
       ],
-      "experience_level": "intermediate"
+      "experience_level": "intermediate",
+      "ability_score": 0.62,
+      "ability_source": "instructor_rating"
     },
     "work_rhythm_signature": {
       "planning_style": "planner",
@@ -60,7 +62,9 @@
         "backend-developer",
         "tech-lead"
       ],
-      "experience_level": "advanced"
+      "experience_level": "advanced",
+      "ability_score": 0.88,
+      "ability_source": "instructor_rating"
     },
     "work_rhythm_signature": {
       "planning_style": "planner",
@@ -108,7 +112,9 @@
         "ml-engineer",
         "researcher"
       ],
-      "experience_level": "advanced"
+      "experience_level": "advanced",
+      "ability_score": 0.81,
+      "ability_source": "instructor_rating"
     },
     "work_rhythm_signature": {
       "planning_style": "adaptive",
@@ -156,7 +162,9 @@
         "project-manager",
         "scrum-master"
       ],
-      "experience_level": "intermediate"
+      "experience_level": "intermediate",
+      "ability_score": 0.55,
+      "ability_source": "instructor_rating"
     },
     "work_rhythm_signature": {
       "planning_style": "planner",
@@ -204,7 +212,9 @@
       "roles": [
         "fullstack-developer"
       ],
-      "experience_level": "intermediate"
+      "experience_level": "intermediate",
+      "ability_score": 0.58,
+      "ability_source": "instructor_rating"
     },
     "work_rhythm_signature": {
       "planning_style": "adaptive",
@@ -252,7 +262,9 @@
         "devops-engineer",
         "backend-developer"
       ],
-      "experience_level": "advanced"
+      "experience_level": "advanced",
+      "ability_score": 0.93,
+      "ability_source": "instructor_rating"
     },
     "work_rhythm_signature": {
       "planning_style": "planner",
@@ -300,7 +312,9 @@
         "ux-designer",
         "ui-developer"
       ],
-      "experience_level": "intermediate"
+      "experience_level": "intermediate",
+      "ability_score": 0.47,
+      "ability_source": "instructor_rating"
     },
     "work_rhythm_signature": {
       "planning_style": "spontaneous",
@@ -348,7 +362,9 @@
         "researcher",
         "technical-writer"
       ],
-      "experience_level": "beginner"
+      "experience_level": "beginner",
+      "ability_score": 0.22,
+      "ability_source": "instructor_rating"
     },
     "work_rhythm_signature": {
       "planning_style": "adaptive",
@@ -397,7 +413,9 @@
         "ml-engineer",
         "backend-developer"
       ],
-      "experience_level": "advanced"
+      "experience_level": "advanced",
+      "ability_score": 0.79,
+      "ability_source": "instructor_rating"
     },
     "work_rhythm_signature": {
       "planning_style": "spontaneous",
@@ -445,7 +463,9 @@
         "product-manager",
         "project-manager"
       ],
-      "experience_level": "intermediate"
+      "experience_level": "intermediate",
+      "ability_score": 0.64,
+      "ability_source": "instructor_rating"
     },
     "work_rhythm_signature": {
       "planning_style": "planner",

@@ -1,0 +1,249 @@
+{
+  "note": "Median of 3 repeats per (roster size, profile), deterministic synthetic rosters (evaluation.benchmark_profiles._synthetic_roster), wall-clock via time.perf_counter() around _greedy_build -> _two_opt_improve -> _maximin_improve -> _run_optional_passes (the exact sequence generate_teams() calls). NOT cProfile-instrumented (profiling adds its own overhead).",
+  "sizes": [
+    20,
+    40,
+    60,
+    80,
+    100
+  ],
+  "team_size": 4,
+  "repeats": 3,
+  "results": {
+    "20": {
+      "legacy": {
+        "repeats_ms": [
+          25.967,
+          21.937,
+          22.011
+        ],
+        "median_ms": 22.011,
+        "mean_ms": 23.305
+      },
+      "research_balanced": {
+        "repeats_ms": [
+          63.347,
+          63.064,
+          62.382
+        ],
+        "median_ms": 63.064,
+        "mean_ms": 62.931
+      },
+      "fairness_priority": {
+        "repeats_ms": [
+          372.516,
+          373.434,
+          387.863
+        ],
+        "median_ms": 373.434,
+        "mean_ms": 377.938
+      },
+      "skill_priority": {
+        "repeats_ms": [
+          22.55,
+          22.42,
+          22.44
+        ],
+        "median_ms": 22.44,
+        "mean_ms": 22.47
+      },
+      "preference_priority": {
+        "repeats_ms": [
+          35.434,
+          35.284,
+          35.405
+        ],
+        "median_ms": 35.405,
+        "mean_ms": 35.374
+      }
+    },
+    "40": {
+      "legacy": {
+        "repeats_ms": [
+          108.213,
+          109.016,
+          124.032
+        ],
+        "median_ms": 109.016,
+        "mean_ms": 113.754
+      },
+      "research_balanced": {
+        "repeats_ms": [
+          269.334,
+          268.962,
+          268.856
+        ],
+        "median_ms": 268.962,
+        "mean_ms": 269.051
+      },
+      "fairness_priority": {
+        "repeats_ms": [
+          186.678,
+          185.105,
+          185.829
+        ],
+        "median_ms": 185.829,
+        "mean_ms": 185.871
+      },
+      "skill_priority": {
+        "repeats_ms": [
+          109.783,
+          109.47,
+          109.669
+        ],
+        "median_ms": 109.669,
+        "mean_ms": 109.641
+      },
+      "preference_priority": {
+        "repeats_ms": [
+          166.888,
+          167.041,
+          166.026
+        ],
+        "median_ms": 166.888,
+        "mean_ms": 166.652
+      }
+    },
+    "60": {
+      "legacy": {
+        "repeats_ms": [
+          282.86,
+          282.57,
+          282.117
+        ],
+        "median_ms": 282.57,
+        "mean_ms": 282.516
+      },
+      "research_balanced": {
+        "repeats_ms": [
+          722.485,
+          725.802,
+          723.49
+        ],
+        "median_ms": 723.49,
+        "mean_ms": 723.926
+      },
+      "fairness_priority": {
+        "repeats_ms": [
+          463.846,
+          465.865,
+          465.06
+        ],
+        "median_ms": 465.06,
+        "mean_ms": 464.924
+      },
+      "skill_priority": {
+        "repeats_ms": [
+          283.553,
+          283.366,
+          283.261
+        ],
+        "median_ms": 283.366,
+        "mean_ms": 283.393
+      },
+      "preference_priority": {
+        "repeats_ms": [
+          426.849,
+          423.349,
+          424.441
+        ],
+        "median_ms": 424.441,
+        "mean_ms": 424.88
+      }
+    },
+    "80": {
+      "legacy": {
+        "repeats_ms": [
+          561.818,
+          560.618,
+          561.125
+        ],
+        "median_ms": 561.125,
+        "mean_ms": 561.187
+      },
+      "research_balanced": {
+        "repeats_ms": [
+          1410.447,
+          1410.381,
+          1411.07
+        ],
+        "median_ms": 1410.447,
+        "mean_ms": 1410.633
+      },
+      "fairness_priority": {
+        "repeats_ms": [
+          901.195,
+          900.146,
+          894.13
+        ],
+        "median_ms": 900.146,
+        "mean_ms": 898.49
+      },
+      "skill_priority": {
+        "repeats_ms": [
+          560.397,
+          560.62,
+          561.19
+        ],
+        "median_ms": 560.62,
+        "mean_ms": 560.736
+      },
+      "preference_priority": {
+        "repeats_ms": [
+          825.934,
+          829.142,
+          829.439
+        ],
+        "median_ms": 829.142,
+        "mean_ms": 828.172
+      }
+    },
+    "100": {
+      "legacy": {
+        "repeats_ms": [
+          967.874,
+          969.441,
+          968.955
+        ],
+        "median_ms": 968.955,
+        "mean_ms": 968.757
+      },
+      "research_balanced": {
+        "repeats_ms": [
+          2148.697,
+          2153.062,
+          2148.866
+        ],
+        "median_ms": 2148.866,
+        "mean_ms": 2150.208
+      },
+      "fairness_priority": {
+        "repeats_ms": [
+          1512.05,
+          1514.071,
+          1504.609
+        ],
+        "median_ms": 1512.05,
+        "mean_ms": 1510.243
+      },
+      "skill_priority": {
+        "repeats_ms": [
+          972.048,
+          976.945,
+          975.081
+        ],
+        "median_ms": 975.081,
+        "mean_ms": 974.691
+      },
+      "preference_priority": {
+        "repeats_ms": [
+          1408.988,
+          1412.233,
+          1405.794
+        ],
+        "median_ms": 1408.988,
+        "mean_ms": 1409.005
+      }
+    }
+  }
+}
