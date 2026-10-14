@@ -24,6 +24,16 @@ Branch: `feat/claude-integration`
 
 The matcher implements **reward-for-diversity**: score = `0.7 + 0.3 * (n_distinct / n_members)`. A fully homogeneous team scores 0.7; a fully diverse team scores 1.0. This is NOT a mismatch penalty — a homogeneous team is simply scored slightly lower, not heavily penalised.
 
+## soft_compatibility: fit-type decision — DECIDED (hypothesis, not validated)
+
+`soft_compatibility` dimensions now carry an optional `fit` field in `rubric_v1.yaml`: `complementary` (default, unchanged reward-for-diversity formula above) or `supplementary` (mirror-image reward-for-similarity: score = `1.0 - 0.3 * (n_distinct - 1) / (n_members - 1)`, so a fully homogeneous team scores 1.0 and a fully diverse team scores 0.7).
+
+**Decision:** `planning_style` and `communication_style` are flipped to `fit: supplementary`. Rationale — these are coordination *norms* (how the team stays in sync day to day), not *roles*; a team split across three different planning styles has no shared cadence to coordinate around, unlike a role trait such as `leadership_style` where covering multiple styles is plausibly a benefit. Grounded loosely in the supplementary-vs-complementary person-environment fit distinction (Muchinsky & Monahan, 1987), applied here to team-level composition rather than person-job fit.
+
+**This is logged as a team decision, not a closed research question** — `evidence_basis` for both dimensions remains `preference` (no published evidence establishes either style as superior for student teams), and the fit direction itself is a **hypothesis**: it has not been validated against outcome data, and the existing `TODO(team-decision)` item on `leadership_style` (below) is a separate, still-open question about whether it should move to `complementary_coverage` instead — this change does not touch `leadership_style`, `execution_style`, `conflict_style`, or `help_seeking`, which remain `fit: complementary` (implicit default) pending their own review.
+
+Code: `backend/app/matching.py` — `_soft_compat_score()` now branches on `dim_def.get("fit", "complementary")`. Rubric: `backend/traits/rubric_v1.yaml` — header doc under `soft_compatibility`, plus `fit: supplementary` on `planning_style` and `communication_style`.
+
 ## complementary_coverage status
 
 `complementary_coverage` is **defined AND implemented** — it is applied to skills in `_skill_coverage()` (matching.py), which scores teams by `|team_skills ∩ REFERENCE_SKILLS| / |REFERENCE_SKILLS|`. It is not yet applied to any rubric dimension (leadership_style is a candidate — see TODO below).

@@ -145,19 +145,25 @@ def _ordinal_team_mean(students: List[Student], dim_name: str, dim_def: dict) ->
 
 def _soft_compat_score(students: List[Student], dim_name: str, dim_def: dict) -> float:
     """
-    Slight REWARD for value diversity in a team: more distinct values among
-    known members → higher score.  Range [0.7, 1.0].
+    composition_rule: soft_compatibility. Range [0.7, 1.0] either direction.
+    Direction is set by dim_def["fit"] (default "complementary" when absent):
 
-    composition_rule: soft_compatibility
+      fit: complementary (default) — slight REWARD for value DIVERSITY: more
+        distinct values among known members → higher score. A fully
+        homogeneous team scores 0.7; a fully diverse team scores 1.0.
 
-    Implementation: reward-for-diversity (not penalise-mismatch).
-    A fully homogeneous team scores 0.7; a fully diverse team scores 1.0.
-    """
-    # TODO(team-decision): leadership_style is soft_compatibility (rewards SIMILAR
-    # styles when there is only one member with each style and n_distinct/n is high).
-    # This might contradict complementary-leadership intent — consider switching to
+      fit: supplementary — slight REWARD for value SIMILARITY: mirror image
+        of complementary. A fully homogeneous team scores 1.0; a fully
+        diverse team scores 0.7. DECISION(team-decision): applied to
+        planning_style and communication_style — HYPOTHESIS, not validated.
+        See CHANGES.md §soft_compatibility fit-type decision.
+
+    # TODO(team-decision): leadership_style is still complementary-fit
+    # soft_compatibility (rewards diversity of styles). This might contradict
+    # complementary-leadership intent — consider switching to
     # complementary_coverage, which explicitly rewards covering all styles.
     # File: backend/app/matching.py  — confirm which rule is correct.
+    """
     values = [
         _get_student_dim(s, dim_name, dim_def)
         for s in students
@@ -165,7 +171,15 @@ def _soft_compat_score(students: List[Student], dim_name: str, dim_def: dict) ->
     ]
     if not values:
         return 0.85  # all unknown → neutral
+
     n_distinct = len(set(values))
+    fit = dim_def.get("fit", "complementary")
+
+    if fit == "supplementary":
+        if len(values) <= 1:
+            return 1.0
+        return 1.0 - 0.3 * (n_distinct - 1) / (len(values) - 1)
+
     return 0.7 + 0.3 * (n_distinct / len(values))
 
 

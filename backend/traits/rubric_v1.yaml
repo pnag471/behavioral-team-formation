@@ -19,13 +19,31 @@ schema_version: "v1"
 #                           objective concentrates weak members together,
 #                           violating the bad-apple finding from Bell (2007).
 #
-#   soft_compatibility      categorical; slight REWARD for value diversity in
-#                           a team (more distinct values among members = higher
-#                           score); range [0.7, 1.0]; low weight; NOT
-#                           performance-validated.  The reward-for-diversity
-#                           direction is what the matcher code implements.
-#                           Do not confuse with "penalise mismatch" — these
-#                           are opposite signs for extreme homogeneity.
+#   soft_compatibility      categorical; low weight; NOT performance-validated.
+#                           Direction depends on the dimension's `fit` field
+#                           (default complementary when `fit` is absent):
+#
+#                             fit: complementary (default) — slight REWARD for
+#                               value DIVERSITY in a team (more distinct values
+#                               among members = higher score); range [0.7, 1.0].
+#                               Do not confuse with "penalise mismatch" — these
+#                               are opposite signs for extreme homogeneity.
+#
+#                             fit: supplementary — slight REWARD for value
+#                               SIMILARITY in a team (fewer distinct values
+#                               among members = higher score); range [0.7, 1.0],
+#                               mirror image of the complementary formula.
+#                               Rationale (supplementary vs. complementary
+#                               person-environment fit; see Muchinsky & Monahan
+#                               1987): planning_style and communication_style
+#                               are coordination NORMS, not roles — a team split
+#                               across 3 different planning styles has nothing
+#                               to coordinate around, whereas a role trait like
+#                               leadership benefits from covering multiple styles.
+#                               DECISION(team-decision): applied to planning_style
+#                               and communication_style — HYPOTHESIS, not
+#                               validated against outcome data. See CHANGES.md
+#                               §soft_compatibility fit-type decision.
 #
 #   complementary_coverage  categorical; score by fraction of distinct values
 #                           covered relative to a reference set; higher
@@ -54,6 +72,12 @@ dimensions:
     type: categorical
     group: work_rhythm
     composition_rule: soft_compatibility
+    # DECISION(team-decision): fit flipped from complementary (reward diversity)
+    # to supplementary (reward similarity) — HYPOTHESIS, not validated. Planning
+    # style is a coordination norm, not a role: a team split across planner /
+    # spontaneous / adaptive has no shared cadence to coordinate around. See
+    # CHANGES.md §soft_compatibility fit-type decision.
+    fit: supplementary
     evidence_basis: preference
     source: >
       No published evidence establishes one planning style as superior for
@@ -73,6 +97,11 @@ dimensions:
     type: categorical
     group: work_rhythm
     composition_rule: soft_compatibility
+    # DECISION(team-decision): fit flipped from complementary (reward diversity)
+    # to supplementary (reward similarity) — HYPOTHESIS, not validated. Same
+    # reasoning as planning_style: a coordination norm, not a role. See
+    # CHANGES.md §soft_compatibility fit-type decision.
+    fit: supplementary
     evidence_basis: preference
     source: >
       No evidence that a communication modality causes better outcomes in
