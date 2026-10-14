@@ -1,0 +1,50 @@
+[
+  {
+    "student_a_id": "s01",
+    "student_b_id": "s02",
+    "strength": 0.85,
+    "source": "roster_survey"
+  },
+  {
+    "student_a_id": "s01",
+    "student_b_id": "s03",
+    "strength": 0.8,
+    "source": "roster_survey"
+  },
+  {
+    "student_a_id": "s01",
+    "student_b_id": "s04",
+    "strength": 0.75,
+    "source": "roster_survey"
+  },
+  {
+    "student_a_id": "s02",
+    "student_b_id": "s03",
+    "strength": 0.9,
+    "source": "roster_survey"
+  },
+  {
+    "student_a_id": "s02",
+    "student_b_id": "s04",
+    "strength": 0.8,
+    "source": "roster_survey"
+  },
+  {
+    "student_a_id": "s03",
+    "student_b_id": "s04",
+    "strength": 0.82,
+    "source": "roster_survey"
+  },
+  {
+    "student_a_id": "s05",
+    "student_b_id": "s06",
+    "strength": 0.6,
+    "source": "lms_co_enrollment"
+  },
+  {
+    "student_a_id": "s07",
+    "student_b_id": "s08",
+    "strength": 0.0,
+    "source": "roster_survey"
+  }
+]

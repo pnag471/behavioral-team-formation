@@ -1,0 +1,3735 @@
+{
+  "datasets": [
+    {
+      "dataset": "seed_roster_20",
+      "n_students": 20,
+      "n_distinct_partitions_among_5_profiles": 2,
+      "pairwise": {
+        "legacy__vs__research_balanced": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.8333333333333334,
+              "b": 0.8333333333333334,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__fairness_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.8333333333333334,
+              "b": 0.8333333333333334,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__skill_priority": {
+          "percent_students_reassigned": 0.4,
+          "pairwise_comembership_distance": 0.1684,
+          "adjusted_rand_index": 0.3667,
+          "identical_partition": false,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.8333333333333334,
+              "b": 0.8333333333333334,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 0.75,
+              "diff": -0.25
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.8333333333333334,
+              "b": 0.8333333333333334,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__fairness_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.8333333333333334,
+              "b": 0.8333333333333334,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__skill_priority": {
+          "percent_students_reassigned": 0.4,
+          "pairwise_comembership_distance": 0.1684,
+          "adjusted_rand_index": 0.3667,
+          "identical_partition": false,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.8333333333333334,
+              "b": 0.8333333333333334,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 0.75,
+              "diff": -0.25
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.8333333333333334,
+              "b": 0.8333333333333334,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "fairness_priority__vs__skill_priority": {
+          "percent_students_reassigned": 0.4,
+          "pairwise_comembership_distance": 0.1684,
+          "adjusted_rand_index": 0.3667,
+          "identical_partition": false,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.8333333333333334,
+              "b": 0.8333333333333334,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 0.75,
+              "diff": -0.25
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "fairness_priority__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.8333333333333334,
+              "b": 0.8333333333333334,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "skill_priority__vs__preference_priority": {
+          "percent_students_reassigned": 0.4,
+          "pairwise_comembership_distance": 0.1684,
+          "adjusted_rand_index": 0.3667,
+          "identical_partition": false,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.8333333333333334,
+              "b": 0.8333333333333334,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 0.75,
+              "b": 1.0,
+              "diff": 0.25
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "dataset": "skill_vs_behavior",
+      "n_students": 8,
+      "n_distinct_partitions_among_5_profiles": 1,
+      "pairwise": {
+        "legacy__vs__research_balanced": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__fairness_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__fairness_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "fairness_priority__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "fairness_priority__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "skill_priority__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "dataset": "hidden_bad_apple",
+      "n_students": 4,
+      "n_distinct_partitions_among_5_profiles": 1,
+      "pairwise": {
+        "legacy__vs__research_balanced": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__fairness_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__fairness_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "fairness_priority__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "fairness_priority__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "skill_priority__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "dataset": "stacked_team",
+      "n_students": 12,
+      "n_distinct_partitions_among_5_profiles": 2,
+      "pairwise": {
+        "legacy__vs__research_balanced": {
+          "percent_students_reassigned": 0.25,
+          "pairwise_comembership_distance": 0.2727,
+          "adjusted_rand_index": 0.3125,
+          "identical_partition": false,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 0.5,
+              "b": 1.0,
+              "diff": 0.5
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__fairness_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 0.5,
+              "b": 0.5,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 0.5,
+              "b": 0.5,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 0.5,
+              "b": 0.5,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__fairness_priority": {
+          "percent_students_reassigned": 0.25,
+          "pairwise_comembership_distance": 0.2727,
+          "adjusted_rand_index": 0.3125,
+          "identical_partition": false,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 0.5,
+              "diff": -0.5
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__skill_priority": {
+          "percent_students_reassigned": 0.25,
+          "pairwise_comembership_distance": 0.2727,
+          "adjusted_rand_index": 0.3125,
+          "identical_partition": false,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 0.5,
+              "diff": -0.5
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__preference_priority": {
+          "percent_students_reassigned": 0.25,
+          "pairwise_comembership_distance": 0.2727,
+          "adjusted_rand_index": 0.3125,
+          "identical_partition": false,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 0.5,
+              "diff": -0.5
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "fairness_priority__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 0.5,
+              "b": 0.5,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "fairness_priority__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 0.5,
+              "b": 0.5,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "skill_priority__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 0.5,
+              "b": 0.5,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "dataset": "isolated_student",
+      "n_students": 9,
+      "n_distinct_partitions_among_5_profiles": 1,
+      "pairwise": {
+        "legacy__vs__research_balanced": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.16666666666666666,
+              "b": 0.16666666666666666,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__fairness_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.16666666666666666,
+              "b": 0.16666666666666666,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.16666666666666666,
+              "b": 0.16666666666666666,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.16666666666666666,
+              "b": 0.16666666666666666,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__fairness_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.16666666666666666,
+              "b": 0.16666666666666666,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.16666666666666666,
+              "b": 0.16666666666666666,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.16666666666666666,
+              "b": 0.16666666666666666,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "fairness_priority__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.16666666666666666,
+              "b": 0.16666666666666666,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "fairness_priority__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.16666666666666666,
+              "b": 0.16666666666666666,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "skill_priority__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.16666666666666666,
+              "b": 0.16666666666666666,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "dataset": "friend_clique",
+      "n_students": 12,
+      "n_distinct_partitions_among_5_profiles": 1,
+      "pairwise": {
+        "legacy__vs__research_balanced": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.25,
+              "b": 0.25,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__fairness_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.25,
+              "b": 0.25,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.25,
+              "b": 0.25,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.25,
+              "b": 0.25,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__fairness_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.25,
+              "b": 0.25,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.25,
+              "b": 0.25,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.25,
+              "b": 0.25,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "fairness_priority__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.25,
+              "b": 0.25,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "fairness_priority__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.25,
+              "b": 0.25,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "skill_priority__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.25,
+              "b": 0.25,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "dataset": "utility_vs_fairness",
+      "n_students": 8,
+      "n_distinct_partitions_among_5_profiles": 1,
+      "pairwise": {
+        "legacy__vs__research_balanced": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.5,
+              "b": 1.5,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__fairness_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.5,
+              "b": 1.5,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.5,
+              "b": 1.5,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.5,
+              "b": 1.5,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__fairness_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.5,
+              "b": 1.5,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.5,
+              "b": 1.5,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.5,
+              "b": 1.5,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "fairness_priority__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.5,
+              "b": 1.5,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "fairness_priority__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.5,
+              "b": 1.5,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "skill_priority__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.5,
+              "b": 1.5,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "dataset": "preference_instability",
+      "n_students": 8,
+      "n_distinct_partitions_among_5_profiles": 2,
+      "pairwise": {
+        "legacy__vs__research_balanced": {
+          "percent_students_reassigned": 0.25,
+          "pairwise_comembership_distance": 0.4286,
+          "adjusted_rand_index": 0.125,
+          "identical_partition": false,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__fairness_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__preference_priority": {
+          "percent_students_reassigned": 0.25,
+          "pairwise_comembership_distance": 0.4286,
+          "adjusted_rand_index": 0.125,
+          "identical_partition": false,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__fairness_priority": {
+          "percent_students_reassigned": 0.25,
+          "pairwise_comembership_distance": 0.4286,
+          "adjusted_rand_index": 0.125,
+          "identical_partition": false,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__skill_priority": {
+          "percent_students_reassigned": 0.25,
+          "pairwise_comembership_distance": 0.4286,
+          "adjusted_rand_index": 0.125,
+          "identical_partition": false,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "fairness_priority__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "fairness_priority__vs__preference_priority": {
+          "percent_students_reassigned": 0.25,
+          "pairwise_comembership_distance": 0.4286,
+          "adjusted_rand_index": 0.125,
+          "identical_partition": false,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "skill_priority__vs__preference_priority": {
+          "percent_students_reassigned": 0.25,
+          "pairwise_comembership_distance": 0.4286,
+          "adjusted_rand_index": 0.125,
+          "identical_partition": false,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "dataset": "uneven_ability",
+      "n_students": 10,
+      "n_distinct_partitions_among_5_profiles": 1,
+      "pairwise": {
+        "legacy__vs__research_balanced": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.4166666666666667,
+              "b": 0.4166666666666667,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 0.4,
+              "b": 0.4,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__fairness_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.4166666666666667,
+              "b": 0.4166666666666667,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 0.4,
+              "b": 0.4,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.4166666666666667,
+              "b": 0.4166666666666667,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 0.4,
+              "b": 0.4,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.4166666666666667,
+              "b": 0.4166666666666667,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 0.4,
+              "b": 0.4,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__fairness_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.4166666666666667,
+              "b": 0.4166666666666667,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 0.4,
+              "b": 0.4,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.4166666666666667,
+              "b": 0.4166666666666667,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 0.4,
+              "b": 0.4,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.4166666666666667,
+              "b": 0.4166666666666667,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 0.4,
+              "b": 0.4,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "fairness_priority__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.4166666666666667,
+              "b": 0.4166666666666667,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 0.4,
+              "b": 0.4,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "fairness_priority__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.4166666666666667,
+              "b": 0.4166666666666667,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 0.4,
+              "b": 0.4,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "skill_priority__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.4166666666666667,
+              "b": 0.4166666666666667,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 0.4,
+              "b": 0.4,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "dataset": "uneven_roster_size",
+      "n_students": 11,
+      "n_distinct_partitions_among_5_profiles": 1,
+      "pairwise": {
+        "legacy__vs__research_balanced": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.25,
+              "b": 0.25,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__fairness_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.25,
+              "b": 0.25,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.25,
+              "b": 0.25,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.25,
+              "b": 0.25,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__fairness_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.25,
+              "b": 0.25,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.25,
+              "b": 0.25,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.25,
+              "b": 0.25,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "fairness_priority__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.25,
+              "b": 0.25,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "fairness_priority__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.25,
+              "b": 0.25,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "skill_priority__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.25,
+              "b": 0.25,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "dataset": "missing_tied_extreme",
+      "n_students": 8,
+      "n_distinct_partitions_among_5_profiles": 1,
+      "pairwise": {
+        "legacy__vs__research_balanced": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__fairness_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__fairness_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "fairness_priority__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "fairness_priority__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "skill_priority__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "dataset": "greedy_local_optimum",
+      "n_students": 8,
+      "n_distinct_partitions_among_5_profiles": 1,
+      "pairwise": {
+        "legacy__vs__research_balanced": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.5833333333333334,
+              "b": 0.5833333333333334,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.25,
+              "b": 1.25,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__fairness_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.5833333333333334,
+              "b": 0.5833333333333334,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.25,
+              "b": 1.25,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.5833333333333334,
+              "b": 0.5833333333333334,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.25,
+              "b": 1.25,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.5833333333333334,
+              "b": 0.5833333333333334,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.25,
+              "b": 1.25,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__fairness_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.5833333333333334,
+              "b": 0.5833333333333334,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.25,
+              "b": 1.25,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.5833333333333334,
+              "b": 0.5833333333333334,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.25,
+              "b": 1.25,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.5833333333333334,
+              "b": 0.5833333333333334,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.25,
+              "b": 1.25,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "fairness_priority__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.5833333333333334,
+              "b": 0.5833333333333334,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.25,
+              "b": 1.25,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "fairness_priority__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.5833333333333334,
+              "b": 0.5833333333333334,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.25,
+              "b": 1.25,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        },
+        "skill_priority__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.5833333333333334,
+              "b": 0.5833333333333334,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.25,
+              "b": 1.25,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 1,
+              "b": 1,
+              "diff": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "dataset": "2opt_harms_fairness",
+      "n_students": 8,
+      "n_distinct_partitions_among_5_profiles": 2,
+      "pairwise": {
+        "legacy__vs__research_balanced": {
+          "percent_students_reassigned": 0.25,
+          "pairwise_comembership_distance": 0.4286,
+          "adjusted_rand_index": 0.125,
+          "identical_partition": false,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.4166666666666667,
+              "b": 0.5,
+              "diff": 0.08333333333333331
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__fairness_priority": {
+          "percent_students_reassigned": 0.25,
+          "pairwise_comembership_distance": 0.4286,
+          "adjusted_rand_index": 0.125,
+          "identical_partition": false,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.4166666666666667,
+              "b": 0.5,
+              "diff": 0.08333333333333331
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__skill_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.4166666666666667,
+              "b": 0.4166666666666667,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "legacy__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.4166666666666667,
+              "b": 0.4166666666666667,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__fairness_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.5,
+              "b": 0.5,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__skill_priority": {
+          "percent_students_reassigned": 0.25,
+          "pairwise_comembership_distance": 0.4286,
+          "adjusted_rand_index": 0.125,
+          "identical_partition": false,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.5,
+              "b": 0.4166666666666667,
+              "diff": -0.08333333333333331
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "research_balanced__vs__preference_priority": {
+          "percent_students_reassigned": 0.25,
+          "pairwise_comembership_distance": 0.4286,
+          "adjusted_rand_index": 0.125,
+          "identical_partition": false,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.5,
+              "b": 0.4166666666666667,
+              "diff": -0.08333333333333331
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "fairness_priority__vs__skill_priority": {
+          "percent_students_reassigned": 0.25,
+          "pairwise_comembership_distance": 0.4286,
+          "adjusted_rand_index": 0.125,
+          "identical_partition": false,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.5,
+              "b": 0.4166666666666667,
+              "diff": -0.08333333333333331
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "fairness_priority__vs__preference_priority": {
+          "percent_students_reassigned": 0.25,
+          "pairwise_comembership_distance": 0.4286,
+          "adjusted_rand_index": 0.125,
+          "identical_partition": false,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.5,
+              "b": 0.4166666666666667,
+              "diff": -0.08333333333333331
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        },
+        "skill_priority__vs__preference_priority": {
+          "percent_students_reassigned": 0.0,
+          "pairwise_comembership_distance": 0.0,
+          "adjusted_rand_index": 1.0,
+          "identical_partition": true,
+          "metric_diffs": {
+            "skill_coverage": {
+              "a": 0.4166666666666667,
+              "b": 0.4166666666666667,
+              "diff": 0.0
+            },
+            "ability_diversity": {
+              "a": 1.0,
+              "b": 1.0,
+              "diff": 0.0
+            },
+            "conscientiousness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            },
+            "agreeableness": {
+              "a": 0,
+              "b": 0,
+              "diff": 0
+            }
+          }
+        }
+      }
+    }
+  ]
+}

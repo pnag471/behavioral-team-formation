@@ -9,8 +9,8 @@ from typing import List
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.models import Student, Team
-from app.database import init_db, SessionLocal, StudentDB
+from app.models import FamiliarityEdge, Student, Team
+from app.database import init_db, SessionLocal, StudentDB, FamiliarityDB
 
 # ---------------------------------------------------------------------------
 # Lifespan: seed data on startup
@@ -39,6 +39,27 @@ async def lifespan(app: FastAPI):
                 )
                 db.add(db_student)
             db.commit()
+
+        existing_familiarity = db.query(FamiliarityDB).first()
+        if not existing_familiarity:
+            from app.familiarity import canonical_pair
+            import uuid as _uuid
+
+            familiarity_seed_path = Path(__file__).parent.parent / "sample_familiarity.json"
+            if familiarity_seed_path.exists():
+                with open(familiarity_seed_path) as f:
+                    edges = json.load(f)
+                for raw in edges:
+                    edge = FamiliarityEdge(**raw)
+                    a, b = canonical_pair(edge.student_a_id, edge.student_b_id)
+                    db.add(FamiliarityDB(
+                        id=str(_uuid.uuid4()),
+                        student_a_id=a,
+                        student_b_id=b,
+                        strength=edge.strength,
+                        source=edge.source,
+                    ))
+                db.commit()
     finally:
         db.close()
 
@@ -63,12 +84,14 @@ app.add_middleware(
 )
 
 # Import routers after app is created to avoid circular imports
-from app import behavioral_analysis, matching, explainability, conversation
+from app import behavioral_analysis, matching, explainability, conversation, familiarity, preferences
 
 app.include_router(behavioral_analysis.router)
 app.include_router(matching.router)
 app.include_router(explainability.router)
 app.include_router(conversation.router)
+app.include_router(familiarity.router)
+app.include_router(preferences.router)
 
 
 # ---------------------------------------------------------------------------

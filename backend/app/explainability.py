@@ -89,6 +89,14 @@ def get_explanation(team_id: str):
         db_students = db.query(StudentDB).filter(StudentDB.id.in_(student_ids)).all()
         students = [_db_student_to_model(s) for s in db_students]
 
+        # Teams are persisted with team_norms=[] at formation time (norms are
+        # generated on-demand here, not during /teams/generate). generate()
+        # reads team.team_norms rather than building them itself, so it must
+        # be populated first — this is what MockExplainer already does
+        # internally, but GeminiExplainer.generate() does not.
+        if not team.team_norms:
+            team.team_norms = explainer.suggest_norms(team, students)
+
         return explainer.generate(team, students)
     finally:
         db.close()

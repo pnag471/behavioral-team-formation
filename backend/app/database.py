@@ -1,5 +1,5 @@
 from __future__ import annotations
-from sqlalchemy import create_engine, Column, String, Float, JSON, DateTime, UniqueConstraint
+from sqlalchemy import create_engine, Column, String, Float, Integer, JSON, DateTime, UniqueConstraint
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime, timezone
@@ -91,6 +91,64 @@ class TeamScoreDB(Base):
     confidence_score = Column(Float, default=0.0)
 
 
+class FamiliarityDB(Base):
+    """
+    Prior familiarity between two students (Part 4) — a RELATIONSHIP, not a
+    property of one student, hence its own edge table rather than a column
+    on `students`. Rows are stored with a CANONICAL pair ordering
+    (student_a_id < student_b_id lexicographically — see
+    app.familiarity.canonical_pair()) so a given unordered pair can never
+    have more than one row; the unique constraint below enforces that at
+    the database layer too, not just in application code. A pair with NO
+    row here is UNKNOWN familiarity, distinct from a row explicitly
+    recorded with strength=0.0 — see app.models.FamiliarityEdge.
+    """
+    __tablename__ = "familiarity"
+
+    id = Column(String, primary_key=True)  # surrogate UUID key
+    student_a_id = Column(String, nullable=False, index=True)
+    student_b_id = Column(String, nullable=False, index=True)
+    strength = Column(Float, nullable=False)
+    source = Column(String, nullable=True)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    __table_args__ = (
+        UniqueConstraint("student_a_id", "student_b_id", name="uq_familiarity_pair"),
+    )
+
+
+class PreferenceDB(Base):
+    """
+    ONE directed preference statement FROM student_id (Part 5) — see
+    app.models.PreferenceEntry's docstring for the full field semantics
+    (rank/ties, priority, prefer vs. avoid, named-student vs. characteristic
+    targets). Unlike FamiliarityDB, this is NOT canonicalized/symmetric —
+    each row belongs to exactly the student who submitted it, and there is
+    no uniqueness constraint at the DB layer (a student's own upsert
+    identity — same student_id + target + direction updates the existing
+    row — is enforced in application code by app/preferences.py, mirroring
+    app.familiarity.upsert_familiarity's pattern but without the
+    canonical-pair step, since preferences are directional).
+
+    PRIVACY: this table is queried in bulk ONLY by server-side code
+    (app.matching.generate_teams / compute_preference_metrics) — the public
+    API surface in app/preferences.py deliberately has no "list everyone's
+    preferences" endpoint; see that module's docstring.
+    """
+    __tablename__ = "preferences"
+
+    id = Column(String, primary_key=True)  # surrogate UUID key
+    student_id = Column(String, nullable=False, index=True)
+    direction = Column(String, nullable=False)  # "prefer" | "avoid"
+    target_student_id = Column(String, nullable=True, index=True)
+    target_characteristic = Column(JSON, nullable=True)
+    rank = Column(Integer, nullable=True)
+    priority = Column(String, default="normal")  # "normal" | "high"
+    reason_category = Column(String, nullable=True)
+    source = Column(String, nullable=True)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+
 # ---------------------------------------------------------------------------
 # Dependency
 # ---------------------------------------------------------------------------
@@ -176,9 +234,23 @@ class DimensionScoreDB(Base):
     id = Column(String, primary_key=True)
     profile_version_id = Column(String, nullable=False)
     dimension = Column(String, nullable=False)
-    value = Column(String, nullable=False)
+    value = Column(String, nullable=False)  # final label from dimension_scorer.score()
     confidence = Column(Float, nullable=True)
-    evidence_span = Column(String, nullable=True)  # supporting quote from transcript
+    evidence_span = Column(String, nullable=True)  # best supporting quote for display
+
+
+class EvidenceUnitDB(Base):
+    __tablename__ = "evidence_units"
+    id = Column(String, primary_key=True)           # UUID
+    run_id = Column(String, nullable=False)         # → extraction_runs.id
+    session_id = Column(String, nullable=False)
+    trait = Column(String, nullable=False)          # rubric dimension name
+    rubric_indicator = Column(String, nullable=False)  # which allowed_value
+    polarity = Column(String, nullable=False)       # supporting | contradicting
+    strength = Column(String, nullable=False)       # weak | medium | strong
+    span = Column(String, nullable=True)            # quote from transcript
+    rejected = Column(String, default="false")      # "true" if indicator not in allowed_values
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
 
 class AnnotatorDB(Base):
