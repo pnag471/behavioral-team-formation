@@ -3,6 +3,7 @@ import json
 import os
 import time
 from typing import List
+import uuid as uuid_lib
 from fastapi import APIRouter, HTTPException
 from app.models import (
     ConversationStartRequest,
@@ -320,9 +321,13 @@ def extract_signature(session_id: str, student_name: str, history: List[Conversa
 
         # Save signature
         db.merge(BehavioralSignatureDB(
+            id=str(uuid_lib.uuid4()),
             student_id=student_id,
             signature=sig,
             model_version="gemini-3.1-flash-lite",
+            rubric_version=None,
+            bank_version=None,
+            scorer_version=None,
         ))
 
         db.commit()

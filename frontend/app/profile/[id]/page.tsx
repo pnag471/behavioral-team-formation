@@ -64,9 +64,11 @@ export default function ProfilePage() {
   const [profile, setProfile] = useState<StudentProfile | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const id = params.id  // extract stable value
 
   useEffect(() => {
-    fetch(`${BASE_URL}/students/${params.id}`)
+    if (!id) return
+    fetch(`${BASE_URL}/students/${id}`)
       .then(res => {
         if (!res.ok) throw new Error('Student not found')
         return res.json()
@@ -74,7 +76,7 @@ export default function ProfilePage() {
       .then(setProfile)
       .catch(() => setError('Could not load profile.'))
       .finally(() => setLoading(false))
-  }, [params.id])
+  }, [id])  // use stable id, not params.id
 
   if (loading) return <div className="text-center text-slate-400 py-16 text-sm">Loading profile...</div>
   if (error || !profile) return (
