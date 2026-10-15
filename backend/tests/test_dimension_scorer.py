@@ -266,6 +266,8 @@ def test_score_with_real_rubric_returns_all_dimensions():
         SignalUnit("communication_style", "async"),
         SignalUnit("execution_style", "methodical"),
         SignalUnit("help_seeking", "proactive"),
+        SignalUnit("safety_contribution", "high"),
+        SignalUnit("stress_response", "composed"),
     ]
     result = score(signals, rubric)
     assert result["conflict_style"] == "collaborative"

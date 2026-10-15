@@ -57,10 +57,32 @@ schema_version: "v1"
 # matching_weight:   relative weight inside _behavioral_compat(); the matcher
 #                    normalises by sum(weights) so they need not sum to 1.0.
 # allowed_values:    for ordinal, ordered poor → strong (index 0 = poorest).
+# exemplars:         per allowed_value; empty stub, filled later by psych
+#                    faculty with real example quotes. Not scoring input.
 # default_value:     for DISPLAY only; NEVER passed to floor or balance
 #                    scoring. Unknown dimensions are tracked separately via
 #                    Student.under_determined_dims.
 # ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
+# Evidence strength — shared across ALL dimensions, not prompt-author prose.
+# Maps L3 extraction's per-evidence-unit strength label to the SignalUnit
+# weight the L4 scorer aggregates. Provisional numbers — not tuned against
+# real data yet.
+# ---------------------------------------------------------------------------
+evidence_strength:
+  strong:
+    weight: 1.5
+    definition: >
+      A specific past example with concrete detail (who, what, when, outcome).
+  medium:
+    weight: 1.0
+    definition: >
+      A stated general habit or pattern, without a specific instance.
+  weak:
+    weight: 0.5
+    definition: >
+      A hypothetical ("I would...") or vague/non-committal statement.
 
 dimensions:
 
@@ -90,6 +112,7 @@ dimensions:
       - planner
       - spontaneous
       - adaptive
+    exemplars: {}  # per allowed_value; filled later by psych faculty — see §8
     default_value: adaptive
     matching_weight: 0.025
 
@@ -113,6 +136,7 @@ dimensions:
       - async
       - sync
       - mixed
+    exemplars: {}  # per allowed_value; filled later by psych faculty — see §8
     default_value: mixed
     matching_weight: 0.025
 
@@ -131,6 +155,7 @@ dimensions:
       - methodical
       - iterative
       - exploratory
+    exemplars: {}  # per allowed_value; filled later by psych faculty — see §8
     default_value: iterative
     matching_weight: 0.025
 
@@ -167,6 +192,7 @@ dimensions:
       - avoidant
       - assertive
       - collaborative
+    exemplars: {}  # per allowed_value; filled later by psych faculty — see §8
     default_value: collaborative
     matching_weight: 0.0
 
@@ -191,6 +217,7 @@ dimensions:
       - directive
       - facilitative
       - emergent
+    exemplars: {}  # per allowed_value; filled later by psych faculty — see §8
     default_value: facilitative
     matching_weight: 0.10
 
@@ -225,6 +252,7 @@ dimensions:
       - low         # poor
       - developing  # mid
       - high        # strong
+    exemplars: {}  # per allowed_value; filled later by psych faculty — see §8
     default_value: developing
     matching_weight: 0.35
 
@@ -245,6 +273,7 @@ dimensions:
       - proactive
       - reactive
       - independent
+    exemplars: {}  # per allowed_value; filled later by psych faculty — see §8
     default_value: proactive
     matching_weight: 0.025
 
@@ -280,8 +309,51 @@ dimensions:
       - low         # poor
       - developing  # mid
       - high        # strong
+    exemplars: {}  # per allowed_value; filled later by psych faculty — see §8
     default_value: developing
     matching_weight: 0.35
+
+  safety_contribution:
+    type: ordinal
+    group: collaboration
+    # null, not high_mean_with_floor — see decisions doc §3 (floor dims are
+    # picked by composition_rule+type, not weight).
+    composition_rule: null
+    evidence_basis: weak
+    source: >
+      Collected, not scored. Overlaps with cooperativeness but also covers
+      admitting mistakes / giving credit — closer to Edmondson (1999)
+      psychological safety. Fold-or-keep decision deferred, see
+      docs/conversation_pipeline_decisions.md §3.
+    description: >
+      Degree to which a person creates space for teammates: admits mistakes,
+      gives credit, versus dominating, blaming, or taking credit.
+    allowed_values:
+      - low
+      - medium
+      - high
+    exemplars: {}  # per allowed_value; filled later by psych faculty — see §8
+    default_value: medium
+    matching_weight: 0.0
+
+  stress_response:
+    type: categorical
+    group: collaboration
+    composition_rule: null
+    evidence_basis: weak
+    source: >
+      Collected, not scored — no composition rule established yet.
+    description: >
+      How behavior changes under pressure. 'composed': holds up, may focus
+      harder. 'reactive': more controlling or confrontational. 'withdraws':
+      disengages, goes quiet.
+    allowed_values:
+      - composed
+      - reactive
+      - withdraws
+    exemplars: {}  # per allowed_value; filled later by psych faculty — see §8
+    default_value: composed
+    matching_weight: 0.0
 
   # =========================================================================
   # CONFIDENCE  (group: confidence)  —  DERIVED; not a scoreable trait
