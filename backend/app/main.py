@@ -157,6 +157,7 @@ def get_student(student_id: str):
                 collaboration_signature=s.collaboration_signature,
                 motivation_layer=s.motivation_layer,
                 confidence_layer=s.confidence_layer,
+                under_determined_dims=s.under_determined_dims or [],
             )
         finally:
             db.close()

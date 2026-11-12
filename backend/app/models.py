@@ -80,6 +80,9 @@ class ConfidenceLayer(BaseModel):
     # Same value as confidence_score under its new name (backend/ai/README.md
     # "Naming"). Written by the interview path; None on older records.
     measurement_coverage: Optional[float] = Field(default=None, ge=0.0, le=1.0)
+    # Contradicting-evidence flags from the interview path, {dimension, note, ...}.
+    # Declared so Pydantic doesn't drop them from API responses.
+    consistency_flags: List[Dict[str, object]] = []
 
 
 class Student(BaseModel):
