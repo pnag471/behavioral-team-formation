@@ -77,6 +77,8 @@ Tags: **[done]** works as designed · **[partial]** exists, incomplete · **[stu
 | F25 | [done] | **Confidence never reaches matching.** `matching.py` doesn't read `confidence_layer` for scoring or team choice (it's only copied in `_db_student_to_model`, `:4185`). Rule 5's "never weight scores" holds today. | `backend/app/matching.py` |
 | F26 | [contradicts-design] | **The two confidence decision records conflict.** `docs/conversation_pipeline_decisions.md` §4 (status "decided") drops per-dimension confidence from extraction entirely and shows scorer coverage instead. `backend/ai/README.md` "Decision record" (2026-11-06) keeps confidence as a per-evidence review flag. | `docs/conversation_pipeline_decisions.md:66-78`; `backend/ai/README.md:27-38` |
 
+RESOLVED (2026-11-12): Option B, see backend/ai/README.md decision record.
+
 ### 1.5 Trait vocabulary
 
 The rubric has 10 scoreable dimensions plus the derived `confidence_score` (`backend/traits/rubric_v1.yaml:93-379`).
@@ -188,6 +190,7 @@ The order puts docs and tests first, so later runtime changes are protected, the
 These are for the team to decide. This audit doesn't resolve them.
 
 - **Q1 — TODO(team-decision):** Confidence: drop it from extraction and show scorer coverage (`docs/conversation_pipeline_decisions.md` §4), or keep it as a per-evidence review flag (`backend/ai/README.md` Decision record)? The two records conflict (F26).
+  - RESOLVED (2026-11-12): Option B, see backend/ai/README.md decision record.
 - **Q2 — TODO(team-decision):** Which provider handles extraction? The only live LLM path is Gemini, inline in `conversation.py`. The README TODO says to demo through "the Claude analyzer path", which isn't wired anywhere and whose SDK isn't installed. Should the demo use Gemini through a fixed adapter, wire up Claude, or skip interviews in the demo and use MCQ only?
 - **Q3 — TODO(team-decision):** Fix or retire `gemini_analyzer.py`, `claude_analyzer.py`, `mock_analyzer.py`, the `BehavioralAnalyzer` interface, and `ClaudeExplainer` (F10–F13, F17, F36)? (Carries over the existing `backend/ai/README.md:38` TODO.)
 - **Q4 — TODO(team-decision):** Should the MCQ path's free-text `response_text` become evidence (through the same extraction adapter), or is MCQ deliberately option-only (F2)?

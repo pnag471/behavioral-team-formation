@@ -50,7 +50,7 @@ Naming (to stop the two "confidence" fields getting mixed up):
 - `measurement_coverage` = rubric's old confidence_score (dimension signal coverage)
 - per-evidence review flag = the Option B confidence above
 
-TODO(team-decision): when Vivek or Bernice surface, confirm Option B and get the okay to fix or retire gemini_analyzer.py. Until then, point the demo at the Claude analyzer path only, so you’re never running through the one with the old boundary bug.
+Option B is settled (agreed with Bernice and Sandipan). TODO(team-decision): get the okay to fix or retire gemini_analyzer.py. Until then, point the demo at the Claude analyzer path only, so you’re never running through the one with the old boundary bug.
 
 ## Architecture
 
@@ -122,9 +122,9 @@ Returns a dict with exactly these keys:
 - `planning_style`: `"planner" | "spontaneous" | "adaptive"`
 - `communication_style`: `"async" | "sync" | "mixed"`
 - `execution_style`: `"methodical" | "iterative" | "exploratory"`
-- `conflict_style`: `"avoidant" | "confrontational" | "collaborative"`
+- `conflict_style`: `"avoidant" | "assertive" | "collaborative"`
 - `leadership_style`: `"directive" | "facilitative" | "emergent"`
-- `accountability`: `"high" | "medium" | "low"`
+- `accountability`: `"high" | "developing" | "low"`
 - `help_seeking`: `"proactive" | "reactive" | "independent"`
 - `confidence_score`: `float` in `[0.0, 1.0]`
 

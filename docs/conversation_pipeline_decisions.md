@@ -11,8 +11,10 @@ better/worse" — no longer true after decision #1 below).
 
 **Decision:** count-based. A dimension is `unknown` when it has zero evidence units after
 the verbatim check (§2) filters out unverifiable ones. No confidence-threshold gating —
-self-reported per-dimension confidence is dropped from the extraction contract entirely
-(see §4); display shows scorer evidence coverage instead.
+confidence is KEPT as a per-evidence review flag, used only to flag weak evidence for human
+review and never weighting scores (Option B). This supersedes the earlier "dropped from the
+extraction contract entirely" wording; see the decision record in `backend/ai/README.md`.
+Display shows scorer evidence coverage (`measurement_coverage`).
 
 **Plurality ties:** a genuine tie (equal total weight across ≥2 values) does **not** fall
 back to first-listed-value — that would silently bias every tie toward whichever value is
