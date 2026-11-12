@@ -38,6 +38,9 @@ def _ordinal_levels(dim: dict) -> List[str]:
     return list(dim["allowed_values"])  # rubric lists ordinal levels low -> high
 
 
+LOW_MODES = ("all", "partial")
+
+
 def generate_cohort(
     n: int,
     seed: int,
@@ -45,14 +48,21 @@ def generate_cohort(
     with_skills: bool = True,
     min_skills: int = 1,
     max_skills: int = 3,
+    low_mode: str = "all",
 ) -> dict:
+    """low_mode "all": a low scorer is at the lowest level on every ordinal trait.
+    low_mode "partial": a low scorer is at the lowest level on 1 or 2 randomly
+    chosen ordinal traits, and drawn like everyone else on the rest."""
     if n <= 0:
         raise ValueError("n must be positive")
     if not 0.0 <= low_scorer_fraction <= 1.0:
         raise ValueError("low_scorer_fraction must be in [0, 1]")
+    if low_mode not in LOW_MODES:
+        raise ValueError(f"low_mode must be one of {LOW_MODES}")
 
     rng = random.Random(seed)
     dims = trait_dimensions()
+    ordinal_names = [name for name, d in dims.items() if d["type"] == "ordinal"]
     skill_pool = sorted(REFERENCE_SKILLS)  # sorted: set order must not leak into output
 
     n_low = round(low_scorer_fraction * n)
@@ -61,12 +71,19 @@ def generate_cohort(
     students = []
     for i in range(n):
         is_low = i in low_indices
+        if not is_low:
+            low_traits = set()
+        elif low_mode == "all":
+            low_traits = set(ordinal_names)
+        else:
+            k = rng.randint(1, min(2, len(ordinal_names)))
+            low_traits = set(rng.sample(ordinal_names, k))
         traits = {}
         for name, d in dims.items():  # rubric file order — fixed
             values = list(d["allowed_values"])
             if d["type"] == "ordinal":
                 levels = _ordinal_levels(d)
-                if is_low:
+                if name in low_traits:
                     # "Low on every trait": lowest level on every ORDINAL dim.
                     traits[name] = levels[0]
                 else:
@@ -93,6 +110,8 @@ def generate_cohort(
             "traits": traits,
             "low_scorer": is_low,
         }
+        if low_mode == "partial" and is_low:
+            rec["low_traits"] = sorted(low_traits)
         if with_skills:
             # TODO(team-decision): how skills feed in. The real matcher only
             # reads skill NAMES (skill_coverage vs REFERENCE_SKILLS); the
@@ -113,17 +132,20 @@ def generate_cohort(
     # those terms are constant (0.5 and 0.0) for every team, so they cannot
     # change which teams form. Add generators for them if the evals should
     # exercise those terms.
+    params = {
+        "n": n,
+        "seed": seed,
+        "low_scorer_fraction": low_scorer_fraction,
+        "with_skills": with_skills,
+        "min_skills": min_skills,
+        "max_skills": max_skills,
+    }
+    if low_mode != "all":  # omitted for "all" so the default output stays byte-identical
+        params["low_mode"] = low_mode
     return {
         "generator": "eval.generate_cohort",
         "rubric_schema_version": get_rubric().get("schema_version"),
-        "params": {
-            "n": n,
-            "seed": seed,
-            "low_scorer_fraction": low_scorer_fraction,
-            "with_skills": with_skills,
-            "min_skills": min_skills,
-            "max_skills": max_skills,
-        },
+        "params": params,
         "trait_dimensions": list(dims),
         "n_low_scorers": n_low,
         "students": students,
@@ -139,7 +161,9 @@ def main(argv: Optional[List[str]] = None) -> int:
     p.add_argument("--n", type=int, default=24, help="number of students (default 24)")
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--low-scorer-fraction", type=float, default=0.0,
-                   help="fraction of students at the lowest level on every ordinal trait (default 0.0)")
+                   help="fraction of students who are low scorers (default 0.0)")
+    p.add_argument("--low-mode", choices=LOW_MODES, default="all",
+                   help="all: low on every ordinal trait (default); partial: low on 1 or 2 ordinal traits")
     p.add_argument("--no-skills", action="store_true", help="omit the skills dict")
     p.add_argument("--out", help="output path (default: stdout)")
     args = p.parse_args(argv)
@@ -148,6 +172,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         n=args.n, seed=args.seed,
         low_scorer_fraction=args.low_scorer_fraction,
         with_skills=not args.no_skills,
+        low_mode=args.low_mode,
     ))
     if args.out:
         with open(args.out, "w") as f:
