@@ -116,17 +116,29 @@ Then in `app/explainability.py`, replace `MockExplainer()` with `ClaudeExplainer
 
 ## Interface Contract
 
-### `BehavioralAnalyzer.analyze(request) -> dict`
+### Interview extraction (`POST /conversation/extract`)
 
-Returns a dict with exactly these keys:
-- `planning_style`: `"planner" | "spontaneous" | "adaptive"`
-- `communication_style`: `"async" | "sync" | "mixed"`
-- `execution_style`: `"methodical" | "iterative" | "exploratory"`
-- `conflict_style`: `"avoidant" | "assertive" | "collaborative"`
-- `leadership_style`: `"directive" | "facilitative" | "emergent"`
-- `accountability`: `"high" | "developing" | "low"`
-- `help_seeking`: `"proactive" | "reactive" | "independent"`
-- `confidence_score`: `float` in `[0.0, 1.0]`
+**The LLM returns evidence only.** No trait labels and no `confidence_score`.
+The prompt is `prompts/evidence_extraction.txt`, filled from the rubric. The
+output shape is `EvidenceExtractionOutput` in `app/models.py`:
+- `evidence`: a list of `{quote, dimension, indicator, polarity, strength, confidence}`
+  - `dimension` is a non-derived rubric dimension; `indicator` is one of its `allowed_values`
+  - `polarity` is `"supporting" | "contradicting"`; `strength` is a key of `rubric.evidence_strength`
+  - `confidence` (0 to 1) is a review flag only and never weights a score
+- facts: `primary_skills`, `skill_depth` (display only), `skill_no_gos`, `unavailable_times`, `timezone_notes`
+
+**The fixed code produces the labels.** `scoring/interview_adapter.evidence_to_signals`
+validates the evidence and weights it by `strength`. `scoring/dimension_scorer.score()`
+then returns:
+- one label per dimension, always from that dimension's `allowed_values`
+- `confidence_score`, stored on the Student as `measurement_coverage` with the legacy key kept
+- `_unknown_dims`, stored as `under_determined_dims`
+
+Every evidence item is stored, and `conversation.rescore_run(run_id)` rebuilds the
+profile from stored evidence with no LLM.
+
+The old `BehavioralAnalyzer.analyze(request) -> dict` interface returned labels
+directly. It breaks the design rules above, and no route uses it.
 
 ### `ExplanationGenerator.generate(team, students) -> TeamExplanation`
 

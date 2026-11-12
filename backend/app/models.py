@@ -77,6 +77,9 @@ class MotivationLayer(BaseModel):
 class ConfidenceLayer(BaseModel):
     # Scorer measurement quality, NOT student self-assurance (see rubric_v1.yaml).
     confidence_score: float = Field(default=0.5, ge=0.0, le=1.0)
+    # Same value as confidence_score under its new name (backend/ai/README.md
+    # "Naming"). Written by the interview path; None on older records.
+    measurement_coverage: Optional[float] = Field(default=None, ge=0.0, le=1.0)
 
 
 class Student(BaseModel):
@@ -915,3 +918,44 @@ class ConversationResponse(BaseModel):
     is_complete: bool
     session_id: str
     
+
+
+# ---------------------------------------------------------------------------
+# Interview evidence extraction (POST /conversation/extract)
+#
+# The LLM returns evidence only, never trait labels. These models check the
+# SHAPE of its JSON. They deliberately do NOT check dimension / indicator /
+# polarity / strength values against the rubric: that is the adapter's job
+# (scoring/interview_adapter.py), which records a reason per rejected item so
+# every item can be persisted, including the invalid ones.
+# ---------------------------------------------------------------------------
+
+class ExtractedEvidenceItem(BaseModel):
+    quote: str
+    dimension: str
+    indicator: str
+    polarity: str
+    strength: str
+    # Review flag only; never weights a score (backend/ai/README.md decision record).
+    confidence: Optional[float] = Field(default=None, ge=0.0, le=1.0)
+
+
+class EvidenceExtractionOutput(BaseModel):
+    evidence: List[ExtractedEvidenceItem] = []
+    # Facts, not traits. skill_depth is stored for display only (plan TODO-9).
+    primary_skills: List[str] = []
+    skill_depth: Optional[str] = None
+    skill_no_gos: List[str] = []
+    unavailable_times: List[str] = []
+    timezone_notes: str = ""
+
+
+class ExtractResponse(BaseModel):
+    student_id: str
+    session_id: str
+    run_id: str
+    # The scorer output (score()), not the model's JSON.
+    signature: Dict[str, object]
+    under_determined_dims: List[str]
+    measurement_coverage: float
+    evidence_counts: Dict[str, int]   # decision string -> number of items
