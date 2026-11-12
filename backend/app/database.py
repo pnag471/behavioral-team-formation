@@ -1,5 +1,5 @@
 from __future__ import annotations
-from sqlalchemy import create_engine, Column, String, Float, Integer, JSON, DateTime, UniqueConstraint
+from sqlalchemy import create_engine, Column, String, Float, Integer, JSON, DateTime, Text, UniqueConstraint
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime, timezone
@@ -217,6 +217,10 @@ class ExtractionRunDB(Base):
     params_json = Column(JSON, default={})
     run_purpose = Column(String, default="production")  # production | rerun | ablation
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    # Provenance for re-scoring from stored evidence (plan B3). Nullable; nothing writes these yet.
+    rubric_version = Column(String, nullable=True)  # rubric schema_version used for this run
+    prompt_hash = Column(String, nullable=True)     # hash of the exact prompt sent to the LLM
+    raw_response = Column(Text, nullable=True)      # unparsed model text, kept even when parsing fails
 
 
 class ProfileVersionDB(Base):
@@ -251,6 +255,15 @@ class EvidenceUnitDB(Base):
     span = Column(String, nullable=True)            # quote from transcript
     rejected = Column(String, default="false")      # "true" if indicator not in allowed_values
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    # Adapter output per item (plan B3/B4). Nullable; nothing writes these yet.
+    confidence = Column(Float, nullable=True)       # LLM self-reported; review flag only, never a score weight
+    # TODO(team-decision): needs_review type. Stored as String "true"/"false" to
+    # match `rejected` above (this schema has no Boolean columns). Switch both to
+    # Boolean together if the team prefers real booleans. No default on purpose:
+    # NULL means "not assessed" (rows written before the adapter existed).
+    needs_review = Column(String, nullable=True)    # "true" | "false"
+    decision = Column(String, nullable=True)        # e.g. "accepted", "rejected:not_verbatim", "excluded:over_cap"
+    quote_start = Column(Integer, nullable=True)    # offset of span in the normalized student text
 
 
 class AnnotatorDB(Base):
