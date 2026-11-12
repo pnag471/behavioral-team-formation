@@ -65,7 +65,13 @@ closer to Edmondson (1999) psychological safety than CATME cooperativeness.
 
 ## 4. Confidence
 
-**Decision:** drop self-reported per-dimension confidence from the extraction contract
+> **Superseded 2026-11-10 (with Bernice).** Confidence is now KEPT as a per-evidence
+> review flag. It flags weak evidence for human review and never weights scores. See the
+> "Decision record" in `backend/ai/README.md` for the current answer. The coverage
+> display below still applies, renamed `measurement_coverage`. The original decision
+> is kept below for history.
+
+**Original decision:** drop self-reported per-dimension confidence from the extraction contract
 entirely — once the LLM isn't asserting a label, there's no single inference for a
 confidence number to attach to. Display the scorer's per-dimension evidence coverage
 instead. Requires `dimension_scorer.score()` to expose coverage per-dimension (today it

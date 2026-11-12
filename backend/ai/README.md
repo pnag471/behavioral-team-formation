@@ -26,14 +26,29 @@ or to team formation.
 
 ## Decision record
 
-Decision (2026-11-06): Confidence stays, as a per-evidence field, used only to
-flag weak evidence for human review.
-Why: matches how real extraction systems work; keeps the AI out of scoring;
-keeps extraction deterministic.
-Rejected: dropping it (loses a useful review signal); using it to weight scores
-(puts a poorly-calibrated number back into the decision).
-Revisit if: the team prefers Option A, or we switch to self-consistency
-confidence (which would break determinism).
+Decision (updated 2026-11-10, with Bernice): Confidence is a per-evidence REVIEW
+FLAG only. It flags weak evidence for human review and never weights scores.
+(Supersedes conversation_pipeline_decisions.md §4, which dropped confidence; the
+team has now landed on keep-as-review-flag.)
+
+Determinism: the scorer and optimizer are deterministic given the same STORED
+evidence. LLM extraction is NOT deterministic, so we persist the evidence from each
+run and reproduce scoring and team formation from it. Reproducibility comes from
+saving the evidence, not from the LLM.
+
+Strength is a SEPARATE field and DOES weight the score. It must be a grounded
+classification (specific example vs general habit vs hypothetical) with anchored
+example responses per level. Exemplars are not filled in yet (rubric: "filled later
+by psych faculty"), so strength is currently UNVALIDATED. Dependency: Thao / Liesel.
+
+Known boundary violation to fix: POST /conversation/extract (conversation.py) writes
+LLM labels straight to the student DB with no scorer between. Live interview path.
+Tracked for the refactor.
+
+Naming (to stop the two "confidence" fields getting mixed up):
+
+- `measurement_coverage` = rubric's old confidence_score (dimension signal coverage)
+- per-evidence review flag = the Option B confidence above
 
 TODO(team-decision): when Vivek or Bernice surface, confirm Option B and get the okay to fix or retire gemini_analyzer.py. Until then, point the demo at the Claude analyzer path only, so you’re never running through the one with the old boundary bug.
 
