@@ -4237,6 +4237,8 @@ def _greedy_build(
     members across teams before the maximin pass.
     File: backend/app/matching.py  — confirm seeding strategy.
     """
+    # Ties below break by list order, so fix the order to make the result input-order independent.
+    students = sorted(students, key=lambda s: s.id)
     dims = _floor_dims()
 
     def is_floor_student(s: Student) -> bool:
@@ -4490,7 +4492,7 @@ def generate_teams(request: TeamGenerationRequest):
 
     db = SessionLocal()
     try:
-        db_students = db.query(StudentDB).all()
+        db_students = db.query(StudentDB).order_by(StudentDB.id).all()
         students = [_db_student_to_model(s) for s in db_students]
         familiarity_edges = [
             FamiliarityEdge(student_a_id=r.student_a_id, student_b_id=r.student_b_id, strength=r.strength, source=r.source)
