@@ -8,9 +8,9 @@ import type { AssessmentResult, BehavioralSignature, RadarData, Scenario } from 
 const RADAR_LABELS = ['Communication', 'Conflict Handling', 'Leadership', 'Accountability', 'Planning']
 
 const COMM_MAP: Record<string, number>    = { async: 0.35, mixed: 0.65, sync: 0.9 }
-const CONFLICT_MAP: Record<string, number> = { avoidant: 0.2, confrontational: 0.6, collaborative: 0.85 }
+const CONFLICT_MAP: Record<string, number> = { avoidant: 0.2, assertive: 0.6, collaborative: 0.85 }
 const LEADER_MAP: Record<string, number>  = { emergent: 0.3, facilitative: 0.7, directive: 0.92 }
-const ACCOUNT_MAP: Record<string, number> = { low: 0.2, medium: 0.6, high: 0.9 }
+const ACCOUNT_MAP: Record<string, number> = { low: 0.2, developing: 0.6, high: 0.9 }
 const PLAN_MAP: Record<string, number>    = { spontaneous: 0.2, adaptive: 0.6, planner: 0.9 }
 
 function signatureToRadar(sig: BehavioralSignature): RadarData {

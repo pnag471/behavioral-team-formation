@@ -29,23 +29,30 @@ interface StudentProfile {
     leadership_style: string
     accountability: string
     help_seeking: string
+    cooperativeness: string   // low | developing | high (rubric)
     safety_contribution: string
     stress_response: string
   }
   confidence_layer: {
     confidence_score: number
-    confidence_scores: Record<string, number>
+    // Same value as confidence_score under its new name; absent on older/MCQ profiles.
+    measurement_coverage?: number | null
     consistency_flags: { dimension: string; note: string }[]
   }
+  // Dimensions with no evidence: the shown value is only the rubric's display default.
+  under_determined_dims: string[]
 }
 
 function signatureToRadar(collab: StudentProfile['collaboration_signature'], work: StudentProfile['work_rhythm_signature']) {
   const commMap: Record<string, number> = { async: 0.35, mixed: 0.65, sync: 0.90 }
-  const conflictMap: Record<string, number> = { avoidant: 0.20, confrontational: 0.60, collaborative: 0.85 }
+  const conflictMap: Record<string, number> = { avoidant: 0.20, assertive: 0.60, collaborative: 0.85 }
   const leaderMap: Record<string, number> = { emergent: 0.30, facilitative: 0.70, directive: 0.92 }
-  const accountMap: Record<string, number> = { low: 0.20, medium: 0.60, high: 0.90 }
+  const accountMap: Record<string, number> = { low: 0.20, developing: 0.60, high: 0.90 }
   const planMap: Record<string, number> = { spontaneous: 0.20, adaptive: 0.60, planner: 0.90 }
 
+  // TODO(design): cooperativeness is shown in the trait list only. Whether it
+  // also becomes a radar axis (6 axes instead of 5, here and on the assessment
+  // page) is a design call; the axes are left as they were.
   return {
     labels: ['Communication', 'Conflict Handling', 'Leadership', 'Accountability', 'Planning'],
     values: [
@@ -87,8 +94,9 @@ export default function ProfilePage() {
   )
 
   const radar = signatureToRadar(profile.collaboration_signature, profile.work_rhythm_signature)
-  const overallConfidence = profile.confidence_layer?.confidence_score ?? 0
-  const confidenceScores = profile.confidence_layer?.confidence_scores ?? {}
+  // How much of the profile had evidence. Older and MCQ profiles only have confidence_score.
+  const coverage = profile.confidence_layer?.measurement_coverage ?? profile.confidence_layer?.confidence_score ?? 0
+  const unknownDims = new Set(profile.under_determined_dims ?? [])
   const consistencyFlags = profile.confidence_layer?.consistency_flags ?? []
 
   return (
@@ -99,12 +107,15 @@ export default function ProfilePage() {
         <h1 className="text-3xl font-bold text-slate-800 mt-2">{profile.name}</h1>
         <div className="flex items-center gap-3 mt-2">
           <span className="text-sm text-slate-500">Behavioral Profile</span>
-          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-            overallConfidence >= 0.75 ? 'bg-emerald-100 text-emerald-800' :
-            overallConfidence >= 0.55 ? 'bg-amber-100 text-amber-800' :
-            'bg-red-100 text-red-800'
-          }`}>
-            {Math.round(overallConfidence * 100)}% overall confidence
+          <span
+            title="How much of this profile is backed by evidence from your answers"
+            className={`px-3 py-1 rounded-full text-xs font-semibold ${
+              coverage >= 0.75 ? 'bg-emerald-100 text-emerald-800' :
+              coverage >= 0.55 ? 'bg-amber-100 text-amber-800' :
+              'bg-red-100 text-red-800'
+            }`}
+          >
+            {Math.round(coverage * 100)}% evidence coverage
           </span>
         </div>
       </div>
@@ -176,22 +187,19 @@ export default function ProfilePage() {
                 { label: 'Leadership', value: profile.collaboration_signature.leadership_style, dim: 'leadership_style' },
                 { label: 'Accountability', value: profile.collaboration_signature.accountability, dim: 'accountability' },
                 { label: 'Help Seeking', value: profile.collaboration_signature.help_seeking, dim: 'help_seeking' },
+                { label: 'Cooperativeness', value: profile.collaboration_signature.cooperativeness, dim: 'cooperativeness' },
                 { label: 'Safety Contribution', value: profile.collaboration_signature.safety_contribution, dim: 'safety_contribution' },
                 { label: 'Stress Response', value: profile.collaboration_signature.stress_response, dim: 'stress_response' },
               ].map(({ label, value, dim }) => (
                 <div key={dim} className="bg-slate-50 rounded-xl p-3 border border-slate-100">
                   <p className="text-xs text-slate-400 mb-1">{label}</p>
-                  <p className="text-sm font-semibold text-slate-800 capitalize">{value}</p>
-                  {confidenceScores[dim] !== undefined && (
-                    <div className="mt-2">
-                      <div className="w-full bg-slate-200 rounded-full h-1">
-                        <div
-                          className="bg-[#1e3a8a] h-1 rounded-full"
-                          style={{ width: `${Math.round(confidenceScores[dim] * 100)}%` }}
-                        />
-                      </div>
-                      <p className="text-xs text-slate-400 mt-0.5">{Math.round(confidenceScores[dim] * 100)}% confidence</p>
-                    </div>
+                  {unknownDims.has(dim) ? (
+                    <>
+                      <p className="text-sm font-semibold text-slate-400 capitalize">{value}</p>
+                      <p className="text-xs text-slate-400 italic mt-1">Not enough information</p>
+                    </>
+                  ) : (
+                    <p className="text-sm font-semibold text-slate-800 capitalize">{value}</p>
                   )}
                 </div>
               ))}
