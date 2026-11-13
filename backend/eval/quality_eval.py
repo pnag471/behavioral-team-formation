@@ -79,7 +79,6 @@ METRICS = (
     "cooperativeness_mean_of_team_means",
     "team_score_std",
     "worst_team_score",
-    "skill_coverage_rate",
     "mean_coverage",
     "worst_off_utility",
 )
@@ -95,7 +94,6 @@ TABLE_COLUMNS = (
     ("worst_team_score", "worst team score"),
     ("team_score_std", "team score std"),
     ("mean_coverage", "mean skill coverage"),
-    ("skill_coverage_rate", "full-coverage teams"),
     ("worst_off_utility", "worst-off utility"),
 )
 
@@ -107,6 +105,9 @@ HEADER_NOTES = (
     "A floor student is at the lowest level on accountability or cooperativeness. "
     "one_low_per_team limits each trait separately, so a team can hold two floor students "
     "(one per trait); 'max same-trait floor/team' is the per-trait count the policy constrains.",
+    "Low-scorer fraction is the generator setting. In partial mode a low scorer can be low only on "
+    "safety_contribution, which is not a floor trait, so the actual floor-student share is lower; "
+    "each block reports it.",
     "Cohorts infeasible under one_low_per_team (more floor students on a dimension than teams) are skipped and counted.",
     "Values are the mean over cohorts with a 95% percentile bootstrap CI "
     f"({BOOTSTRAP_RESAMPLES} resamples, seed {BOOTSTRAP_SEED}).",
@@ -185,6 +186,10 @@ def behavior_score(student: Student) -> int:
     return sum(_level(getattr(student.collaboration_signature, t), t) for t in FLOOR_TRAITS)
 
 
+def is_floor_student(student: Student) -> bool:
+    return any(_level(getattr(student.collaboration_signature, t), t) == 0 for t in FLOOR_TRAITS)
+
+
 def form_sort_and_chunk(students: List[Student], key: str) -> List[List[Student]]:
     return _chunk(sorted(students, key=lambda s: (behavior_score(s), s.id)))
 
@@ -253,7 +258,6 @@ def team_metrics(teams: List[List[Student]]) -> Dict[str, Optional[float]]:
         "cooperativeness_mean_of_team_means": agr["global_mean_of_team_means"],
         "team_score_std": statistics.pstdev(scores),
         "worst_team_score": min(scores),
-        "skill_coverage_rate": sum(1 for t in sc["per_team"] if not t["missing_skills"]) / len(teams),
         "mean_coverage": sc["mean_coverage_rate"],
         "worst_off_utility": util["min_utility"],
     }
@@ -273,8 +277,10 @@ def run_cohort(job: Tuple[float, int, int]) -> dict:
     students = [record_to_student(r) for r in cohort["students"]]
     n_teams = prod._compute_n_teams(len(students), TEAM_SIZE)
     feasible, infeasible_dims = prod._check_feasibility(students, n_teams, FLOOR_POLICY)
+    n_floor = sum(1 for s in students if is_floor_student(s))
     out = {"low_scorer_fraction": fraction, "size": size, "seed": seed,
-           "n_teams": n_teams, "feasible": feasible}
+           "n_teams": n_teams, "feasible": feasible,
+           "n_floor_students": n_floor, "floor_student_fraction": _round(n_floor / size)}
     if not feasible:
         out["infeasible_dims"] = dict(sorted(infeasible_dims.items()))
         return out
@@ -323,6 +329,10 @@ def aggregate(cohorts: List[dict], fraction: float, sizes: List[int]) -> dict:
         by_size[str(size)] = {
             "n_cohorts": len(kept),
             "n_skipped_infeasible": len(rows) - len(kept),
+            "floor_student_fraction": dict(zip(
+                ("mean", "ci_low", "ci_high"),
+                bootstrap_ci([c["floor_student_fraction"] for c in rows], f"{fraction}:{size}:floor_fraction"),
+            )),
             "methods": methods,
         }
     return by_size
@@ -349,8 +359,11 @@ def render_markdown(results: dict) -> str:
         table = results["tables"][table_name]
         lines += [f"## {table_name.capitalize()}: low-scorer fraction {fraction}", ""]
         for size, block in table.items():
+            ff = block["floor_student_fraction"]
             lines += [f"### {size} students ({block['n_cohorts']} cohorts, "
-                      f"{block['n_skipped_infeasible']} skipped as infeasible)", ""]
+                      f"{block['n_skipped_infeasible']} skipped as infeasible)", "",
+                      f"Actual floor students: {ff['mean']:.1%} of the cohort "
+                      f"[{ff['ci_low']:.1%}, {ff['ci_high']:.1%}]", ""]
             lines.append("| method | " + " | ".join(label for _, label in TABLE_COLUMNS) + " |")
             lines.append("|---" * (len(TABLE_COLUMNS) + 1) + "|")
             for method in METHODS:
@@ -364,14 +377,16 @@ def render_csv(results: dict) -> str:
     buf = io.StringIO()
     w = csv.writer(buf, lineterminator="\n")
     w.writerow(["table", "low_scorer_fraction", "size", "method", "metric",
-                "mean", "ci_low", "ci_high", "n", "n_cohorts", "n_skipped_infeasible"])
+                "mean", "ci_low", "ci_high", "n", "n_cohorts", "n_skipped_infeasible",
+                "floor_student_fraction_mean"])
     for table_name, fraction in results["header"]["tables"]:
         for size, block in results["tables"][table_name].items():
             for method in METHODS:
                 for metric in METRICS:
                     c = block["methods"][method][metric]
                     w.writerow([table_name, fraction, size, method, metric, c["mean"], c["ci_low"],
-                                c["ci_high"], c["n"], block["n_cohorts"], block["n_skipped_infeasible"]])
+                                c["ci_high"], c["n"], block["n_cohorts"], block["n_skipped_infeasible"],
+                                block["floor_student_fraction"]["mean"]])
     return buf.getvalue()
 
 

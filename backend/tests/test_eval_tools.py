@@ -115,10 +115,29 @@ def test_team_metrics_on_known_teams():
     assert m["accountability_mean_of_team_means"] == pytest.approx(1.625)
     assert m["cooperativeness_min_team_mean"] == pytest.approx(1.25)
     assert m["cooperativeness_mean_of_team_means"] == pytest.approx(1.625)
-    assert m["skill_coverage_rate"] == pytest.approx(0.5)
     assert m["mean_coverage"] == pytest.approx((1 / len(ref) + 1) / 2)
     assert m["worst_team_score"] == pytest.approx(
         min(prod._total_score(t, prod._DEFAULT_WEIGHTS) for t in (team_a, team_b)))
+
+
+def test_floor_student_count_ignores_non_floor_traits():
+    students = [
+        _student("f1", "low", "high", []),
+        _student("f2", "high", "low", []),
+        _student("f3", "high", "high", []),
+    ]
+    assert [qe.is_floor_student(s) for s in students] == [True, True, False]
+
+
+def test_cohort_reports_actual_floor_students():
+    out = qe.run_cohort((0.25, 40, 3))
+    cohort = generate_cohort(40, 3, low_scorer_fraction=0.25, low_mode="partial")
+    expected = sum(
+        1 for s in cohort["students"]
+        if s["traits"]["accountability"] == "low" or s["traits"]["cooperativeness"] == "low"
+    )
+    assert out["n_floor_students"] == expected
+    assert expected < cohort["n_low_scorers"]
 
 
 def test_sort_and_chunk_puts_weakest_together():

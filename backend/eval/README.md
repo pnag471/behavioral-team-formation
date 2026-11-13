@@ -44,6 +44,8 @@ Methods, all on the same cohorts (team size 4, profile `legacy`, floor policy `o
 
 Cohorts that are infeasible under `one_low_per_team` are skipped and counted in the output.
 
+The low-scorer fraction is a generator setting, not the floor-student share. In partial mode a low scorer can be low only on `safety_contribution`, which is not a floor trait, so fewer students end up at the floor. Each cohort records `n_floor_students`, and each table block reports the actual floor-student share.
+
 ## What each metric means
 
 Ordinal levels are mapped to 0, 1, 2 (low, developing, high). A floor student is at the lowest level on accountability or cooperativeness.
@@ -58,7 +60,6 @@ Ordinal levels are mapped to 0, 1, 2 (low, developing, high). A floor student is
 | `worst_team_score` | lowest team score (`_total_score` with the default legacy weights) |
 | `team_score_std` | spread of team scores across teams |
 | `mean_coverage` | average fraction of the reference skills each team covers |
-| `skill_coverage_rate` | fraction of teams covering every reference skill |
 | `worst_off_utility` | lowest individual utility from `compute_assignment_utilities` |
 
 ## Why these metrics
