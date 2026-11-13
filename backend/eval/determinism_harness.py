@@ -52,22 +52,9 @@ def real_former(students: List[Student], team_size: int) -> List[List[str]]:
     """
     Thin adapter: (students, team_size) -> list of teams of student ids.
 
-    There is no single pure team-formation function. The production entry
-    point is app.matching.generate_teams (POST /teams/generate), which reads
-    students from SQLite and DELETES/REWRITES the teams table, so it cannot be
-    called here. This adapter replays the exact formation sequence from that
-    function's `formation_mode == "behavioral"` branch, with the same calls
-    and arguments, minus the DB I/O and the post-formation reporting (which
-    never changes the assignment):
-
-        resolve_profile -> _normalize_weights -> _greedy_build
-        -> _two_opt_improve -> _maximin_improve -> _run_optional_passes
-
-    TODO(team-decision): this mirrors generate_teams by copy, so it can drift
-    if that branch changes. Cleaner fix (needs a change to matching.py, out of
-    scope here): extract that branch into a pure
-    `form_teams(students, request, familiarity_edges, preference_entries)`
-    that both the endpoint and this harness call.
+    Calls app.matching.form_teams, the same pure function generate_teams
+    (POST /teams/generate) uses for behavioral mode, so this cannot drift
+    from production.
 
     TODO(team-decision): optimizer config. Uses TeamGenerationRequest defaults
     -> profile "legacy" (every optional pass OFF), floor_policy
@@ -82,18 +69,8 @@ def _form(students: List[Student], team_size: int, profile: Optional[str]) -> Li
     req_kwargs = {"team_size": team_size}
     if profile is not None:
         req_kwargs["profile"] = profile
-    request, _ = matching.resolve_profile(TeamGenerationRequest(**req_kwargs))
-    weights = matching._normalize_weights(request.weights)
-    floor_policy = request.floor_policy
-
-    groups = matching._greedy_build(students, request.team_size, weights)
-    groups = matching._two_opt_improve(groups, weights, floor_policy=floor_policy)
-    groups = matching._maximin_improve(groups, weights=weights, floor_policy=floor_policy)
-    groups, _trace = matching._run_optional_passes(
-        groups, request, weights, floor_policy,
-        [], [],  # familiarity_edges, preference_entries: none in a synthetic cohort
-        primary_metric=matching.OPTIMIZATION_PROFILES[request.profile]["primary_metric"],
-    )
+    # No familiarity edges or preference entries in a synthetic cohort.
+    groups, _trace = matching.form_teams(students, TeamGenerationRequest(**req_kwargs), [], [])
     return [[s.id for s in g] for g in groups]
 
 
@@ -188,13 +165,8 @@ def main(argv: Optional[List[str]] = None) -> int:
                          [real_runs[0]] + proc_runs)
 
     if args.shuffle_input > 0:
-        # Informational, does not affect the exit code: the spec's check is
-        # "same cohort, same order". Production loads students with
-        # db.query(StudentDB).all() (no ORDER BY), so input order is not
-        # guaranteed there; this shows whether the result depends on it.
-        # TODO(team-decision): is input-order invariance part of the
-        # determinism claim? If yes, either sort students by id before
-        # formation in matching.py, or add ORDER BY to the DB query.
+        # Informational, does not affect the exit code. form_teams sorts
+        # students by id, so this should PASS; a FAIL means order dependence crept back in.
         shuffled = []
         for k in range(args.shuffle_input):
             order = list(students)

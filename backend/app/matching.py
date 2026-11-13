@@ -4237,6 +4237,8 @@ def _greedy_build(
     members across teams before the maximin pass.
     File: backend/app/matching.py  — confirm seeding strategy.
     """
+    # Ties below break by list order, so fix the order to make the result input-order independent.
+    students = sorted(students, key=lambda s: s.id)
     dims = _floor_dims()
 
     def is_floor_student(s: Student) -> bool:
@@ -4469,6 +4471,28 @@ def _build_teams(
     return result
 
 
+def form_teams(
+    students: List[Student],
+    request: TeamGenerationRequest,
+    familiarity_edges: List[FamiliarityEdge],
+    preference_entries: List[PreferenceEntry],
+) -> Tuple[List[List[Student]], List[Dict[str, object]]]:
+    """Behavioral-mode team formation, with no DB access. Returns (teams, optimization_trace)."""
+    request, _ = resolve_profile(request)
+    weights = _normalize_weights(request.weights)
+    floor_policy = request.floor_policy
+    students = sorted(students, key=lambda s: s.id)
+
+    groups = _greedy_build(students, request.team_size, weights)
+    groups = _two_opt_improve(groups, weights, floor_policy=floor_policy)
+    groups = _maximin_improve(groups, weights=weights, floor_policy=floor_policy)
+    return _run_optional_passes(
+        groups, request, weights, floor_policy,
+        familiarity_edges, preference_entries,
+        primary_metric=OPTIMIZATION_PROFILES[request.profile]["primary_metric"],
+    )
+
+
 # ---------------------------------------------------------------------------
 # Endpoints
 # ---------------------------------------------------------------------------
@@ -4490,7 +4514,7 @@ def generate_teams(request: TeamGenerationRequest):
 
     db = SessionLocal()
     try:
-        db_students = db.query(StudentDB).all()
+        db_students = db.query(StudentDB).order_by(StudentDB.id).all()
         students = [_db_student_to_model(s) for s in db_students]
         familiarity_edges = [
             FamiliarityEdge(student_a_id=r.student_a_id, student_b_id=r.student_b_id, strength=r.strength, source=r.source)
@@ -4556,13 +4580,11 @@ def generate_teams(request: TeamGenerationRequest):
 
     optimization_trace: List[Dict[str, object]] = []
     if mode == "random":
+        # Nondeterministic by design (unseeded shuffle).
         raw_groups = random_assignment(students, request.team_size)
     elif mode == "skill":
         raw_groups = skill_based_assignment(students, request.team_size)
     else:
-        raw_groups = _greedy_build(students, request.team_size, behavioral_weights)
-        raw_groups = _two_opt_improve(raw_groups, behavioral_weights, floor_policy=floor_policy)
-        raw_groups = _maximin_improve(raw_groups, weights=behavioral_weights, floor_policy=floor_policy)
         # Every optional pass (ability/fairness/familiarity/hard_avoidance/
         # preference) is OFF by default and a no-op with no relevant data —
         # each one only runs, and can only change the returned assignment,
@@ -4573,10 +4595,8 @@ def generate_teams(request: TeamGenerationRequest):
         # _run_optional_passes' docstring for the cross-pass acceptance
         # policy (Part 6, Section 6) applied on top of each pass's own
         # internal guarantees.
-        raw_groups, optimization_trace = _run_optional_passes(
-            raw_groups, request, behavioral_weights, floor_policy,
-            familiarity_edges, preference_entries,
-            primary_metric=OPTIMIZATION_PROFILES[request.profile]["primary_metric"],
+        raw_groups, optimization_trace = form_teams(
+            students, request, familiarity_edges, preference_entries,
         )
 
     result = _build_teams(raw_groups, mode, behavioral_weights)
