@@ -61,6 +61,8 @@ EXTRACTION_RETRIES = 3
 RETRY_DELAY_SECONDS = 10
 # Student turns are joined with this before the adapter's verbatim check.
 STUDENT_TURN_SEPARATOR = "\n\n"
+# Safety backstop, not the normal close: the interview normally ends when the model reports coverage is complete (see prompts/interview_system.txt).
+MAX_INTERVIEW_HISTORY = 60
 
 
 def _get_gemini_client():
@@ -132,7 +134,7 @@ def conversation_turn(request: ConversationTurnRequest):
     from google.genai import types
 
     # Hard turn cap — force close before building or calling anything
-    if len(request.history) >= 22:
+    if len(request.history) >= MAX_INTERVIEW_HISTORY:
         return ConversationResponse(
             message="That's everything I needed — thanks for being so open about all of this. I'll put together your profile now.",
             is_complete=True,
