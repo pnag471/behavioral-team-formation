@@ -16,6 +16,9 @@ from app.models import (
     ConversationTurn,
     EvidenceExtractionOutput,
     ExtractResponse,
+    ReviewEvidenceItem,
+    ReviewEvidenceResponse,
+    ReviewEvidenceSummary,
 )
 
 from app import database as db_module
@@ -608,3 +611,85 @@ def rescore_run(run_id: str, db=None) -> dict:
     finally:
         if own_session:
             db.close()
+
+
+# ===========================================================================
+# GET /conversation/{session_id}/evidence  (plan B4: reviewer view)
+#
+# Read-only. Returns the stored evidence of a session's extraction run so a
+# human can check the items flagged needs_review. No auth, like the rest of
+# the app.
+# ===========================================================================
+
+def _as_bool(flag: Optional[str]) -> Optional[bool]:
+    """evidence_units stores flags as "true"/"false" strings; NULL = not assessed."""
+    return None if flag is None else flag == "true"
+
+
+@router.get("/{session_id}/evidence", response_model=ReviewEvidenceResponse)
+def get_session_evidence(session_id: str):
+    db = db_module.SessionLocal()
+    try:
+        runs = (
+            db.query(ExtractionRunDB)
+            .filter(ExtractionRunDB.session_id == session_id)
+            .order_by(ExtractionRunDB.created_at.desc(), ExtractionRunDB.id.desc())
+            .all()
+        )
+        # TODO(team-decision): which run to show when a session has several
+        # (reruns). Default: the LATEST run by created_at, skipping failed runs
+        # (a 502 run has an "error" in params_json and no evidence, so showing
+        # it would hide the real evidence behind an empty list). The
+        # alternative is returning every run. runs_for_session tells the
+        # reviewer when there were others.
+        run = next((r for r in runs if "error" not in (r.params_json or {})), None)
+        if run is None:
+            detail = (f"No successful extraction run for session '{session_id}' "
+                      f"({len(runs)} failed run(s))." if runs
+                      else f"No extraction run for session '{session_id}'.")
+            raise HTTPException(status_code=404, detail=detail)
+
+        rows = db.query(EvidenceUnitDB).filter(EvidenceUnitDB.run_id == run.id).all()
+
+        # TODO(team-decision): which items to return. Default: ALL items, so the
+        # reviewer sees flagged items in context, each with its needs_review
+        # flag. A ?needs_review_only=true filter is the alternative.
+        # Order: flagged first, then by dimension and transcript position.
+        rows.sort(key=lambda r: (
+            _as_bool(r.needs_review) is not True,
+            r.trait,
+            r.quote_start is None, r.quote_start or 0,
+            r.rubric_indicator,
+            r.span or "",
+            r.decision or "",
+        ))
+        items = [
+            ReviewEvidenceItem(
+                dimension=r.trait,
+                indicator=r.rubric_indicator,
+                polarity=r.polarity,
+                strength=r.strength,
+                quote=r.span,
+                confidence=r.confidence,
+                decision=r.decision,
+                needs_review=_as_bool(r.needs_review),
+            )
+            for r in rows
+        ]
+        summary = ReviewEvidenceSummary(
+            total=len(items),
+            needs_review=sum(1 for i in items if i.needs_review),
+            by_decision=dict(sorted(Counter(i.decision or "unknown" for i in items).items())),
+        )
+        return ReviewEvidenceResponse(
+            session_id=session_id,
+            run_id=run.id,
+            run_created_at=run.created_at.isoformat() if run.created_at else None,
+            rubric_version=run.rubric_version,
+            model_name=run.model_name,
+            runs_for_session=len(runs),
+            summary=summary,
+            items=items,
+        )
+    finally:
+        db.close()

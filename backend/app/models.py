@@ -962,3 +962,39 @@ class ExtractResponse(BaseModel):
     under_determined_dims: List[str]
     measurement_coverage: float
     evidence_counts: Dict[str, int]   # decision string -> number of items
+
+
+# ---------------------------------------------------------------------------
+# Reviewer view of stored evidence (GET /conversation/{session_id}/evidence)
+# ---------------------------------------------------------------------------
+
+class ReviewEvidenceItem(BaseModel):
+    dimension: str
+    indicator: str
+    polarity: str
+    strength: str
+    quote: Optional[str] = None
+    # LLM self-reported; a review aid only, never a score weight.
+    confidence: Optional[float] = None
+    decision: Optional[str] = None        # e.g. "accepted", "rejected:not_verbatim"
+    # None = row predates the adapter (not assessed).
+    needs_review: Optional[bool] = None
+
+
+class ReviewEvidenceSummary(BaseModel):
+    total: int
+    needs_review: int
+    by_decision: Dict[str, int]
+
+
+class ReviewEvidenceResponse(BaseModel):
+    session_id: str
+    run_id: str
+    run_created_at: Optional[str] = None
+    rubric_version: Optional[str] = None
+    model_name: Optional[str] = None
+    # All extraction runs recorded for this session, including failed ones;
+    # > 1 means there were reruns and only the selected run is shown.
+    runs_for_session: int
+    summary: ReviewEvidenceSummary
+    items: List[ReviewEvidenceItem]
